@@ -16,7 +16,7 @@
 - [Spring boot](https://spring.io/) 
 - [Liquibase](https://www.liquibase.org/)
 
-## Авторы:
+## Авторы
 - [Анастасия Сашина](https://github.com/Arcturs)
 - [Евгений Охрямкин](https://github.com/Eugene-Okhryamkin)
 - [Захар Казмиров](https://github.com/Neonvolt)
