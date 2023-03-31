@@ -23,6 +23,6 @@
 
 ## Смотреть также
 - [Trello](https://trello.com/b/y1g020zX/%D1%81%D1%82%D1%80%D0%B8%D0%BC%D0%B8%D0%BD%D0%B3%D0%BE%D0%B2%D1%8B%D0%B9-%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81)
-- [Miro](https://miro.com/app/board/uXjVMaVV5qU=/)
+- [Miro](https://miro.com/app/board/uXjVMaVV5qU=/?share_link_id=838823599808/)
 - [Figma](https://www.figma.com/proto/lnKM9pm5HmxMi5NboduJrd/WebProject?page-id=0%3A1&node-id=2-2&viewport=551%2C207%2C0.61&scaling=scale-down)
 - [Защита ТЗ](https://drive.google.com/file/d/1NdsEdDp1seJ7x68AnN0qodGPCHbLI0SQ/view?usp=sharing)
