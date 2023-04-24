@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1-Create auth tables" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-user_info-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-role-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-user_role-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-refresh_token-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>

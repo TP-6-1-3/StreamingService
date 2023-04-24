@@ -1,0 +1,35 @@
+version: '3'
+services:
+  musicmanDB:
+    image: postgres:15.1-alpine
+    restart: always
+    ports:
+      - ${MUSICMAN_DATABASE_PORT}:5432
+    container_name: ${MUSICMAN_DATABASE_HOST}
+    environment:
+      - POSTGRES_USER=${MUSICMAN_DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${MUSICMAN_DATABASE_PASSWORD}
+      - POSTGRES_DB=${MUSICMAN_DATABASE_NAME}
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    volumes:
+      - ./musicman_data:/var/lib/postgresql/data
+
+  backend:
+    image: musicman_backend
+    container_name: backend
+    build:
+      context: backend/.
+    ports:
+      - ${MUSICMAN_SERVER_PORT}:8080
+    depends_on:
+      - musicmanDB
+    environment:
+      - DATABASE_HOST=${MUSICMAN_DATABASE_HOST}
+      - DATABASE_PORT=${MUSICMAN_DATABASE_PORT}
+      - DATABASE_NAME=${MUSICMAN_DATABASE_NAME}
+      - DATABASE_USERNAME=${MUSICMAN_DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${MUSICMAN_DATABASE_PASSWORD}
+      - JWT_SECRET_KEY=${MUSICMAN_SERVER_JWT_SECRET_KEY}
+      - SERVER_PREFIX=${MUSICMAN_SERVER_PREFIX}
+      - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
+      - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
