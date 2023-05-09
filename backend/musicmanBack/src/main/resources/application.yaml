@@ -11,7 +11,7 @@ spring:
     host: smtp.yandex.ru
     port: 465
     username: ${EMAIL_LOGIN:MusicmanPlatform@yandex.ru}
-    password: ${EMAIL_PASSWORD:68wkAxh@q7@$PKv}
+    password: ${EMAIL_PASSWORD:rcrajuneuyzjxwow}
     properties:
       mail:
         smtp:

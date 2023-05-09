@@ -12,7 +12,7 @@ services:
       - POSTGRES_DB=${MUSICMAN_DATABASE_NAME}
     command: [ "postgres", "-c", "wal_level=logical" ]
     volumes:
-      - ./musicman_data:/var/lib/postgresql/data
+      - musicman_data:/var/lib/postgresql/data
 
   backend:
     image: musicman_backend
@@ -33,3 +33,6 @@ services:
       - SERVER_PREFIX=${MUSICMAN_SERVER_PREFIX}
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
+
+volumes:
+  musicman_data:

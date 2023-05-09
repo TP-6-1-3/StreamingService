@@ -2,6 +2,7 @@ package ru.vsu.csf.asashina.musicmanBack.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.RoleDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
@@ -20,6 +21,9 @@ public interface UserMapper {
     @Mapping(target = "roles", expression = "java(roleMapper.toEntityFromDTOSet(dto.getRoles()))")
     User toEntityFromDTO(UserDTO dto);
 
-    @Mapping(target = "roles", expression = "java(roleMapper.toEntityFromDTOSet(roles))")
-    User toEntityFromRequest(UserSignUpRequest request, Set<RoleDTO> roles);
+    @Mappings(value = {
+            @Mapping(target = "roles", expression = "java(roleMapper.toEntityFromDTOSet(roles))"),
+            @Mapping(target = "isVerified", expression = "java(false)")
+    })
+    User toEntityFromRequest(UserSignUpRequest request, Set<RoleDTO> roles, String passwordHash);
 }

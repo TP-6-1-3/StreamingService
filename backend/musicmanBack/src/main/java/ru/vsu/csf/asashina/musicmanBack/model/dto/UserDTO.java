@@ -17,6 +17,7 @@ public class UserDTO implements UserDetails {
     private String passwordHash;
     private String email;
     private String nickname;
+    private Boolean isVerified;
     private Set<RoleDTO> roles;
 
     @Override
@@ -51,6 +52,6 @@ public class UserDTO implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isVerified;
     }
 }

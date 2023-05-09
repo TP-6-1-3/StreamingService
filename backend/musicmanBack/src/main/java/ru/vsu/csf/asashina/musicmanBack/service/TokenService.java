@@ -14,8 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.entity.RefreshToken;
+import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.RefreshTokenRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
@@ -37,6 +40,7 @@ public class TokenService {
     private static final String FULL_NAME_CLAIM = "fullName";
 
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -124,5 +128,20 @@ public class TokenService {
 
     private static int fromDaysToSeconds(int days) {
         return days * 24 * 60 * 60;
+    }
+
+    public TokensDTO refreshAccessToken(RefreshTokenRequest request) {
+        RefreshToken refreshToken = findRefreshTokenById(request.getRefreshToken());
+        checkIfTokenIsExpired(refreshToken.getValidTill());
+        return new TokensDTO(
+                generateAccessToken(userService.getUserByEmail(refreshToken.getUser().getEmail())),
+                refreshToken.getToken()
+        );
+    }
+
+    private RefreshToken findRefreshTokenById(String refreshToken) {
+        return refreshTokenRepository.findById(refreshToken).orElseThrow(
+                () -> new EntityDoesNotExistException("Токен не существует")
+        );
     }
 }

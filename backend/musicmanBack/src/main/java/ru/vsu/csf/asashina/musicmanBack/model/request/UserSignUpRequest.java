@@ -14,7 +14,7 @@ public class UserSignUpRequest {
 
     @NotBlank(message = "Поле Фамилия не может быть пустым")
     @Size(max = 100, message = "Фамилия не может быть больше 100 символов")
-    private String secondName;
+    private String lastName;
 
     @NotBlank(message = "Поле Почта не может быть пустым")
     @Email(message = "Почта указана неверно")

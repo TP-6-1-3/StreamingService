@@ -12,4 +12,8 @@
         <sqlFile path="changeset/create/create-refresh_token-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="2-Add verification tables" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-verification-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.vsu.csf.asashina.musicmanBack.filter.AuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.*;
+import static ru.vsu.csf.asashina.musicmanBack.model.constant.Role.USER;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +29,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests()
-                .requestMatchers("/auth/*").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .requestMatchers(GET, "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                .requestMatchers(POST, "/auth/resend-code").hasAnyAuthority(USER)
 
                 .anyRequest().authenticated();
 

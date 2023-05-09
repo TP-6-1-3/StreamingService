@@ -14,7 +14,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Stri
 
     @Modifying
     @Query(value = """
-                    INSERT INTO refresh_token(refresh_token, expire_date, user_id)
+                    INSERT INTO refresh_token(token, valid_till, user_id)
                     VALUES(:refreshToken, :expireDate, :userId)""", nativeQuery = true)
     void saveNewRefreshToken(@Param("refreshToken") String refreshToken,
                              @Param("expireDate") Instant expireDate,

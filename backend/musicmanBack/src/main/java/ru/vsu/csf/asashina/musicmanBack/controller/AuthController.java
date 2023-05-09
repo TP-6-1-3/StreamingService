@@ -9,12 +9,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.AuthService;
 import ru.vsu.csf.asashina.musicmanBack.service.TokenService;
+import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -28,11 +33,12 @@ public class AuthController {
 
     private final AuthService authService;
     private final TokenService tokenService;
+    private final UserService userService;
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация нового пользователя", tags = AUTH, responses = {
             @ApiResponse(responseCode = "201", description = "Пользователь зарегистрирован", content = {
-                    @Content(mediaType = "application/json")
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TokensDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
@@ -47,8 +53,9 @@ public class AuthController {
     @SecurityRequirements
     public ResponseEntity<?> signUpNewUserUsingForm(@RequestBody @Valid UserSignUpRequest request,
                                                     HttpServletRequest req) {
-        authService.signUp(request, req.getRequestURI().replace("register", "verify"));
-        return ResponseBuilder.buildWithoutBodyResponse(CREATED);
+        return ResponseBuilder.build(
+                CREATED,
+                authService.signUp(request, req.getRequestURL().toString().replace("register", "verify")));
     }
 
     @PostMapping("/verify/{code}")
@@ -73,17 +80,35 @@ public class AuthController {
         return ResponseBuilder.buildWithoutBodyResponse(CREATED);
     }
 
+    @PostMapping("/resend-code")
+    @Operation(summary = "Повторная отправка кода", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Код повторно отправлен", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(
+                    responseCode = "404", description = "Пользователь не найден", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(
+                    responseCode = "405", description = "Пользователь уже верифицирован", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> resendCode(Authentication authentication, HttpServletRequest request) {
+        UserDTO user = userService.getUserByEmail((String) authentication.getPrincipal());
+        authService.resendCode(user, request.getRequestURL().toString().replace("resend-code", "verify"));
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
 
-//TODO: send code again endpoint
+
     @PostMapping("/login")
-    @Operation(tags = AUTH, responses = {
-            @ApiResponse(responseCode = "200", description = "User was successfully logged in and tokens are returned", content = {
+    @Operation(summary = "Вход пользователя", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Пользователь успешно вошел в систему", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = TokensDTO.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Wrong credentials", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "User does not have needed role", content = {
+            @ApiResponse(responseCode = "400", description = "Неправильный пароль или почта", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
@@ -93,11 +118,11 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    @Operation(summary = "Refreshes access token using refresh token", tags = AUTH, responses = {
-            @ApiResponse(responseCode = "200", description = "Tokens are returned", content = {
+    @Operation(summary = "Обновление access токена", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Возвращение обновленных токенов", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = TokensDTO.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Refresh token is empty", content = {
+            @ApiResponse(responseCode = "400", description = "Токен отсутствует", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
             @ApiResponse(responseCode = "401", description = "Refresh token is expired", content = {

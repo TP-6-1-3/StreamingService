@@ -2,6 +2,7 @@ package ru.vsu.csf.asashina.musicmanBack.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
@@ -42,7 +43,8 @@ public class UserService {
         if (!request.getPassword().equals(request.getRepeatPassword())) {
             throw new PasswordsDoNotMatch("Пароли не совпадают");
         }
-        User user = userMapper.toEntityFromRequest(request, Set.of(roleService.getUserRole()));
+        User user = userMapper.toEntityFromRequest(
+                request, Set.of(roleService.getUserRole()), BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         user = userRepository.save(user);
         return userMapper.toDTOFromEntity(user);
     }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
+import ru.vsu.csf.asashina.musicmanBack.exception.AlreadyVerifiedUserException;
 import ru.vsu.csf.asashina.musicmanBack.exception.VerificationExpiredException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.VerificationMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
@@ -40,5 +41,12 @@ public class VerificationService {
         }
         verificationRepository.delete(verification);
         return verification.getUser().getUserId();
+    }
+
+    public String resendCode(UserDTO user) {
+        if (user.getIsVerified()) {
+            throw new AlreadyVerifiedUserException("Пользователь уже верифицирован");
+        }
+        return createCodeAndSave(user);
     }
 }
