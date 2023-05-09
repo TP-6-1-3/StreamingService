@@ -125,10 +125,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Токен отсутствует", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
-            @ApiResponse(responseCode = "401", description = "Refresh token is expired", content = {
+            @ApiResponse(responseCode = "401", description = "Токен не валиден", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Refresh token does not exist", content = {
+            @ApiResponse(responseCode = "404", description = "Токен не существует", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
