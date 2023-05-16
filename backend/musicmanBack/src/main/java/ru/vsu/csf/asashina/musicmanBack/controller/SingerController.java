@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSingerRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateSingerRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.SingerService;
 import ru.vsu.csf.asashina.musicmanBack.service.SongService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
@@ -19,7 +22,7 @@ import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SINGER;
 
 @RestController
@@ -85,5 +88,63 @@ public class SingerController {
                 songService.getAllSongs(
                         pageNumber, size, "", SongSort.BY_TITLE, true, new ArrayList<>(), id),
                 pageNumber, size);
+    }
+
+    @PostMapping("")
+    @Operation(summary = "Создание исполнителя", tags = SINGER, responses = {
+            @ApiResponse(responseCode = "201", description = "Исполнитель был создан", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> createSinger(@RequestBody @Valid CreateSingerRequest request) {
+        singerService.createSinger(request);
+        return ResponseBuilder.buildWithoutBodyResponse(CREATED);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Обновление описания исполнителя", tags = SINGER, responses = {
+            @ApiResponse(responseCode = "200", description = "Описание обновлено", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Исполнитель не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> updateSinger(@PathVariable("id") Long id,
+                                          @RequestBody @Valid UpdateSingerRequest request) {
+        singerService.updateSingerById(id, request);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление исполнителя", tags = SINGER, responses = {
+            @ApiResponse(responseCode = "204", description = "Исполнитель удален", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Исполнитель не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteSinger(@PathVariable("id") Long id) {
+        singerService.deleteSingerById(id);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 }

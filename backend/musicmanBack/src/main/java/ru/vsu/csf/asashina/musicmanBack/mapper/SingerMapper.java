@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Singer;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSingerRequest;
 
 @Mapper
 public interface SingerMapper {
@@ -13,4 +14,6 @@ public interface SingerMapper {
     SingerDTO toDTOFromEntity(Singer entity);
 
     Singer toEntityFromDTO(SingerDTO dto);
+
+    Singer toEntityFromRequest(CreateSingerRequest request);
 }

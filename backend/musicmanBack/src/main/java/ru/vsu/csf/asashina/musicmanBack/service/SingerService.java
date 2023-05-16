@@ -1,5 +1,6 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,8 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SingerMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Singer;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSingerRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateSingerRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.SingerRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
 
@@ -35,5 +38,23 @@ public class SingerService {
         Page<Singer> singers = singerRepository.getAll(name, pageRequest);
         pageUtil.checkPageOutOfRange(singers, pageNumber);
         return singers.map(singerMapper::toDTOFromEntity);
+    }
+
+    @Transactional
+    public void createSinger(CreateSingerRequest request) {
+        singerRepository.save(singerMapper.toEntityFromRequest(request));
+    }
+
+    @Transactional
+    public void updateSingerById(Long id, UpdateSingerRequest request) {
+        Singer singer = findSingerById(id);
+        singer.setDescription(request.getDescription());
+        singerRepository.save(singer);
+    }
+
+    @Transactional
+    public void deleteSingerById(Long id) {
+        Singer singer = findSingerById(id);
+        singerRepository.delete(singer);
     }
 }
