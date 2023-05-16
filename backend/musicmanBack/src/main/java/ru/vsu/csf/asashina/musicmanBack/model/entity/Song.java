@@ -25,9 +25,6 @@ public class Song {
     @Column(nullable = false)
     private LocalTime duration;
 
-    @Column(nullable = false)
-    private String songPath;
-
     @ManyToOne
     @JoinColumn(name = "singer_id")
     private Singer singer;

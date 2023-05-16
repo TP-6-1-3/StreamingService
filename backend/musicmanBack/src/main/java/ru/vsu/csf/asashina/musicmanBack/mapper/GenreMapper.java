@@ -14,5 +14,9 @@ public interface GenreMapper {
 
     GenreDTO toDTOFromEntity(Genre entity);
 
+    Genre toEntityFromDTO(GenreDTO dto);
+
     Set<GenreDTO> toDTOFromEntitySet(Set<Genre> entities);
+
+    Set<Genre> toEntityFromDTOSet(Set<GenreDTO> dtos);
 }

@@ -41,3 +41,6 @@ server:
 
 emailTemplate:
   mainPage:
+
+songs:
+  directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}

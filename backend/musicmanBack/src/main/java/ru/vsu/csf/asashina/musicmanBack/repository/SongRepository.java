@@ -13,11 +13,11 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     @Query(value = """
             SELECT s
-            FROM song s
+            FROM Song s
             JOIN s.singer sing
-                ON sing.singer_id = :singerId
+                ON sing.singerId = :singerId
             JOIN s.genres g
-                ON g.genre_id IN (:genreIds)
+                ON g.genreId IN (:genreIds)
             WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')
             """)
     Page<Song> getAll(@Param("singerId") Long singerId,
