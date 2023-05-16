@@ -28,7 +28,8 @@ public class ExceptionHandlerController {
         return ResponseBuilder.build(INTERNAL_SERVER_ERROR, new ExceptionDTO("Internal server error"));
     }
 
-    @ExceptionHandler({PasswordsDoNotMatch.class, WrongCredentialsException.class})
+    @ExceptionHandler({PasswordsDoNotMatch.class, WrongCredentialsException.class, PageException.class,
+            SongFileException.class})
     public ResponseEntity<?> badRequestExceptionHandler(Exception e) {
         return ResponseBuilder.build(BAD_REQUEST, e);
     }

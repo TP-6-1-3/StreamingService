@@ -16,4 +16,11 @@
         <sqlFile path="changeset/create/create-verification-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="3.1-Add songs flow tables" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-singer-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-song-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-genre-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-song_genre-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
