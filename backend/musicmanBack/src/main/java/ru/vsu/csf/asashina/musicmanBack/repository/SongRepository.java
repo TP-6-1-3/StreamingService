@@ -18,7 +18,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
             SELECT s
             FROM Song s
             JOIN s.singer sing
-                ON (:singerId IS NULL OR sing.singerId = CAST(CAST(:singerId AS CHARACTER VARYING) AS BIGINT))
+                ON (:singerId IS NULL OR sing.singerId = :singerId)
             JOIN s.genres g
                 ON g.genreId IN (:genreIds)
             WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
@@ -31,7 +31,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
             SELECT s
             FROM Song s
             JOIN s.singer sing
-                ON (:singerId IS NULL OR sing.singerId = CAST(CAST(:singerId AS CHARACTER VARYING) AS BIGINT))
+                ON (:singerId IS NULL OR sing.singerId = :singerId)
             WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
     Page<Song> getAll(@Param("singerId") Long singerId,
                       @Param("title") String title,
