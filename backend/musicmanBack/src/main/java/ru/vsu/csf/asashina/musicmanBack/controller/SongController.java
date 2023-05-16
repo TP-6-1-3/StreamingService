@@ -20,6 +20,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SONG;
 
@@ -69,5 +70,25 @@ public class SongController {
     public ResponseEntity<?> createSong(@RequestBody @Valid CreateSongRequest request) throws UnsupportedAudioFileException, IOException {
         songService.createSong(request);
         return ResponseBuilder.buildWithoutBodyResponse(CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление песни", tags = SONG, responses = {
+            @ApiResponse(responseCode = "204", description = "Песня удалена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Отсутствует доступ", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песня не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteSong(@PathVariable("id") Long id) {
+        songService.deleteSongById(id);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 }

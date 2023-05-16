@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
@@ -87,6 +88,23 @@ public class SongService {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(in);
         in.close();
         audioStream.close();
+    }
+
+    @Transactional
+    public void deleteSongById(Long id) {
+        Song song = findSongById(id);
+        songRepository.delete(song);
+        deleteSongFile(id);
+    }
+
+    private void deleteSongFile(Long id) {
+        File file = new File(songsDirectoryPath.concat("/").concat(id.toString()));
+        file.delete();
+    }
+
+    private Song findSongById(Long id) {
+        return songRepository.findById(id).orElseThrow(
+                () -> new EntityDoesNotExistException("Песня с заданным ИД не существует"));
     }
 
     @PostConstruct
