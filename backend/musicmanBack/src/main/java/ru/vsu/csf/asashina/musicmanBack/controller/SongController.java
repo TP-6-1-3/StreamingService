@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
@@ -36,7 +37,7 @@ public class SongController {
     @GetMapping("")
     @Operation(summary = "Выводит все песни по страницам", tags = SONG, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает все песни по страницам", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongPageDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = PagingDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
