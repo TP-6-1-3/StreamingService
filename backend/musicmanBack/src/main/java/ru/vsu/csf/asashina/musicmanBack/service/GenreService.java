@@ -30,4 +30,17 @@ public class GenreService {
         }
         return genreMapper.toDTOFromEntitySet(genres);
     }
+
+    public List<GenreDTO> getAll() {
+        return genreMapper.toDTOFromEntityList(genreRepository.findAll());
+    }
+
+    public GenreDTO getGenreById(Long id) {
+        return genreMapper.toDTOFromEntity(findGenreById(id));
+    }
+
+    private Genre findGenreById(Long id) {
+        return genreRepository.findById(id).orElseThrow(
+                () -> new EntityDoesNotExistException("Жанр с данным ИД не существует"));
+    }
 }

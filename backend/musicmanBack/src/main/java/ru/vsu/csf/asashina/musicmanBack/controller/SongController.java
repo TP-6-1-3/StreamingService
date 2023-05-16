@@ -56,6 +56,8 @@ public class SongController {
                 songService.getAllSongs(pageNumber, size, title, sort, isAsc, genreIds, singerId), pageNumber, size);
     }
 
+    //TODO: добавить эндпоинт для добавления песни жанров
+
     @GetMapping("/{id}")
     @Operation(summary = "Выводит информацию о песне", tags = SONG, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает информацию о песне", content = {

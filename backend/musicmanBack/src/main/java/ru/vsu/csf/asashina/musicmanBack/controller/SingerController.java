@@ -20,7 +20,6 @@ import ru.vsu.csf.asashina.musicmanBack.service.SongService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SINGER;
