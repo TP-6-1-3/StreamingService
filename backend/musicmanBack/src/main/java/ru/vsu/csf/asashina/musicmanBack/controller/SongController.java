@@ -22,6 +22,7 @@ import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
@@ -49,10 +50,10 @@ public class SongController {
                                          @RequestParam(value = "title", required = false) String title,
                                          @RequestParam(value = "sort", required = false, defaultValue = "BY_TITLE") SongSort sort,
                                          @RequestParam(value = "isAsc", required = false, defaultValue = "true") Boolean isAsc,
-                                         @RequestParam(value = "genres", required = false) Long[] genreId,
+                                         @RequestParam(value = "genres", required = false) List<Long> genreIds,
                                          @RequestParam(value = "singer", required = false) Long singerId) {
         return ResponseBuilder.build(
-                songService.getAllSongs(pageNumber, size, title, sort, isAsc, genreId, singerId), pageNumber, size);
+                songService.getAllSongs(pageNumber, size, title, sort, isAsc, genreIds, singerId), pageNumber, size);
     }
 
     @GetMapping("/{id}")

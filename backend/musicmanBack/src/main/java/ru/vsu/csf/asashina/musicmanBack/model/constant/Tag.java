@@ -7,5 +7,6 @@ public class Tag {
 
     public static final String AUTH = "Auth Controller";
     public static final String SONG = "Song Controller";
+    public static final String SINGER = "Singer Controller";
 
 }

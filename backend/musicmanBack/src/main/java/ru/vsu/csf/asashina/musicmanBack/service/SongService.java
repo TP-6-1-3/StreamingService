@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -56,10 +57,15 @@ public class SongService {
             String title,
             SongSort sort,
             Boolean isAsc,
-            Long[] genreIds,
+            List<Long> genreIds,
             Long singerId) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size, isAsc, sort.getQueryParam());
-        Page<Song> songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
+        Page<Song> songs;
+        if (genreIds.isEmpty()) {
+            songs = songRepository.getAll(singerId, title, pageRequest);
+        } else {
+            songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
+        }
         pageUtil.checkPageOutOfRange(songs, pageNumber);
         return songs.map(songMapper::toPageDTOFromEntity);
     }
