@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    host: ${DATABASE_HOST:localhost}
+    port: ${DATABASE_PORT:5435}
+    dbname: ${DATABASE_NAME:musicmandb}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5435}/${DATABASE_NAME:musicmandb}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:gtneifhs}
+
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: ${EMAIL_LOGIN:MusicmanPlatform@yandex.ru}
+    password: ${EMAIL_PASSWORD:rcrajuneuyzjxwow}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          ssl.enable: true
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:secretKey897#7h}
+    access-token:
+
+      #30 seconds
+      expire-date-ms: 30000
+
+    refresh-token:
+      expire-date-days: 30
+
+server:
+  shutdown: GRACEFUL
+  forward-headers-strategy: NATIVE
+  servlet:
+    context-path: ${SERVER_PREFIX:/api/v1}
+
+emailTemplate:
+  mainPage:
