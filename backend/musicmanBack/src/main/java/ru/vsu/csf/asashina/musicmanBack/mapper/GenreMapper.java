@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Genre;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreateGenreRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,8 @@ public interface GenreMapper {
     GenreDTO toDTOFromEntity(Genre entity);
 
     Genre toEntityFromDTO(GenreDTO dto);
+
+    Genre toEntityFromRequest(CreateGenreRequest request);
 
     Set<GenreDTO> toDTOFromEntitySet(Set<Genre> entities);
 

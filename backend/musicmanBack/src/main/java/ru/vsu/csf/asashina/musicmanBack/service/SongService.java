@@ -16,8 +16,10 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.entity.Genre;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
+import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.SongRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
@@ -104,6 +106,20 @@ public class SongService {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(in);
         in.close();
         audioStream.close();
+    }
+
+    @Transactional
+    public void addGenresToSong(Long id, AddGenresToSongRequest request) {
+        Song song = findSongById(id);
+        Set<GenreDTO> genres = genreService.getGenresByIds(request.getGenresIds());
+        List<Long> genresIdsInSong = song.getGenres().stream()
+                .map(Genre::getGenreId)
+                .toList();
+        List<Long> genresIdsFiltered = genres.stream()
+                .map(GenreDTO::getGenreId)
+                .filter(genreId -> !genresIdsInSong.contains(genreId))
+                .toList();
+        songRepository.addGenresToSong(song.getSongId(), genresIdsFiltered);
     }
 
     @Transactional

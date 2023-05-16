@@ -16,6 +16,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
+import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.SongService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
@@ -55,8 +56,6 @@ public class SongController {
         return ResponseBuilder.build(
                 songService.getAllSongs(pageNumber, size, title, sort, isAsc, genreIds, singerId), pageNumber, size);
     }
-
-    //TODO: добавить эндпоинт для добавления песни жанров
 
     @GetMapping("/{id}")
     @Operation(summary = "Выводит информацию о песне", tags = SONG, responses = {
@@ -112,6 +111,27 @@ public class SongController {
     public ResponseEntity<?> createSong(@RequestBody @Valid CreateSongRequest request) throws UnsupportedAudioFileException, IOException {
         songService.createSong(request);
         return ResponseBuilder.buildWithoutBodyResponse(CREATED);
+    }
+
+    @PostMapping("/{id}/add-genres")
+    @Operation(summary = "Добавление жанров к песни", tags = SONG, responses = {
+            @ApiResponse(responseCode = "200", description = "Жанры добавлены", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Отсутствует доступ", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Не существует исполнитель или жанр", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> addGenresToSong(@PathVariable("id") Long id,
+                                             @RequestBody @Valid AddGenresToSongRequest request) {
+        songService.addGenresToSong(id, request);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
     @DeleteMapping("/{id}")
