@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
@@ -19,8 +22,7 @@ import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SONG;
 
@@ -50,6 +52,42 @@ public class SongController {
                                          @RequestParam(value = "singer", required = false) Long singerId) {
         return ResponseBuilder.build(
                 songService.getAllSongs(pageNumber, size, title, sort, isAsc, genreId, singerId), pageNumber, size);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Выводит информацию о песне", tags = SONG, responses = {
+            @ApiResponse(responseCode = "200", description = "Возвращает информацию о песне", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песни не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    @SecurityRequirements
+    public ResponseEntity<?> getSongById(@PathVariable("id") Long id) {
+        return ResponseBuilder.build(OK, songService.getSongById(id));
+    }
+
+    @GetMapping(value = "/{id}/file", produces = "audio/mp3")
+    @Operation(summary = "Возвращает mp3 файл", tags = SONG, responses = {
+            @ApiResponse(responseCode = "200", description = "Возвращает файл", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песни не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> getSongFileById(Long id) throws IOException {
+        FileSystemResource in = new FileSystemResource(songService.getFileFromSystem(id));
+        var headers = new HttpHeaders();
+        headers.setContentLength(in.contentLength());
+        return new ResponseEntity(in, headers, OK);
     }
 
     @PostMapping(value = "", consumes = MULTIPART_FORM_DATA_VALUE)

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
@@ -20,4 +21,6 @@ public interface SongMapper {
     SongPageDTO toPageDTOFromEntity(Song entity);
 
     Song toEntityFromRequest(CreateSongRequest request, SingerDTO singer, Set<GenreDTO> genres);
+
+    SongDTO toDTOFromEntity(Song entity);
 }

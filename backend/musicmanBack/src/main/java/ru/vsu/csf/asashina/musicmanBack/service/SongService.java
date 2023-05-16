@@ -14,6 +14,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
@@ -61,6 +62,15 @@ public class SongService {
         Page<Song> songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
         pageUtil.checkPageOutOfRange(songs, pageNumber);
         return songs.map(songMapper::toPageDTOFromEntity);
+    }
+
+    public SongDTO getSongById(Long id) {
+        return songMapper.toDTOFromEntity(findSongById(id));
+    }
+
+    public File getFileFromSystem(Long id) {
+        findSongById(id);
+        return new File(songsDirectoryPath.concat("/").concat(Long.toString(id)));
     }
 
     @Transactional

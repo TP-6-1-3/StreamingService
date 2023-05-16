@@ -8,8 +8,6 @@ import lombok.Data;
 public class SingerDTO {
 
     private Long singerId;
-
     private String fullName;
-
     private String description;
 }

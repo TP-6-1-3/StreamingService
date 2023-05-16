@@ -31,8 +31,10 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(GET, "/v3/api-docs/**", "/songs", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers(GET, "/v3/api-docs/**", "/songs/**", "/swagger-ui/**",
+                        "/swagger-ui.html").permitAll()
 
+                .requestMatchers(GET, "/songs/*/file").hasAnyAuthority(USER)
                 .requestMatchers(POST, "/auth/resend-code").hasAnyAuthority(USER)
 
                 .requestMatchers(POST, "/songs").hasAnyAuthority(ADMIN)
