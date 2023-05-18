@@ -36,4 +36,9 @@ public class MapperConfiguration {
     public SongMapper songMapper() {
         return SongMapper.INSTANCE;
     }
+
+    @Bean
+    public PlaylistMapper playlistMapper() {
+        return PlaylistMapper.INSTANCE;
+    }
 }
