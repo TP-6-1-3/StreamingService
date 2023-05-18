@@ -69,4 +69,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Query(value = """
             DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId""", nativeQuery = true)
     void deleteSongFromUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+
+    //TODO: исправить баг с первичным ключом!
 }
