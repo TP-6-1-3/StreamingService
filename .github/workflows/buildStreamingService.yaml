@@ -25,7 +25,7 @@ jobs:
           mvn clean package -B -DskipTests
 
   test-backend:
-    needs: build
+    needs: build-backend
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
