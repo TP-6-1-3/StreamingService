@@ -25,6 +25,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.SongRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
+import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -158,7 +159,7 @@ public class SongService {
         if (isSongInUsersLibrary(userId, songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
         }
-        songRepository.addSongToUsersLibrary(songId, userId);
+        songRepository.addSongToUsersLibrary(UuidUtil.generateRandomUUIDInString(), songId, userId);
     }
 
     @Transactional
