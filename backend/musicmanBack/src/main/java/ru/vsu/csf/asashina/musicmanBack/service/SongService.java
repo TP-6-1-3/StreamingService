@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInLibraryException;
 import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
@@ -68,6 +70,13 @@ public class SongService {
         } else {
             songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
         }
+        pageUtil.checkPageOutOfRange(songs, pageNumber);
+        return songs.map(songMapper::toPageDTOFromEntity);
+    }
+
+    public Page<SongPageDTO> getUsersSongs(Long userId, Integer pageNumber, Integer size, String title) {
+        PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
+        Page<Song> songs = songRepository.getUsersAll(userId, title, pageRequest);
         pageUtil.checkPageOutOfRange(songs, pageNumber);
         return songs.map(songMapper::toPageDTOFromEntity);
     }
@@ -137,6 +146,28 @@ public class SongService {
     private Song findSongById(Long id) {
         return songRepository.findById(id).orElseThrow(
                 () -> new EntityDoesNotExistException("Песня с заданным ИД не существует"));
+    }
+
+    public boolean isSongInUsersLibrary(Long userId, Long songId) {
+        return songRepository.isSongAlreadyInUsersLibrary(songId, userId);
+    }
+
+    @Transactional
+    public void addSongToUsersLibrary(Long userId, Long songId) {
+        Song song = findSongById(songId);
+        if (isSongInUsersLibrary(userId, songId)) {
+            throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
+        }
+        songRepository.addSongToUsersLibrary(songId, userId);
+    }
+
+    @Transactional
+    public void deleteSongFromUsersLibrary(Long userId, Long songId) {
+        Song song = findSongById(songId);
+        if (!isSongInUsersLibrary(userId, songId)) {
+            throw new NoSongInLibraryException("Песни нет в аудиотеке");
+        }
+        songRepository.deleteSongFromUsersLibrary(songId, userId);
     }
 
     @PostConstruct

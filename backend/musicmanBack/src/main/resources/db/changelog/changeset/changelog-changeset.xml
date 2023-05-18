@@ -23,4 +23,8 @@
         <sqlFile path="changeset/create/create-song_genre-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="4-Add user's audio library table" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-user_song-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

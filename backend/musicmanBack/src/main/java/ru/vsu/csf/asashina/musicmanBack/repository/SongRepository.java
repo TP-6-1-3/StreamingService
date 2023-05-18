@@ -46,4 +46,27 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                 ON g.genre_id IN (:genreIds)
                 AND s.song_id = :songId""", nativeQuery = true)
     void addGenresToSong(@Param("songId") Long songId, @Param("genreIds") List<Long> genreIds);
+
+    @Query("""
+            SELECT s
+            FROM Song s
+            JOIN s.users u
+                ON u.userId = :userId
+            WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
+    Page<Song> getUsersAll(@Param("userId") Long userId, @Param("title") String title, Pageable pageable);
+
+    @Query(value = """
+            SELECT EXISTS(SELECT 1 FROM user_song WHERE song_id = :songId AND user_id = :userId)""", nativeQuery = true)
+    boolean isSongAlreadyInUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+
+    @Modifying
+    @Query(value = """
+            INSERT INTO user_song(user_id, song_id)
+            VALUES(:userId, :songId)""", nativeQuery = true)
+    void addSongToUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+
+    @Modifying
+    @Query(value = """
+            DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId""", nativeQuery = true)
+    void deleteSongFromUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
 }
