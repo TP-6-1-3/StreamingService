@@ -36,6 +36,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
                 .requestMatchers(GET, "/songs/*/file", "/library/**").hasAnyAuthority(USER)
                 .requestMatchers(POST, "/auth/resend-code", "/library/*").hasAnyAuthority(USER)
+                .requestMatchers(DELETE, "/library/*").hasAnyAuthority(USER)
 
                 .requestMatchers(POST, "/songs/**", "/singers", "/genres").hasAnyAuthority(ADMIN)
                 .requestMatchers(PUT, "/singers/*").hasAnyAuthority(ADMIN)

@@ -30,4 +30,10 @@ public class AudioLibraryService {
         UserDTO user = userService.getUserByEmail(userEmail);
         return new UsersSongDTO(songService.isSongInUsersLibrary(user.getUserId(), songId));
     }
+
+    @Transactional
+    public void deleteSong(String userEmail, Long songId) {
+        UserDTO user = userService.getUserByEmail(userEmail);
+        songService.deleteSongFromUsersLibrary(user.getUserId(), songId);
+    }
 }

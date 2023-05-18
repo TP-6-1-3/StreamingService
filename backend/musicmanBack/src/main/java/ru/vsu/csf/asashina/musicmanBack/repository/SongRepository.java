@@ -64,4 +64,9 @@ public interface SongRepository extends JpaRepository<Song, Long> {
             INSERT INTO user_song(user_id, song_id)
             VALUES(:userId, :songId)""", nativeQuery = true)
     void addSongToUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+
+    @Modifying
+    @Query(value = """
+            DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId""", nativeQuery = true)
+    void deleteSongFromUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
 }

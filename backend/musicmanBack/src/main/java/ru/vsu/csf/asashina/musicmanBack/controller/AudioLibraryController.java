@@ -16,6 +16,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.UsersSongDTO;
 import ru.vsu.csf.asashina.musicmanBack.service.AudioLibraryService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUDIO_LIBRARY;
 
@@ -88,5 +89,28 @@ public class AudioLibraryController {
     public ResponseEntity<?> addSong(@PathVariable("songId") Long songId, Authentication authentication) {
         audioLibraryService.addSong((String) authentication.getPrincipal(), songId);
         return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
+
+    @DeleteMapping("/{songId}")
+    @Operation(summary = "Удаляет песню из аудиотеки", tags = AUDIO_LIBRARY, responses = {
+            @ApiResponse(responseCode = "204", description = "Песня удалена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песня не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "405", description = "Песни нет в аудиотеке", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteSong(@PathVariable("songId") Long songId, Authentication authentication) {
+        audioLibraryService.deleteSong((String) authentication.getPrincipal(), songId);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 }
