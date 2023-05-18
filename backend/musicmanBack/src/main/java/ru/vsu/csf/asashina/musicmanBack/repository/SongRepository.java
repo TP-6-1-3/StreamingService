@@ -49,9 +49,9 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     @Query("""
             SELECT s
-            FROM song s
-            JOIN s.user u
-                ON u.user_id = :userId
+            FROM Song s
+            JOIN s.users u
+                ON u.userId = :userId
             WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
     Page<Song> getUsersAll(@Param("userId") Long userId, @Param("title") String title, Pageable pageable);
 
