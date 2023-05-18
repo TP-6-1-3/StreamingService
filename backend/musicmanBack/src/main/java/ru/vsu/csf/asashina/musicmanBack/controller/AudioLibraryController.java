@@ -5,18 +5,17 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.service.AudioLibraryService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
+import static org.springframework.http.HttpStatus.OK;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUDIO_LIBRARY;
 
 @RestController
@@ -45,5 +44,31 @@ public class AudioLibraryController {
         return ResponseBuilder.build(audioLibraryService.getAllSongs(
                 (String) authentication.getPrincipal(), pageNumber, size, title),
                 pageNumber, size);
+    }
+
+    //TODO: добавить эндпоинт на проверку существования песни в аудиотеке
+
+    @PostMapping("/{songId}")
+    @Operation(summary = "Добавляет песню в аудиотеку", tags = AUDIO_LIBRARY, responses = {
+            @ApiResponse(responseCode = "200", description = "Песня добавлена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песня не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Песня уже в аудиотеке", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> addSong(@PathVariable("songId") Long songId,
+                                     Authentication authentication) {
+        audioLibraryService.addSong((String) authentication.getPrincipal(), songId);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 }

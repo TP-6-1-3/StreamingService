@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
@@ -144,6 +145,15 @@ public class SongService {
     private Song findSongById(Long id) {
         return songRepository.findById(id).orElseThrow(
                 () -> new EntityDoesNotExistException("Песня с заданным ИД не существует"));
+    }
+
+    @Transactional
+    public void addSongToUsersLibrary(Long userId, Long songId) {
+        Song song = findSongById(songId);
+        if (songRepository.isSongAlreadyInUsersLibrary(songId, userId)) {
+            throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
+        }
+        songRepository.addSongToUsersLibrary(songId, userId);
     }
 
     @PostConstruct

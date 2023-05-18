@@ -35,7 +35,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                         "/swagger-ui.html", "/singer/**", "/genres/**").permitAll()
 
                 .requestMatchers(GET, "/songs/*/file", "/library").hasAnyAuthority(USER)
-                .requestMatchers(POST, "/auth/resend-code").hasAnyAuthority(USER)
+                .requestMatchers(POST, "/auth/resend-code", "/library/*").hasAnyAuthority(USER)
 
                 .requestMatchers(POST, "/songs/**", "/singers", "/genres").hasAnyAuthority(ADMIN)
                 .requestMatchers(PUT, "/singers/*").hasAnyAuthority(ADMIN)

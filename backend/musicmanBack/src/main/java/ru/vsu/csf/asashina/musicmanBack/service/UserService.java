@@ -53,6 +53,4 @@ public class UserService {
     public void verifyUserById(Long id) {
         userRepository.verifyUserById(id);
     }
-
-    public Set<>
 }
