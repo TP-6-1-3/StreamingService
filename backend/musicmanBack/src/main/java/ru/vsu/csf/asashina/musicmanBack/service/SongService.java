@@ -72,6 +72,13 @@ public class SongService {
         return songs.map(songMapper::toPageDTOFromEntity);
     }
 
+    public Page<SongPageDTO> getUsersSongs(Long userId, Integer pageNumber, Integer size, String title) {
+        PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
+        Page<Song> songs = songRepository.getUsersAll(userId, title, pageRequest);
+        pageUtil.checkPageOutOfRange(songs, pageNumber);
+        return songs.map(songMapper::toPageDTOFromEntity);
+    }
+
     public SongDTO getSongById(Long id) {
         return songMapper.toDTOFromEntity(findSongById(id));
     }

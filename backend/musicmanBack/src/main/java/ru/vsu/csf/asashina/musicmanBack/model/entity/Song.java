@@ -34,4 +34,7 @@ public class Song {
             joinColumns = {@JoinColumn(name = "song_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres;
+
+    @ManyToMany(mappedBy = "songs")
+    private Set<User> users;
 }

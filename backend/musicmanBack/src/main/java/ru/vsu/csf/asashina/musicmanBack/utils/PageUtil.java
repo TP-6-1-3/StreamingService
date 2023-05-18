@@ -19,4 +19,8 @@ public class PageUtil {
         return PageRequest.of(pageNumber - 1, size,
                 isAsc ? Sort.by(sort).ascending() : Sort.by(sort).descending());
     }
+
+    public PageRequest createPageRequest(Integer pageNumber, Integer size) {
+        return PageRequest.of(pageNumber - 1, size);
+    }
 }

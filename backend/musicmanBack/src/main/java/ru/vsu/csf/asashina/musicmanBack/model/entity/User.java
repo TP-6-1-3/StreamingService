@@ -42,4 +42,10 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(name = "user_song",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "song_id")})
+    private Set<Song> songs;
 }

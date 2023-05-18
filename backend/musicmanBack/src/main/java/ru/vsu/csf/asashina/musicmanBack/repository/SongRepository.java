@@ -46,4 +46,12 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                 ON g.genre_id IN (:genreIds)
                 AND s.song_id = :songId""", nativeQuery = true)
     void addGenresToSong(@Param("songId") Long songId, @Param("genreIds") List<Long> genreIds);
+
+    @Query("""
+            SELECT s
+            FROM song s
+            JOIN s.user u
+                ON u.user_id = :userId
+            WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
+    Page<Song> getUsersAll(@Param("userId") Long userId, @Param("title") String title, Pageable pageable);
 }
