@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.UsersSongDTO;
 
 @Service
 @AllArgsConstructor
@@ -23,5 +24,10 @@ public class AudioLibraryService {
     public void addSong(String userEmail, Long songId) {
         UserDTO user = userService.getUserByEmail(userEmail);
         songService.addSongToUsersLibrary(user.getUserId(), songId);
+    }
+
+    public UsersSongDTO doesSongExists(String userEmail, Long songId) {
+        UserDTO user = userService.getUserByEmail(userEmail);
+        return new UsersSongDTO(songService.isSongInUsersLibrary(user.getUserId(), songId));
     }
 }

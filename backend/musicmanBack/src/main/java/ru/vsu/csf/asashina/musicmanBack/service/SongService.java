@@ -147,10 +147,14 @@ public class SongService {
                 () -> new EntityDoesNotExistException("Песня с заданным ИД не существует"));
     }
 
+    public boolean isSongInUsersLibrary(Long userId, Long songId) {
+        return songRepository.isSongAlreadyInUsersLibrary(songId, userId);
+    }
+
     @Transactional
     public void addSongToUsersLibrary(Long userId, Long songId) {
         Song song = findSongById(songId);
-        if (songRepository.isSongAlreadyInUsersLibrary(songId, userId)) {
+        if (isSongInUsersLibrary(userId, songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
         }
         songRepository.addSongToUsersLibrary(songId, userId);
