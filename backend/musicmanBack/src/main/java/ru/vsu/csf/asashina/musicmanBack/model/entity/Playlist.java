@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "playlist")
@@ -16,7 +17,8 @@ import java.util.Set;
 public class Playlist {
 
     @Id
-    private String playlistId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID playlistId;
 
     @Column(nullable = false)
     private String name;

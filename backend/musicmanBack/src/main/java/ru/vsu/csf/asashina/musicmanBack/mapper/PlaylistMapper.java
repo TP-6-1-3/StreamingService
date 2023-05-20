@@ -12,6 +12,8 @@ import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 
+import java.util.UUID;
+
 @Mapper(uses = {SongMapper.class, UserMapper.class})
 public interface PlaylistMapper {
 
@@ -21,7 +23,7 @@ public interface PlaylistMapper {
 
     PlaylistWithSongsDTO toDTOWithSongFromEntity(Playlist entity);
 
-    Playlist toEntityFromRequest(String playlistId, CreatePlaylistRequest request, UserDTO user);
+    Playlist toEntityFromRequest(CreatePlaylistRequest request, UserDTO user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntity(UpdatePlaylistRequest request, @MappingTarget Playlist entity);

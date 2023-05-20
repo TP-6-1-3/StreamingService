@@ -5,14 +5,14 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="1-Create auth tables" author="Anastasiya Sashina">
+    <changeSet id="1.1-Create auth tables" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-user_info-table.sql" relativeToChangelogFile="true"/>
         <sqlFile path="changeset/create/create-role-table.sql" relativeToChangelogFile="true"/>
         <sqlFile path="changeset/create/create-user_role-table.sql" relativeToChangelogFile="true"/>
         <sqlFile path="changeset/create/create-refresh_token-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="2-Add verification tables" author="Anastasiya Sashina">
+    <changeSet id="2.1-Add verification tables" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-verification-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
@@ -23,22 +23,26 @@
         <sqlFile path="changeset/create/create-song_genre-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="4-Add user's audio library table" author="Anastasiya Sashina">
+    <changeSet id="4.1-Add user's audio library table" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-user_song-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="5-Add playlist table" author="Anastasiya Sashina">
+    <changeSet id="5.1-Add playlist table" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-playlist-table.sql" relativeToChangelogFile="true"/>
         <sqlFile path="changeset/create/create-playlist_song-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="6-Add statistic and history tables" author="Anastasiya Sashina">
+    <changeSet id="6.1-Add statistic and history tables" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-statistic-table.sql" relativeToChangelogFile="true"/>
         <sqlFile path="changeset/create/create-history-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="7-Add friend table" author="Anastasiya Sashina">
+    <changeSet id="7.1-Add friend table" author="Anastasiya Sashina">
         <sqlFile path="changeset/create/create-friend-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="8-Add recommendation table" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-recommendation-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog>

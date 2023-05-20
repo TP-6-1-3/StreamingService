@@ -3,6 +3,8 @@ package ru.vsu.csf.asashina.musicmanBack.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "statistic")
 @AllArgsConstructor
@@ -13,7 +15,8 @@ import lombok.*;
 public class Statistic {
 
     @Id
-    private String statisticId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID statisticId;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
     @JoinColumn(name = "user_id")

@@ -7,26 +7,26 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "history")
+@Table(name = "recommendation")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class History {
+public class Recommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID historyId;
+    private UUID recommendationId;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
     @JoinColumn(name = "song_id")
     private Song song;
 
     @Column(nullable = false)
-    private Instant playTimestamp;
+    private Instant till;
 }

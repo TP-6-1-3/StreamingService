@@ -12,7 +12,6 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.History;
 import ru.vsu.csf.asashina.musicmanBack.repository.HistoryRepository;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import java.time.Instant;
 import java.util.LinkedList;
@@ -37,7 +36,7 @@ public class HistoryService {
         List<History> updatedHistory = new LinkedList<>();
         if (histories.isEmpty()) {
             updatedHistory.add(
-                    historyMapper.createEntity(UuidUtil.generateRandomUUIDInString(), user, song, Instant.now()));
+                    historyMapper.createEntity(user, song, Instant.now()));
         } else {
             boolean exists = false;
             for (History history : histories) {
@@ -49,7 +48,7 @@ public class HistoryService {
             }
             if (updatedHistory.size() == historySize && !exists) {
                 updatedHistory.set(0,
-                        historyMapper.createEntity(UuidUtil.generateRandomUUIDInString(), user, song, Instant.now()));
+                        historyMapper.createEntity(user, song, Instant.now()));
             }
         }
         historyRepository.saveAll(updatedHistory);

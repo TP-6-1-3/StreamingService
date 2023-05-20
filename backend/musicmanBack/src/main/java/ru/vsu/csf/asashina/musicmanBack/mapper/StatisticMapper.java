@@ -13,5 +13,5 @@ public interface StatisticMapper {
     StatisticMapper INSTANCE = Mappers.getMapper(StatisticMapper.class);
 
     @Mapping(target = "amount", expression = "java(0L)")
-    Statistic createStatistic(String statisticId, UserDTO user, GenreDTO genre);
+    Statistic createStatistic(UserDTO user, GenreDTO genre);
 }

@@ -12,7 +12,6 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.StatisticUserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Statistic;
 import ru.vsu.csf.asashina.musicmanBack.repository.StatisticRepository;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +39,10 @@ public class StatisticService {
                 .toList();
         for (Long genreId : genreIds) {
             if (!genreIdFromExistingStatistics.contains(genreId)) {
-                statistics.add(statisticMapper.createStatistic(
-                        UuidUtil.generateRandomUUIDInString(), user, findGenre(genres, genreId)));
+                statistics.add(statisticMapper.createStatistic(user, findGenre(genres, genreId)));
             }
         }
+        statistics.forEach(Statistic::incrementAmount);
         statisticRepository.saveAll(statistics);
     }
 

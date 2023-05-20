@@ -10,9 +10,9 @@ import ru.vsu.csf.asashina.musicmanBack.mapper.VerificationMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Verification;
 import ru.vsu.csf.asashina.musicmanBack.repository.VerificationRepository;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -23,17 +23,16 @@ public class VerificationService {
     private final VerificationMapper verificationMapper;
 
     @Transactional
-    public String createCodeAndSave(UserDTO user) {
-        String code = UuidUtil.generateRandomUUIDInString();
+    public UUID createCodeAndSave(UserDTO user) {
+        UUID code = UUID.randomUUID();
         verificationRepository.save(
-                verificationMapper.toEntityFromParams(
-                        UuidUtil.generateRandomUUIDInString(), user, Instant.now().plusSeconds(3600), code));
+                verificationMapper.toEntityFromParams(user, Instant.now().plusSeconds(3600), code));
         return code;
     }
 
     @Transactional
     public Long getVerificationUserId(String code) {
-        Verification verification = verificationRepository.findByCode(code).orElseThrow(
+        Verification verification = verificationRepository.findByCode(UUID.fromString(code)).orElseThrow(
                 () -> new EntityDoesNotExistException("Данного кода для верификации не существует")
         );
         if (verification.getValidTill().isBefore(Instant.now())) {
@@ -43,7 +42,7 @@ public class VerificationService {
         return verification.getUser().getUserId();
     }
 
-    public String resendCode(UserDTO user) {
+    public UUID resendCode(UserDTO user) {
         if (user.getIsVerified()) {
             throw new AlreadyVerifiedUserException("Пользователь уже верифицирован");
         }
