@@ -7,7 +7,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.AlreadyVerifiedUserException;
 import ru.vsu.csf.asashina.musicmanBack.exception.VerificationExpiredException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.VerificationMapper;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Verification;
 import ru.vsu.csf.asashina.musicmanBack.repository.VerificationRepository;
 

@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.RecommendationDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.service.RecommendationService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;

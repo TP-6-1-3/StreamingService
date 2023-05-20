@@ -12,6 +12,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.PlaylistMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;

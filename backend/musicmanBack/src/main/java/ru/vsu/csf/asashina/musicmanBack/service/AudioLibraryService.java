@@ -9,7 +9,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongExistsDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserWithSongsDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
 
 import java.util.List;

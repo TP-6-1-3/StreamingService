@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.StatisticUserDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.service.HistoryService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;

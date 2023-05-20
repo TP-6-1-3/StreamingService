@@ -13,7 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.CredentialsDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
@@ -34,6 +35,23 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
     private final UserService userService;
+
+    @PostMapping("/credentials")
+    @Operation(summary = "Получение информации о пользователе", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Получение кредов", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CredentialsDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> getCredentials(Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        return ResponseBuilder.build(OK, userService.getCredentials(user));
+    }
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация нового пользователя", tags = AUTH, responses = {
@@ -85,15 +103,14 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Код повторно отправлен", content = {
                     @Content(mediaType = "application/json")
             }),
-            @ApiResponse(
-                    responseCode = "404", description = "Пользователь не найден", content = {
-                    @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDTO.class))
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
-            @ApiResponse(
-                    responseCode = "405", description = "Пользователь уже верифицирован", content = {
-                    @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDTO.class))
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "405", description = "Пользователь уже верифицирован", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
     public ResponseEntity<?> resendCode(Authentication authentication, HttpServletRequest request) {

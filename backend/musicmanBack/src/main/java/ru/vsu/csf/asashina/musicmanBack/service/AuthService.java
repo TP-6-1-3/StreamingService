@@ -10,7 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.WrongCredentialsException;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.VerificationEmailDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;

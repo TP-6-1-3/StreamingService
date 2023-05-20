@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.page.SongPagesDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;

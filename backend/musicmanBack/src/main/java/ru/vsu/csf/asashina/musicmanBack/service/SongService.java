@@ -16,6 +16,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.GenreMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
