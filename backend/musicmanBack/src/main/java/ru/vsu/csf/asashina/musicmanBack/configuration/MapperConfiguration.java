@@ -46,4 +46,9 @@ public class MapperConfiguration {
     public StatisticMapper statisticMapper() {
         return StatisticMapper.INSTANCE;
     }
+
+    @Bean
+    public HistoryMapper historyMapper() {
+        return HistoryMapper.INSTANCE;
+    }
 }

@@ -51,6 +51,7 @@ public class SongService {
     private final SingerService singerService;
     private final GenreService genreService;
     private final StatisticService statisticService;
+    private final HistoryService historyService;
 
     @Value("${songs.directory}")
     private String songsDirectoryPath;
@@ -90,6 +91,7 @@ public class SongService {
         SongDTO song = getSongById(id);
         File songFile = new File(songsDirectoryPath.concat("/").concat(Long.toString(id)));
         statisticService.updateStatistic(user, song.getGenres());
+        historyService.addSongToUsersHistory(user, song);
         return songFile;
     }
 
