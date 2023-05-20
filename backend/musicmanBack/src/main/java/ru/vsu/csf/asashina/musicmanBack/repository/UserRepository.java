@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     @Modifying
-    @Query(nativeQuery = true, value = "UPDATE user_info SET is_verified = true WHERE user_id = :id")
+    @Query("UPDATE User u SET u.isVerified = true WHERE u.userId = :id")
     void verifyUserById(@Param("id") Long id);
 
     @Query("""
@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             FROM User u
             JOIN u.friends f
                 ON f.userId = :userId
-                AND WHERE LOWER(f.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')
+                AND LOWER(f.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')
             """)
     Page<User> findAllFriendsByNickname(@Param("userId") Long userId,
                                         @Param("nickname") String nickname,

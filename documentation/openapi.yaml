@@ -5,7 +5,7 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.3
+  version: 1.0.4
 servers:
   - url: http://localhost:8080/api/v1
     description: Generated server url
@@ -714,6 +714,87 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ExceptionDTO"
+  "/friends/{nickname}":
+    post:
+      tags:
+        - Friend Controller
+      summary: Добавить пользователя в друзья
+      operationId: addFriend
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Пользователь добавлен
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Пользователя не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Пользователь уже в друзьях
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+    delete:
+      tags:
+        - Friend Controller
+      summary: Удалить пользователя из друзей
+      operationId: deleteFriend
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Пользователь удален из друзей
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Пользователя не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '405':
+          description: Пользователя не было в друзьях
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
   "/auth/verify/{code}":
     post:
       tags:
@@ -1305,6 +1386,51 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ExceptionDTO"
+  "/friends":
+    get:
+      tags:
+        - Friend Controller
+      summary: Выводит всех друзей пользователя
+      operationId: getAllFriends
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 5
+        - name: nickname
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Возвращает всех друзей
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FriendPagesDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
   "/playlists/{id}/delete-song/{songId}":
     delete:
       tags:
@@ -1640,6 +1766,25 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/GenreDTO"
+    FriendDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        email:
+          type: string
+        nickname:
+          type: string
+    FriendPagesDTO:
+      type: object
+      properties:
+        paging:
+          "$ref": "#/components/schemas/PagingInfoDTO"
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/FriendDTO"
   securitySchemes:
     Authorization:
       type: http
