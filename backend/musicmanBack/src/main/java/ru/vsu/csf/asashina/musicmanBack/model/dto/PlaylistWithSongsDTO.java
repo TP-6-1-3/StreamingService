@@ -3,9 +3,12 @@ package ru.vsu.csf.asashina.musicmanBack.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
-public class UsersSongDTO {
+public class PlaylistWithSongsDTO {
 
-    private Boolean exists;
+    private PlaylistDTO playlistInfo;
+    private Set<SongDTO> songs;
 }

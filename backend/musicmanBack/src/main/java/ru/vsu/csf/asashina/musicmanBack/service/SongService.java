@@ -11,20 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
-import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInLibraryException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
+import ru.vsu.csf.asashina.musicmanBack.mapper.GenreMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.SongPageDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.entity.Genre;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.SongRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
+import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -46,6 +44,7 @@ public class SongService {
     private final SongRepository songRepository;
 
     private final SongMapper songMapper;
+    private final GenreMapper genreMapper;
 
     private final PageUtil pageUtil;
 
@@ -55,7 +54,7 @@ public class SongService {
     @Value("${songs.directory}")
     private String songsDirectoryPath;
 
-    public Page<SongPageDTO> getAllSongs(
+    public Page<SongDTO> getAllSongs(
             Integer pageNumber,
             Integer size,
             String title,
@@ -71,14 +70,15 @@ public class SongService {
             songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
         }
         pageUtil.checkPageOutOfRange(songs, pageNumber);
-        return songs.map(songMapper::toPageDTOFromEntity);
+        return songs.map(songMapper::toDTOFromEntity);
     }
 
-    public Page<SongPageDTO> getUsersSongs(Long userId, Integer pageNumber, Integer size, String title) {
+    @Deprecated
+    public Page<SongDTO> getUsersSongs(Long userId, Integer pageNumber, Integer size, String title) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
         Page<Song> songs = songRepository.getUsersAll(userId, title, pageRequest);
         pageUtil.checkPageOutOfRange(songs, pageNumber);
-        return songs.map(songMapper::toPageDTOFromEntity);
+        return songs.map(songMapper::toDTOFromEntity);
     }
 
     public SongDTO getSongById(Long id) {
@@ -121,14 +121,8 @@ public class SongService {
     public void addGenresToSong(Long id, AddGenresToSongRequest request) {
         Song song = findSongById(id);
         Set<GenreDTO> genres = genreService.getGenresByIds(request.getGenresIds());
-        List<Long> genresIdsInSong = song.getGenres().stream()
-                .map(Genre::getGenreId)
-                .toList();
-        List<Long> genresIdsFiltered = genres.stream()
-                .map(GenreDTO::getGenreId)
-                .filter(genreId -> !genresIdsInSong.contains(genreId))
-                .toList();
-        songRepository.addGenresToSong(song.getSongId(), genresIdsFiltered);
+        genres.forEach(genre -> song.addGenre(genreMapper.toEntityFromDTO(genre)));
+        songRepository.save(song);
     }
 
     @Transactional
@@ -148,26 +142,28 @@ public class SongService {
                 () -> new EntityDoesNotExistException("Песня с заданным ИД не существует"));
     }
 
-    public boolean isSongInUsersLibrary(Long userId, Long songId) {
-        return songRepository.isSongAlreadyInUsersLibrary(songId, userId);
+    public boolean isSongInUsersLibrary(Long id, Long userId) {
+        return songRepository.isSongAlreadyInUsersLibrary(id, userId);
     }
 
+    @Deprecated
     @Transactional
-    public void addSongToUsersLibrary(Long userId, Long songId) {
-        Song song = findSongById(songId);
-        if (isSongInUsersLibrary(userId, songId)) {
+    public void addSongToUsersLibrary(Long id, Long userId) {
+        Song song = findSongById(id);
+        if (isSongInUsersLibrary(userId, id)) {
             throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
         }
-        songRepository.addSongToUsersLibrary(songId, userId);
+        songRepository.addSongToUsersLibrary(UuidUtil.generateRandomUUIDInString(), id, userId);
     }
 
+    @Deprecated
     @Transactional
-    public void deleteSongFromUsersLibrary(Long userId, Long songId) {
-        Song song = findSongById(songId);
-        if (!isSongInUsersLibrary(userId, songId)) {
-            throw new NoSongInLibraryException("Песни нет в аудиотеке");
+    public void deleteSongFromUsersLibrary(Long id, Long userId) {
+        Song song = findSongById(id);
+        if (!isSongInUsersLibrary(userId, id)) {
+            throw new NoSongInCollectionException("Песни нет в аудиотеке");
         }
-        songRepository.deleteSongFromUsersLibrary(songId, userId);
+        songRepository.deleteSongFromUsersLibrary(id, userId);
     }
 
     @PostConstruct

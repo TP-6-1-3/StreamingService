@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.service.AudioLibraryService;
+import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -22,6 +23,7 @@ import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUDIO_LIBRARY;
 public class AudioLibraryController {
 
     private final AudioLibraryService audioLibraryService;
+    private final UserService userService;
 
     @GetMapping("")
     @Operation(summary = "Выводит все композиции в аудиотеке", tags = AUDIO_LIBRARY, responses = {
@@ -39,15 +41,17 @@ public class AudioLibraryController {
                                          @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
                                          @RequestParam(value = "title", required = false) String title,
                                          Authentication authentication) {
-        return ResponseBuilder.build(audioLibraryService.getAllSongs(
-                (String) authentication.getPrincipal(), pageNumber, size, title),
-                pageNumber, size);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        return ResponseBuilder.build(
+                audioLibraryService.getSongs(user.getUserId(), pageNumber, size, title),
+                pageNumber,
+                size);
     }
 
     @GetMapping("/{songId}/exists")
     @Operation(summary = "Существует ли песня в аудиотеке", tags = AUDIO_LIBRARY, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращается результат", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = UsersSongDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongExistsDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
@@ -60,8 +64,8 @@ public class AudioLibraryController {
             })
     })
     public ResponseEntity<?> songExists(@PathVariable("songId") Long songId, Authentication authentication) {
-        return ResponseBuilder.build(OK, audioLibraryService.doesSongExists(
-                (String) authentication.getPrincipal(), songId));
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        return ResponseBuilder.build(OK, audioLibraryService.isSongInLibrary(user.getUserId(), songId));
     }
 
     @PostMapping("/{songId}")
@@ -83,7 +87,8 @@ public class AudioLibraryController {
             })
     })
     public ResponseEntity<?> addSong(@PathVariable("songId") Long songId, Authentication authentication) {
-        audioLibraryService.addSong((String) authentication.getPrincipal(), songId);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        audioLibraryService.addSongToUsersLibrary(songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
@@ -106,7 +111,8 @@ public class AudioLibraryController {
             })
     })
     public ResponseEntity<?> deleteSong(@PathVariable("songId") Long songId, Authentication authentication) {
-        audioLibraryService.deleteSong((String) authentication.getPrincipal(), songId);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        audioLibraryService.deleteSongFromUsersLibrary(songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 }

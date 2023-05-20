@@ -43,9 +43,13 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH })
     @JoinTable(name = "user_song",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "song_id")})
     private Set<Song> songs;
+
+    public void addSong(Song song) {
+        songs.add(song);
+    }
 }

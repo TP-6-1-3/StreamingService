@@ -10,5 +10,6 @@ public class Tag {
     public static final String SINGER = "Singer Controller";
     public static final String GENRE = "Genre Controller";
     public static final String AUDIO_LIBRARY = "Audio Library Controller";
+    public static final String PLAYLIST = "Playlist Controller";
 
 }

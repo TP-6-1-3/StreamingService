@@ -37,6 +37,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                       @Param("title") String title,
                       Pageable pageable);
 
+    @Deprecated
     @Modifying
     @Query(value = """
             INSERT INTO song_genre(song_id, genre_id)
@@ -61,9 +62,11 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     @Modifying
     @Query(value = """
-            INSERT INTO user_song(user_id, song_id)
-            VALUES(:userId, :songId)""", nativeQuery = true)
-    void addSongToUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+            INSERT INTO user_song(user_song_id, user_id, song_id)
+            VALUES(:userSongId, :userId, :songId)""", nativeQuery = true)
+    void addSongToUsersLibrary(@Param("userSongId") String userSongId,
+                               @Param("songId") Long songId,
+                               @Param("userId") Long userId);
 
     @Modifying
     @Query(value = """

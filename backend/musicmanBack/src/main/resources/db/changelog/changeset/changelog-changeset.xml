@@ -27,4 +27,9 @@
         <sqlFile path="changeset/create/create-user_song-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="5-Add playlist table" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-playlist-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-playlist_song-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
