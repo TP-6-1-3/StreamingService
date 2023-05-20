@@ -5,7 +5,7 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.4
+  version: 1.0.5
 servers:
   - url: http://localhost:8080/api/v1
     description: Generated server url
@@ -447,6 +447,59 @@ paths:
                 "$ref": "#/components/schemas/ExceptionDTO"
         '403':
           description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/recommendations/{nickname}/recommend/{songId}":
+    post:
+      tags:
+        - Recommendation Controller
+      summary: Рекомендовать песню другу
+      operationId: recommendSongToUser
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Рекомендация прошла успешно
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песня или пользователь не существуют
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '405':
+          description: Пользователя нет в друзьях
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Песня уже рекомендована
           content:
             application/json:
               schema:
@@ -1167,6 +1220,31 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ExceptionDTO"
       security: []
+  "/recommendations":
+    get:
+      tags:
+        - Recommendation Controller
+      summary: Выводит все рекомендованные песни друзьями
+      operationId: getRecommendations
+      responses:
+        '200':
+          description: Возвращает все песни
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RecommendationDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
   "/playlists/{id}/exists/{songId}":
     get:
       tags:
@@ -1726,11 +1804,19 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/SingerDTO"
+    RecommendationDTO:
+      type: object
+      properties:
+        songs:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SongDTO"
     PlaylistDTO:
       type: object
       properties:
         playlistId:
           type: string
+          format: uuid
         name:
           type: string
         description:

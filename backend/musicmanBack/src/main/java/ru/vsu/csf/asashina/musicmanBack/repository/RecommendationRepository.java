@@ -29,26 +29,10 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
             JOIN r.user u
                 ON u.userId = :userId
             JOIN r.song s
-                s.songId = :songId""")
+                ON s.songId = :songId""")
     Optional<Recommendation> findByUserIdAndSongId(@Param("userId") Long userId, @Param("songId") Long songId);
 
     @Modifying
-    @Query("""
-            DELETE
-            FROM Recommendation r
-            JOIN r.user u
-                ON u.userId = :userId
-            JOIN r.song s
-                s.songId = :songId""")
-    void deleteByUserIdAndSongId(@Param("userId") Long userId, @Param("songId") Long songId);
-
-    @Modifying
-    @Query("""
-            DELETE
-            FROM Recommendation r
-            JOIN r.user u
-                ON u.userId = :userId
-            JOIN r.song s
-                s.songId = :songId""")
+    @Query("DELETE FROM Recommendation r WHERE r.till < :now")
     void deleteOld(@Param("now") Instant now);
 }

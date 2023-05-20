@@ -11,10 +11,12 @@ import ru.vsu.csf.asashina.musicmanBack.mapper.RecommendationMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.entity.Recommendation;
 import ru.vsu.csf.asashina.musicmanBack.repository.RecommendationRepository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +56,11 @@ public class RecommendationService {
     @Async
     @Transactional
     public void deleteFromRecommendation(Long userId, Long songId) {
-        recommendationRepository.deleteByUserIdAndSongId(userId, songId);
+        Optional<Recommendation> recommendation = recommendationRepository.findByUserIdAndSongId(userId, songId);
+        if (recommendation.isEmpty()) {
+            return;
+        }
+        recommendationRepository.delete(recommendation.get());
     }
 
     @Transactional
