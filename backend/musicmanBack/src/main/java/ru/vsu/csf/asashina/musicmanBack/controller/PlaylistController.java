@@ -75,6 +75,30 @@ public class PlaylistController {
         return ResponseBuilder.build(OK, playlistService.getPlaylistById(id, isAdmin, user.getUserId()));
     }
 
+    @GetMapping("/{id}/exists/{songId}")
+    @Operation(summary = "Выводит информацию о существовании песни в плейлисте", tags = PLAYLIST, responses = {
+            @ApiResponse(responseCode = "200", description = "Возвращает результат", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongExistsDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Плейлист или песня не существуют", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> isSongInPlaylist(
+            @PathVariable("id") String id,
+            @PathVariable("songId") Long songId,
+            Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        return ResponseBuilder.build(
+                OK, new SongExistsDTO(playlistService.isSongInPlaylist(id, songId, user.getUserId())));
+    }
+
     @PostMapping("")
     @Operation(summary = "Создает новый плейлист", tags = PLAYLIST, responses = {
             @ApiResponse(responseCode = "201", description = "Плейлист создан", content = {
@@ -96,5 +120,32 @@ public class PlaylistController {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         playlistService.createPlaylist(request, user);
         return ResponseBuilder.buildWithoutBodyResponse(CREATED);
+    }
+
+    @PostMapping("/{id}/add-song/{songId}")
+    @Operation(summary = "Добавить песню в плейлист", tags = PLAYLIST, responses = {
+            @ApiResponse(responseCode = "200", description = "Песня добавлена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Плейлист или песня не существуют", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Песня уже есть в плейлисте", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> addSongToPlaylist(
+            @PathVariable("id") String id,
+            @PathVariable("songId") Long songId,
+            Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        playlistService.addSongToPlaylist(id, songId, user.getUserId());
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 }

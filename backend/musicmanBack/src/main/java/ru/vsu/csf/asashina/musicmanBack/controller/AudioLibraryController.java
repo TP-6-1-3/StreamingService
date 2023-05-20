@@ -51,7 +51,7 @@ public class AudioLibraryController {
     @GetMapping("/{songId}/exists")
     @Operation(summary = "Существует ли песня в аудиотеке", tags = AUDIO_LIBRARY, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращается результат", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = UsersSongDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongExistsDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UsersSongDTO {
+public class SongExistsDTO {
 
     private Boolean exists;
 }
