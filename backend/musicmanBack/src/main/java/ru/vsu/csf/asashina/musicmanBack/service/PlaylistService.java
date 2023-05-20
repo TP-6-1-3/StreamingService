@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.PlaylistMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
@@ -90,6 +91,25 @@ public class PlaylistService {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, false);
         playlistMapper.updateEntity(request, playlist);
+        playlistRepository.save(playlist);
+    }
+
+    @Transactional
+    public void deletePlaylist(String id, Long userId, boolean isAdmin) {
+        Playlist playlist = findPlaylistById(id);
+        checkUsersAccessToPlaylist(playlist, userId, isAdmin);
+        playlistRepository.delete(playlist);
+    }
+
+    @Transactional
+    public void deleteSongFromPlaylist(String id, Long songId, Long userId) {
+        Playlist playlist = findPlaylistById(id);
+        checkUsersAccessToPlaylist(playlist, userId, false);
+        SongDTO song = songService.getSongById(songId);
+        if (!isSongInPlaylist(playlist, songId)) {
+            throw new NoSongInCollectionException("Песни нет в плейлисте");
+        }
+        playlist.deleteSong(songMapper.toEntityFromDTO(song));
         playlistRepository.save(playlist);
     }
 }

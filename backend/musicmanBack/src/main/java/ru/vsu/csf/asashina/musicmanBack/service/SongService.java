@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
-import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInLibraryException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.GenreMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
@@ -161,7 +161,7 @@ public class SongService {
     public void deleteSongFromUsersLibrary(Long id, Long userId) {
         Song song = findSongById(id);
         if (!isSongInUsersLibrary(userId, id)) {
-            throw new NoSongInLibraryException("Песни нет в аудиотеке");
+            throw new NoSongInCollectionException("Песни нет в аудиотеке");
         }
         songRepository.deleteSongFromUsersLibrary(id, userId);
     }

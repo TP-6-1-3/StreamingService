@@ -6,13 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
-import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInLibraryException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongExistsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserWithSongsDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import java.util.List;
 
@@ -64,7 +62,7 @@ public class AudioLibraryService {
         UserWithSongsDTO userWithSongs = userService.getUserWithSongs(userId);
         SongDTO song = songService.getSongById(songId);
         if (!isSongInLibrary(userWithSongs, songId)) {
-            throw new NoSongInLibraryException("Песни нет в аудиотеке");
+            throw new NoSongInCollectionException("Песни нет в аудиотеке");
         }
         userWithSongs.deleteSong(song);
         userService.updateUserWithSongs(userWithSongs);

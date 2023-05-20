@@ -16,8 +16,7 @@ import ru.vsu.csf.asashina.musicmanBack.service.PlaylistService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.PLAYLIST;
 
 @RestController
@@ -156,7 +155,7 @@ public class PlaylistController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Плейлист не существуют", content = {
+            @ApiResponse(responseCode = "404", description = "Плейлист не существует", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
@@ -165,6 +164,54 @@ public class PlaylistController {
                                             Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         playlistService.updatePlaylist(id, request, user.getUserId());
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление плейлиста", tags = PLAYLIST, responses = {
+            @ApiResponse(responseCode = "204", description = "Плейлист удален", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Плейлист не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deletePlaylist(@PathVariable("id") String id, Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        boolean isAdmin = userService.isAdmin(user);
+        playlistService.deletePlaylist(id, user.getUserId(), isAdmin);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
+    }
+
+    @DeleteMapping("/{id}/delete-song/{songId}")
+    @Operation(summary = "Удаление песни из плейлиста", tags = PLAYLIST, responses = {
+            @ApiResponse(responseCode = "200", description = "Песня удалена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Плейлист или песня не существуют", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "405", description = "Песни нет в плейлисте", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteSongFromPlaylist(@PathVariable("id") String id,
+                                                    @PathVariable("songId") Long songId,
+                                                    Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        playlistService.deleteSongFromPlaylist(id, songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 }
