@@ -17,7 +17,7 @@ public interface PlaylistRepository extends JpaRepository<Playlist, String> {
             FROM Playlist p
             JOIN p.user u
                 ON u.userId = :userId
-            WHERE LOWER(s.name) LIKE CONCAT('%', LOWER(:name), '%')""")
+            WHERE LOWER(p.name) LIKE CONCAT('%', LOWER(:name), '%')""")
     Page<Playlist> getAll(@Param("userId") Long userId, @Param("name") String name, Pageable pageable);
 
     @Deprecated
