@@ -25,4 +25,8 @@ public class Statistic {
 
     @Column(nullable = false)
     private Long amount;
+
+    public void incrementAmount() {
+        amount++;
+    }
 }

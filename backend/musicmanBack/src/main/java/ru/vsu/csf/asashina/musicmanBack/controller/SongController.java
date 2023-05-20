@@ -10,12 +10,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.AddGenresToSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.SongService;
+import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -32,6 +34,7 @@ import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SONG;
 public class SongController {
 
     private final SongService songService;
+    private final UserService userService;
 
     @GetMapping("")
     @Operation(summary = "Выводит все песни по страницам", tags = SONG, responses = {
@@ -83,8 +86,10 @@ public class SongController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> getSongFileById(Long id) throws IOException {
-        FileSystemResource in = new FileSystemResource(songService.getFileFromSystem(id));
+    public ResponseEntity<?> getSongFileById(@PathVariable("id") Long id,
+                                             Authentication authentication) throws IOException {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        FileSystemResource in = new FileSystemResource(songService.getFileFromSystem(user, id));
         var headers = new HttpHeaders();
         headers.setContentLength(in.contentLength());
         return new ResponseEntity(in, headers, OK);
