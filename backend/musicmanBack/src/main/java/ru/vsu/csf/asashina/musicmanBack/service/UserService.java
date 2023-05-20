@@ -34,6 +34,13 @@ public class UserService {
         return userMapper.toDTOFromEntity(user);
     }
 
+    public UserDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityDoesNotExistException("Пользователь с данным ИД не существует")
+        );
+        return userMapper.toDTOFromEntity(user);
+    }
+
     public UserDTO getUserByEmailWithVerificationCheck(String email) {
         UserDTO user = getUserByEmail(email);
         if (!user.getIsVerified()) {
