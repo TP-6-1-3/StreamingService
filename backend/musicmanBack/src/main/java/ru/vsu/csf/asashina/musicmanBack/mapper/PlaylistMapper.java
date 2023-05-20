@@ -6,7 +6,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.PlaylistDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.PlaylistWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
-import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.PlaylistRequest;
 
 @Mapper(uses = {SongMapper.class, UserMapper.class})
 public interface PlaylistMapper {
@@ -17,5 +17,5 @@ public interface PlaylistMapper {
 
     PlaylistWithSongsDTO toDTOWithSongFromEntity(Playlist entity);
 
-    Playlist toEntityFromCreateRequest(String playlistId, CreatePlaylistRequest request, UserDTO user);
+    Playlist toEntityFromRequest(String playlistId, PlaylistRequest request, UserDTO user);
 }

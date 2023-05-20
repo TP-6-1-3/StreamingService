@@ -20,11 +20,13 @@ public interface PlaylistRepository extends JpaRepository<Playlist, String> {
             WHERE LOWER(s.name) LIKE CONCAT('%', LOWER(:name), '%')""")
     Page<Playlist> getAll(@Param("userId") Long userId, @Param("name") String name, Pageable pageable);
 
+    @Deprecated
     @Query(value = """
             SELECT EXISTS(SELECT 1 FROM playlist_song WHERE song_id = :songId AND playlist_id = :playlistId)""",
             nativeQuery = true)
     boolean isSongInPlaylist(@Param("playlistId") String playlistId, @Param("songId") Long songId);
 
+    @Deprecated
     @Modifying
     @Query(value = """
             INSERT INTO playlist_song(playlist_song_id, playlist_id, song_id)

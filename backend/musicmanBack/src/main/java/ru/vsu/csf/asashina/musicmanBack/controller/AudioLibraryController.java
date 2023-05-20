@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
-import ru.vsu.csf.asashina.musicmanBack.service.SongService;
+import ru.vsu.csf.asashina.musicmanBack.service.AudioLibraryService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
@@ -22,7 +22,7 @@ import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUDIO_LIBRARY;
 @RequestMapping("/library")
 public class AudioLibraryController {
 
-    private final SongService songService;
+    private final AudioLibraryService audioLibraryService;
     private final UserService userService;
 
     @GetMapping("")
@@ -43,7 +43,7 @@ public class AudioLibraryController {
                                          Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         return ResponseBuilder.build(
-                songService.getUsersSongs(user.getUserId(), pageNumber, size, title),
+                audioLibraryService.getSongs(user.getUserId(), pageNumber, size, title),
                 pageNumber,
                 size);
     }
@@ -65,7 +65,7 @@ public class AudioLibraryController {
     })
     public ResponseEntity<?> songExists(@PathVariable("songId") Long songId, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        return ResponseBuilder.build(OK, songService.isSongInUsersLibrary(user.getUserId(), songId));
+        return ResponseBuilder.build(OK, audioLibraryService.isSongInLibrary(user.getUserId(), songId));
     }
 
     @PostMapping("/{songId}")
@@ -88,7 +88,7 @@ public class AudioLibraryController {
     })
     public ResponseEntity<?> addSong(@PathVariable("songId") Long songId, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        songService.addSongToUsersLibrary(user.getUserId(), songId);
+        audioLibraryService.addSongToUsersLibrary(songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
@@ -112,7 +112,7 @@ public class AudioLibraryController {
     })
     public ResponseEntity<?> deleteSong(@PathVariable("songId") Long songId, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        songService.deleteSongFromUsersLibrary(user.getUserId(), songId);
+        audioLibraryService.deleteSongFromUsersLibrary(songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 }

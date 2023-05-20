@@ -10,6 +10,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.PasswordsDoNotMatch;
 import ru.vsu.csf.asashina.musicmanBack.exception.UserNotVerifiedException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.UserWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.User;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.UserRepository;
@@ -61,6 +62,17 @@ public class UserService {
     @Transactional
     public void verifyUserById(Long id) {
         userRepository.verifyUserById(id);
+    }
+
+    public UserWithSongsDTO getUserWithSongs(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityDoesNotExistException("Пользователь не существует с заданным ИД"));
+        return userMapper.toWithSongsDTOFromEntity(user);
+    }
+
+    @Transactional
+    public void updateUserWithSongs(UserWithSongsDTO user) {
+        userRepository.save(userMapper.toEntityFromDTO(user));
     }
 
     public boolean isAdmin(UserDTO user) {

@@ -28,9 +28,13 @@ public class Playlist {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
     @JoinTable(name = "playlist_song",
             joinColumns = {@JoinColumn(name = "playlist_id")},
             inverseJoinColumns = {@JoinColumn(name = "song_id")})
     private Set<Song> songs;
+
+    public void addSong(Song song) {
+        songs.add(song);
+    }
 }

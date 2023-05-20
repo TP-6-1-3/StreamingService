@@ -6,12 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
-import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.PlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.PlaylistService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
@@ -95,8 +94,7 @@ public class PlaylistController {
             @PathVariable("songId") Long songId,
             Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        return ResponseBuilder.build(
-                OK, new SongExistsDTO(playlistService.isSongInPlaylist(id, songId, user.getUserId())));
+        return ResponseBuilder.build(OK, playlistService.isSongInPlaylist(id, songId, user.getUserId()));
     }
 
     @PostMapping("")
@@ -115,7 +113,7 @@ public class PlaylistController {
             })
     })
     public ResponseEntity<?> createPlaylist(
-            @RequestBody @Valid CreatePlaylistRequest request,
+            @RequestBody @Valid PlaylistRequest request,
             Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         playlistService.createPlaylist(request, user);
@@ -148,4 +146,24 @@ public class PlaylistController {
         playlistService.addSongToPlaylist(id, songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
+
+//    @PutMapping("/{id}")
+//    @Operation(summary = "Обновление плейлиста", tags = PLAYLIST, responses = {
+//            @ApiResponse(responseCode = "200", description = "Плейлист обновлен", content = {
+//                    @Content(mediaType = "application/json")
+//            }),
+//            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+//                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+//            }),
+//            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+//                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+//            }),
+//            @ApiResponse(responseCode = "404", description = "Плейлист не существуют", content = {
+//                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+//            })
+//    })
+//    public ResponseEntity<?> updatePlaylist(@PathVariable("id") String id,
+//                                            @RequestBody @Valid PlaylistRequest playlistRequest) {
+//
+//    }
 }

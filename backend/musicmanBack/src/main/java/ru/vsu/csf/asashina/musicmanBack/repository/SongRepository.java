@@ -37,6 +37,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
                       @Param("title") String title,
                       Pageable pageable);
 
+    @Deprecated
     @Modifying
     @Query(value = """
             INSERT INTO song_genre(song_id, genre_id)

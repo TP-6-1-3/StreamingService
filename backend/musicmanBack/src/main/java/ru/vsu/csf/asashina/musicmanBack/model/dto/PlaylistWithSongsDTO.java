@@ -10,5 +10,5 @@ import java.util.Set;
 public class PlaylistWithSongsDTO {
 
     private PlaylistDTO playlistInfo;
-    private Set<SongPageDTO> songs;
+    private Set<SongDTO> songs;
 }
