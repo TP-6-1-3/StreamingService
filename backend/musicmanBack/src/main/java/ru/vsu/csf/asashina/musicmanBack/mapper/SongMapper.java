@@ -20,6 +20,9 @@ public interface SongMapper {
     @Mapping(target = "singer", expression = "java(entity.getSinger().getFullName())")
     SongPageDTO toPageDTOFromEntity(Song entity);
 
+    @Mapping(target = "singer", expression = "java(entity.getSinger().getFullName())")
+    Set<SongPageDTO> toPageDTOFromEntitySet(Set<Song> entities);
+
     Song toEntityFromRequest(CreateSongRequest request, SingerDTO singer, Set<GenreDTO> genres);
 
     SongDTO toDTOFromEntity(Song entity);

@@ -62,4 +62,8 @@ public class UserService {
     public void verifyUserById(Long id) {
         userRepository.verifyUserById(id);
     }
+
+    public boolean isAdmin(UserDTO user) {
+        return roleService.isAdmin(user.getRoles());
+    }
 }

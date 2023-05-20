@@ -8,6 +8,9 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.RoleDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Role;
 import ru.vsu.csf.asashina.musicmanBack.repository.RoleRepository;
 
+import java.util.Set;
+
+import static ru.vsu.csf.asashina.musicmanBack.model.constant.Role.ADMIN;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Role.USER;
 
 @Service
@@ -23,5 +26,9 @@ public class RoleService {
                 () -> new EntityDoesNotExistException("Роль с данным именем не существует")
         );
         return roleMapper.toDTOFromEntity(role);
+    }
+
+    public boolean isAdmin(Set<RoleDTO> roles) {
+        return roles.stream().anyMatch(role -> role.getName().equals(ADMIN));
     }
 }

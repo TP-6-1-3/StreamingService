@@ -3,6 +3,7 @@ package ru.vsu.csf.asashina.musicmanBack.controller;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,7 +14,6 @@ import ru.vsu.csf.asashina.musicmanBack.exception.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
-import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
