@@ -9,10 +9,10 @@ import ru.vsu.csf.asashina.musicmanBack.annotation.NullOrNotBlank;
 @AllArgsConstructor
 public class UpdatePlaylistRequest {
 
-    @Size(max = 100)
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "Указанное имя не должно быть пустым")
+    @Size(max = 100, message = "Имя не должно превышать 100 символов")
     private String name;
 
-    @NullOrNotBlank
+    @NullOrNotBlank(message = "Указанное описание не должно быть пустым")
     private String description;
 }
