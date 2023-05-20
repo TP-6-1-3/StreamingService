@@ -9,9 +9,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.enumeration.SongSort;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSingerRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateSingerRequest;
@@ -35,7 +33,7 @@ public class SingerController {
     @GetMapping("")
     @Operation(summary = "Выводит всех исполнителей по страницам", tags = SINGER, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает всех исполнителей по страницам", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = PagingDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SingerPagesDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
@@ -69,7 +67,7 @@ public class SingerController {
     @GetMapping("/{id}/songs")
     @Operation(summary = "Выводит все песни исполнителя по страницам", tags = SINGER, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает все песни по страницам", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = PagingDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongPagesDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))

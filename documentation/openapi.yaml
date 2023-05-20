@@ -1,0 +1,1165 @@
+openapi: 3.0.1
+info:
+  title: Musicman API
+  description: Описание всех эндпоинтов сервиса "Musicman"
+  contact:
+    name: Анастасия Сашина
+    email: sashina@cs.vsu.ru
+  version: 1.0.1
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Generated server url
+security:
+  - Bearer: []
+paths:
+  "/singers/{id}":
+    get:
+      tags:
+        - Singer Controller
+      summary: Выводит исполнителя по ИД
+      operationId: getSingerById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает информацию об исполнителе
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SingerDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Исполнитель не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    put:
+      tags:
+        - Singer Controller
+      summary: Обновление описания исполнителя
+      operationId: updateSinger
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateSingerRequest"
+        required: true
+      responses:
+        '200':
+          description: Описание обновлено
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Исполнитель не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+    delete:
+      tags:
+        - Singer Controller
+      summary: Удаление исполнителя
+      operationId: deleteSinger
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Исполнитель удален
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Исполнитель не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/songs":
+    get:
+      tags:
+        - Song Controller
+      summary: Выводит все песни по страницам
+      operationId: getAllSongs
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 5
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: BY_TITLE
+            enum:
+              - BY_TITLE
+              - BY_DURATION
+        - name: isAsc
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: genres
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: singer
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает все песни по страницам
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SongPagesDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    post:
+      tags:
+        - Song Controller
+      summary: Создание новой песни
+      operationId: createSong
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/CreateSongRequest"
+        required: true
+      responses:
+        '201':
+          description: Песня создана
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Отсутствует доступ
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Не существует исполнитель или жанр
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/songs/{id}/add-genres":
+    post:
+      tags:
+        - Song Controller
+      summary: Добавление жанров к песни
+      operationId: addGenresToSong
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AddGenresToSongRequest"
+        required: true
+      responses:
+        '200':
+          description: Жанры добавлены
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Отсутствует доступ
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Не существует исполнитель или жанр
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/singers":
+    get:
+      tags:
+        - Singer Controller
+      summary: Выводит всех исполнителей по страницам
+      operationId: getAllSingers
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 5
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: isAsc
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Возвращает всех исполнителей по страницам
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SingerPagesDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    post:
+      tags:
+        - Singer Controller
+      summary: Создание исполнителя
+      operationId: createSinger
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateSingerRequest"
+        required: true
+      responses:
+        '201':
+          description: Исполнитель был создан
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/library/{songId}":
+    post:
+      tags:
+        - Audio Library Controller
+      summary: Добавляет песню в аудиотеку
+      operationId: addSong
+      parameters:
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Песня добавлена
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песня не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Песня уже в аудиотеке
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+    delete:
+      tags:
+        - Audio Library Controller
+      summary: Удаляет песню из аудиотеки
+      operationId: deleteSong_1
+      parameters:
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Песня удалена
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песня не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '405':
+          description: Песни нет в аудиотеке
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/genres":
+    get:
+      tags:
+        - Genre Controller
+      summary: Выводит все жанры
+      operationId: getAllGenres
+      responses:
+        '200':
+          description: Возвращает все жанры
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenresDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    post:
+      tags:
+        - Genre Controller
+      summary: Создает новый жанр
+      operationId: createGenre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateGenreRequest"
+        required: true
+      responses:
+        '201':
+          description: Жанр создан
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Жанр уже существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/auth/verify/{code}":
+    post:
+      tags:
+        - Auth Controller
+      summary: Верификация пользователя
+      operationId: verifyUser
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Пользователь верифицирован
+          content:
+            application/json: {}
+        '404':
+          description: Ссылка невалидна
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '405':
+          description: Истекло время действия ссылки
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+  "/auth/resend-code":
+    post:
+      tags:
+        - Auth Controller
+      summary: Повторная отправка кода
+      operationId: resendCode
+      responses:
+        '200':
+          description: Код повторно отправлен
+          content:
+            application/json: {}
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '405':
+          description: Пользователь уже верифицирован
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/auth/register":
+    post:
+      tags:
+        - Auth Controller
+      summary: Регистрация нового пользователя
+      operationId: signUpNewUserUsingForm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UserSignUpRequest"
+        required: true
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TokensDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Пользователь с указанной почтой или указанным ником уже существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+  "/auth/refresh-token":
+    post:
+      tags:
+        - Auth Controller
+      summary: Обновление access токена
+      operationId: refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/RefreshTokenRequest"
+        required: true
+      responses:
+        '200':
+          description: Возвращение обновленных токенов
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TokensDTO"
+        '400':
+          description: Токен отсутствует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '401':
+          description: Токен не валиден
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Токен не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+  "/auth/login":
+    post:
+      tags:
+        - Auth Controller
+      summary: Вход пользователя
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        '200':
+          description: Пользователь успешно вошел в систему
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TokensDTO"
+        '400':
+          description: Неправильный пароль или почта
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+  "/songs/{id}":
+    get:
+      tags:
+        - Song Controller
+      summary: Выводит информацию о песне
+      operationId: getSongById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает информацию о песне
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SongDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песни не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    delete:
+      tags:
+        - Song Controller
+      summary: Удаление песни
+      operationId: deleteSong
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Песня удалена
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Отсутствует доступ
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песня не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/songs/{id}/file":
+    get:
+      tags:
+        - Song Controller
+      summary: Возвращает mp3 файл
+      operationId: getSongFileById
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает файл
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SongDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песни не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/singers/{id}/songs":
+    get:
+      tags:
+        - Singer Controller
+      summary: Выводит все песни исполнителя по страницам
+      operationId: getSingersSongs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 5
+      responses:
+        '200':
+          description: Возвращает все песни по страницам
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SongPagesDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Исполнитель не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+  "/library":
+    get:
+      tags:
+        - Audio Library Controller
+      summary: Выводит все композиции в аудиотеке
+      operationId: getAllSongs_1
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 5
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Возвращает все песни
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SongPagesDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/library/{songId}/exists":
+    get:
+      tags:
+        - Audio Library Controller
+      summary: Существует ли песня в аудиотеке
+      operationId: songExists
+      parameters:
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращается результат
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UsersSongDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Песня не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/genres/{id}":
+    get:
+      tags:
+        - Genre Controller
+      summary: Возвращает жанр по ИД
+      operationId: getGenreById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает жанр
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenreDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Жанр не найден
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+      security: []
+    delete:
+      tags:
+        - Genre Controller
+      summary: Удаляет жанр
+      operationId: deleteGenre
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Жанр удален
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '404':
+          description: Жанр не найден
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+components:
+  schemas:
+    ExceptionDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    UpdateSingerRequest:
+      required:
+        - description
+      type: object
+      properties:
+        description:
+          type: string
+    CreateSongRequest:
+      required:
+        - duration
+        - singerId
+        - title
+      type: object
+      properties:
+        title:
+          maxLength: 255
+          minLength: 0
+          type: string
+        duration:
+          "$ref": "#/components/schemas/LocalTime"
+        singerId:
+          type: integer
+          format: int64
+        genreIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        file:
+          type: string
+          format: binary
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
+    AddGenresToSongRequest:
+      required:
+        - genresIds
+      type: object
+      properties:
+        genresIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    CreateSingerRequest:
+      required:
+        - description
+        - fullName
+      type: object
+      properties:
+        fullName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          type: string
+    CreateGenreRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+    TokensDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+    UserSignUpRequest:
+      required:
+        - email
+        - firstName
+        - lastName
+        - nickname
+        - password
+        - repeatPassword
+      type: object
+      properties:
+        firstName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        email:
+          type: string
+        nickname:
+          maxLength: 100
+          minLength: 0
+          type: string
+        password:
+          maxLength: 20
+          minLength: 8
+          type: string
+        repeatPassword:
+          maxLength: 20
+          minLength: 8
+          type: string
+    RefreshTokenRequest:
+      required:
+        - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          type: string
+    LoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    GenreDTO:
+      type: object
+      properties:
+        genreId:
+          type: integer
+          format: int64
+        name:
+          type: string
+    PagingInfoDTO:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    SongPageDTO:
+      type: object
+      properties:
+        songId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        duration:
+          "$ref": "#/components/schemas/LocalTime"
+        singer:
+          type: string
+        genres:
+          uniqueItems: true
+          type: array
+          items:
+            "$ref": "#/components/schemas/GenreDTO"
+    SongPagesDTO:
+      type: object
+      properties:
+        paging:
+          "$ref": "#/components/schemas/PagingInfoDTO"
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SongPageDTO"
+    SingerDTO:
+      type: object
+      properties:
+        singerId:
+          type: integer
+          format: int64
+        fullName:
+          type: string
+        description:
+          type: string
+    SongDTO:
+      type: object
+      properties:
+        songId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        duration:
+          "$ref": "#/components/schemas/LocalTime"
+        singer:
+          "$ref": "#/components/schemas/SingerDTO"
+        genres:
+          uniqueItems: true
+          type: array
+          items:
+            "$ref": "#/components/schemas/GenreDTO"
+    SingerPagesDTO:
+      type: object
+      properties:
+        paging:
+          "$ref": "#/components/schemas/PagingInfoDTO"
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SingerDTO"
+    UsersSongDTO:
+      type: object
+      properties:
+        exists:
+          type: boolean
+    GenresDTO:
+      type: object
+      properties:
+        genres:
+          type: array
+          items:
+            "$ref": "#/components/schemas/GenreDTO"
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
