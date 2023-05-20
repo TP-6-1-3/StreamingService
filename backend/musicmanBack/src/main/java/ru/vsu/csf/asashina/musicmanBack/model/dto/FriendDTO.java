@@ -3,12 +3,11 @@ package ru.vsu.csf.asashina.musicmanBack.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
-public class PagingDTO<T> {
+public class FriendDTO {
 
-    private PagingInfoDTO paging;
-    private List<T> data;
+    private Long userId;
+    private String email;
+    private String nickname;
 }

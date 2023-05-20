@@ -49,7 +49,17 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "song_id")})
     private Set<Song> songs;
 
-    public void addSong(Song song) {
-        songs.add(song);
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH })
+    @JoinTable(name = "friend",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "friend_id")})
+    private Set<User> friends;
+
+    public void addFriend(User friend) {
+        friends.add(friend);
+    }
+
+    public void deleteFriend(User friend) {
+        friends.remove(friend);
     }
 }

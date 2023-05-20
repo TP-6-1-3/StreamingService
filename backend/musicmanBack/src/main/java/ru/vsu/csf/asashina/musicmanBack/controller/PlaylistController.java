@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PlaylistPagesDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.PlaylistService;
@@ -23,8 +24,6 @@ import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.PLAYLIST;
 @AllArgsConstructor
 @RequestMapping("/playlists")
 public class PlaylistController {
-
-    //TODO: не забывать про первичные ключи и роль админа!
 
     private final PlaylistService playlistService;
     private final UserService userService;

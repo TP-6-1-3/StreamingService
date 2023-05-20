@@ -63,7 +63,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler({VerificationExpiredException.class, AlreadyVerifiedUserException.class,
-            NoSongInCollectionException.class})
+            NoSongInCollectionException.class, NoFriendException.class})
     public ResponseEntity<?> methodNotAllowedExceptionHandler(Exception e) {
         return ResponseBuilder.build(METHOD_NOT_ALLOWED, e);
     }

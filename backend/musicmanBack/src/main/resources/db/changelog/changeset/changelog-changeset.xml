@@ -37,4 +37,8 @@
         <sqlFile path="changeset/create/create-history-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="7-Add friend table" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-friend-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

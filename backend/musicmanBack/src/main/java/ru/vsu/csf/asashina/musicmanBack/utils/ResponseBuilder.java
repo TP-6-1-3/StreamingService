@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingInfoDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PagingDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PagingInfoDTO;
 
 import java.util.List;
 import java.util.Map;

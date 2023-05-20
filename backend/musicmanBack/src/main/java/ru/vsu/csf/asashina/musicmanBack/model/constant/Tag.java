@@ -13,5 +13,6 @@ public class Tag {
     public static final String PLAYLIST = "Playlist Controller";
     public static final String STATISTIC = "Statistic Controller";
     public static final String HISTORY = "History Controller";
+    public static final String FRIEND = "Friend Controller";
 
 }

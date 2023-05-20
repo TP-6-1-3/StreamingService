@@ -41,6 +41,13 @@ public class UserService {
         return userMapper.toDTOFromEntity(user);
     }
 
+    public UserDTO getUserByNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname).orElseThrow(
+                () -> new EntityDoesNotExistException("Пользователь с данным ником не существует")
+        );
+        return userMapper.toDTOFromEntity(user);
+    }
+
     public UserDTO getUserByEmailWithVerificationCheck(String email) {
         UserDTO user = getUserByEmail(email);
         if (!user.getIsVerified()) {
