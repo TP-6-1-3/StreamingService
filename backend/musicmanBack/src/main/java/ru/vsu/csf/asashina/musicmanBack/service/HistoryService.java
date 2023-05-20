@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.mapper.HistoryMapper;
+import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.HistoryDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.History;
@@ -23,6 +25,7 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
 
     private final HistoryMapper historyMapper;
+    private final SongMapper songMapper;
 
     @Value("${songs.historySize}")
     private Integer historySize;
@@ -50,5 +53,12 @@ public class HistoryService {
             }
         }
         historyRepository.saveAll(updatedHistory);
+    }
+
+    public HistoryDTO getHistory(Long userId) {
+        List<History> histories = historyRepository.findByUserId(userId);
+        return new HistoryDTO(histories.stream()
+                .map(history -> songMapper.toDTOFromEntity(history.getSong()))
+                .toList());
     }
 }
