@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.History;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface HistoryRepository extends JpaRepository<History, String> {
+public interface HistoryRepository extends JpaRepository<History, UUID> {
 
     @Query("""
             SELECT h

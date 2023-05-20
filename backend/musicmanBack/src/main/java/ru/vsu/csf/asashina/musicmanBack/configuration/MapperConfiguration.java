@@ -51,4 +51,9 @@ public class MapperConfiguration {
     public HistoryMapper historyMapper() {
         return HistoryMapper.INSTANCE;
     }
+
+    @Bean
+    public RecommendationMapper recommendationMapper() {
+        return RecommendationMapper.INSTANCE;
+    }
 }

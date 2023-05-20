@@ -3,13 +3,11 @@ package ru.vsu.csf.asashina.musicmanBack.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.UUID;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class PlaylistDTO {
+public class RecommendationDTO {
 
-    private UUID playlistId;
-    private String name;
-    private String description;
+    private List<SongDTO> songs;
 }

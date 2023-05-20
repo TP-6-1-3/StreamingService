@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS friend
 (
-    user_friend_id VARCHAR(40) PRIMARY KEY,
+    user_friend_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id      BIGINT REFERENCES user_info (user_id) ON DELETE CASCADE NOT NULL,
     friend_id      BIGINT REFERENCES user_info (user_id) ON DELETE CASCADE NOT NULL
 );

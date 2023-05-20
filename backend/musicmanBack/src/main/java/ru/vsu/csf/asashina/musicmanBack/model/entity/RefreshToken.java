@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Table(name = "refresh_token")
 @Entity
@@ -17,7 +18,7 @@ import java.time.Instant;
 public class RefreshToken {
 
     @Id
-    private String token;
+    private UUID token;
 
     @Column(nullable = false)
     private Instant validTill;

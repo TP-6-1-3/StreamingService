@@ -16,6 +16,8 @@ import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.template.EmailTemplate;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -33,13 +35,13 @@ public class AuthService {
     @Transactional
     public TokensDTO signUp(UserSignUpRequest request, String verificationLink) {
         UserDTO registeredUser = userService.registerUser(request);
-        String code = verificationService.createCodeAndSave(registeredUser);
+        UUID code = verificationService.createCodeAndSave(registeredUser);
         sendCode(registeredUser, verificationLink, code);
         return tokenService.createTokens(registeredUser);
     }
 
     @Async
-    private void sendCode(UserDTO user, String verificationLink, String code) {
+    private void sendCode(UserDTO user, String verificationLink, UUID code) {
         emailService.sendTemplate(
                 user.getEmail(),
                 "Подтверждение регистрации на платформе Musicman",
@@ -47,13 +49,13 @@ public class AuthService {
                 new VerificationEmailDTO(
                         user.getFirstName() + " " + user.getLastName(),
                         mainPage,
-                        verificationLink + "/" + code
+                        verificationLink + "/" + code.toString()
                 ));
     }
 
     @Transactional
     public void resendCode(UserDTO user, String verificationLink) {
-        String code = verificationService.resendCode(user);
+        UUID code = verificationService.resendCode(user);
         sendCode(user, verificationLink, code);
     }
 

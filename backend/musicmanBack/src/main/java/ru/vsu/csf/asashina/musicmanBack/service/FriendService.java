@@ -60,4 +60,10 @@ public class FriendService {
         user.deleteFriend(friend);
         userRepository.save(user);
     }
+
+    public boolean hasFriend(UserDTO userDTO, String nickname) {
+        User user = userMapper.toEntityFromDTO(userDTO);
+        User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
+        return hasFriend(user.getFriends(), friend.getUserId());
+    }
 }

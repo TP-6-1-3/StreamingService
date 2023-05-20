@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Statistic;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface StatisticRepository extends JpaRepository<Statistic, String> {
+public interface StatisticRepository extends JpaRepository<Statistic, UUID> {
 
     @Query("""
             SELECT s

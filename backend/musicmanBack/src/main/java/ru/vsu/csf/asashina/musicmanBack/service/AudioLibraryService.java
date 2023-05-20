@@ -20,6 +20,7 @@ public class AudioLibraryService {
 
     private final UserService userService;
     private final SongService songService;
+    private final RecommendationService recommendationService;
 
     private final PageUtil pageUtil;
 
@@ -53,6 +54,7 @@ public class AudioLibraryService {
         if (isSongInLibrary(userWithSongs, songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
         }
+        recommendationService.deleteFromRecommendation(userId, songId);
         userWithSongs.addSong(song);
         userService.updateUserWithSongs(userWithSongs);
     }

@@ -20,11 +20,11 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.RefreshToken;
 import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.RefreshTokenRepository;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
 
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -99,7 +99,7 @@ public class TokenService {
 
     @Transactional
     public TokensDTO createTokens(UserDTO user) {
-        return new TokensDTO(generateAccessToken(user), generateRefreshToken(user));
+        return new TokensDTO(generateAccessToken(user), generateRefreshToken(user).toString());
     }
 
     private String generateAccessToken(UserDTO user) {
@@ -117,8 +117,8 @@ public class TokenService {
                 .sign(getAlgorithm());
     }
 
-    private String generateRefreshToken(UserDTO user) {
-        String refreshToken = UuidUtil.generateRandomUUIDInString();
+    private UUID generateRefreshToken(UserDTO user) {
+        UUID refreshToken = UUID.randomUUID();
         refreshTokenRepository.saveNewRefreshToken(
                 refreshToken,
                 Instant.now().plusSeconds(fromDaysToSeconds(refreshTokenExpireTimeInDays)),
@@ -135,12 +135,12 @@ public class TokenService {
         checkIfTokenIsExpired(refreshToken.getValidTill());
         return new TokensDTO(
                 generateAccessToken(userService.getUserByEmail(refreshToken.getUser().getEmail())),
-                refreshToken.getToken()
+                refreshToken.getToken().toString()
         );
     }
 
     private RefreshToken findRefreshTokenById(String refreshToken) {
-        return refreshTokenRepository.findById(refreshToken).orElseThrow(
+        return refreshTokenRepository.findById(UUID.fromString(refreshToken)).orElseThrow(
                 () -> new EntityDoesNotExistException("Токен не существует")
         );
     }

@@ -17,7 +17,8 @@ import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.PlaylistRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
-import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
+
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +32,7 @@ public class PlaylistService {
     private final PageUtil pageUtil;
 
     private final SongService songService;
+    private final RecommendationService recommendationService;
 
     public Page<PlaylistDTO> getAll(Long userId, Integer pageNumber, Integer size, String name) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
@@ -52,14 +54,13 @@ public class PlaylistService {
     }
 
     private Playlist findPlaylistById(String id) {
-        return playlistRepository.findById(id).orElseThrow(
+        return playlistRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new EntityDoesNotExistException("Плейлиста с данным ИД не существует"));
     }
 
     @Transactional
     public void createPlaylist(CreatePlaylistRequest request, UserDTO user) {
-        Playlist playlist = playlistMapper.toEntityFromRequest(
-                UuidUtil.generateRandomUUIDInString(), request, user);
+        Playlist playlist = playlistMapper.toEntityFromRequest(request, user);
         playlistRepository.save(playlist);
     }
 
@@ -82,6 +83,7 @@ public class PlaylistService {
         if (isSongInPlaylist(playlist, songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в плейлисте");
         }
+        recommendationService.deleteFromRecommendation(userId, songId);
         playlist.addSong(songMapper.toEntityFromDTO(song));
         playlistRepository.save(playlist);
     }
