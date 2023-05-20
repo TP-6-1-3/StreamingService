@@ -32,4 +32,9 @@
         <sqlFile path="changeset/create/create-playlist_song-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="6-Add statistic and history tables" author="Anastasiya Sashina">
+        <sqlFile path="changeset/create/create-statistic-table.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="changeset/create/create-history-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
