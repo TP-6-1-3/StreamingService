@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.page.FriendPagesDTO;
@@ -18,6 +15,7 @@ import ru.vsu.csf.asashina.musicmanBack.service.FriendService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
+import static org.springframework.http.HttpStatus.OK;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.FRIEND;
 
 @RestController
@@ -49,5 +47,29 @@ public class FriendController {
                 friendService.getFriends(user.getUserId(), pageNumber, size, nickname),
                 pageNumber,
                 size);
+    }
+
+    @PostMapping("/{nickname}")
+    @Operation(summary = "Добавить пользователя в друзья", tags = FRIEND, responses = {
+            @ApiResponse(responseCode = "200", description = "Пользователь добавлен", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Пользователя не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Пользователь уже в друзьях", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> addFriend(@PathVariable("nickname") String nickname, Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        friendService.addFriend(user, nickname);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 }
