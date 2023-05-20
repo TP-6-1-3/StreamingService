@@ -16,24 +16,24 @@ public class AudioLibraryService {
     private final SongService songService;
 
     public Page<SongPageDTO> getAllSongs(String userEmail, Integer pageNumber, Integer size, String title) {
-        UserDTO user = userService.getUserByEmail(userEmail);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck(userEmail);
         return songService.getUsersSongs(user.getUserId(), pageNumber, size, title);
     }
 
     @Transactional
     public void addSong(String userEmail, Long songId) {
-        UserDTO user = userService.getUserByEmail(userEmail);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck(userEmail);
         songService.addSongToUsersLibrary(user.getUserId(), songId);
     }
 
     public UsersSongDTO doesSongExists(String userEmail, Long songId) {
-        UserDTO user = userService.getUserByEmail(userEmail);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck(userEmail);
         return new UsersSongDTO(songService.isSongInUsersLibrary(user.getUserId(), songId));
     }
 
     @Transactional
     public void deleteSong(String userEmail, Long songId) {
-        UserDTO user = userService.getUserByEmail(userEmail);
+        UserDTO user = userService.getUserByEmailWithVerificationCheck(userEmail);
         songService.deleteSongFromUsersLibrary(user.getUserId(), songId);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.GenresDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateGenreRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.GenreService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
@@ -28,7 +29,7 @@ public class GenreController {
     @GetMapping("")
     @Operation(summary = "Выводит все жанры", tags = GENRE, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает все жанры", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GenresDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
