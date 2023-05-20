@@ -3,6 +3,7 @@ package ru.vsu.csf.asashina.musicmanBack.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
@@ -48,5 +49,16 @@ public class RecommendationService {
         }
         recommendationRepository.save(recommendationMapper.createEntity(
                 song, user, Instant.now().plusSeconds(daysToRecommend * 3600 * 24)));
+    }
+
+    @Async
+    @Transactional
+    public void deleteFromRecommendation(Long userId, Long songId) {
+        recommendationRepository.deleteByUserIdAndSongId(userId, songId);
+    }
+
+    @Transactional
+    public void deleteOldRecommendations() {
+        recommendationRepository.deleteOld(Instant.now());
     }
 }

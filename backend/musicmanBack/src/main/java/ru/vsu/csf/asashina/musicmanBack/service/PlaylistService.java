@@ -32,6 +32,7 @@ public class PlaylistService {
     private final PageUtil pageUtil;
 
     private final SongService songService;
+    private final RecommendationService recommendationService;
 
     public Page<PlaylistDTO> getAll(Long userId, Integer pageNumber, Integer size, String name) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
@@ -82,6 +83,7 @@ public class PlaylistService {
         if (isSongInPlaylist(playlist, songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в плейлисте");
         }
+        recommendationService.deleteFromRecommendation(userId, songId);
         playlist.addSong(songMapper.toEntityFromDTO(song));
         playlistRepository.save(playlist);
     }
