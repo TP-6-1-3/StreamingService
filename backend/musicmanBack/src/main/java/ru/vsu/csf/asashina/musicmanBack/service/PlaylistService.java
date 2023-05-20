@@ -12,7 +12,8 @@ import ru.vsu.csf.asashina.musicmanBack.mapper.PlaylistMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
-import ru.vsu.csf.asashina.musicmanBack.model.request.PlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.PlaylistRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
 import ru.vsu.csf.asashina.musicmanBack.utils.UuidUtil;
@@ -55,7 +56,7 @@ public class PlaylistService {
     }
 
     @Transactional
-    public void createPlaylist(PlaylistRequest request, UserDTO user) {
+    public void createPlaylist(CreatePlaylistRequest request, UserDTO user) {
         Playlist playlist = playlistMapper.toEntityFromRequest(
                 UuidUtil.generateRandomUUIDInString(), request, user);
         playlistRepository.save(playlist);
@@ -81,6 +82,14 @@ public class PlaylistService {
             throw new EntityAlreadyExistsException("Песня уже есть в плейлисте");
         }
         playlist.addSong(songMapper.toEntityFromDTO(song));
+        playlistRepository.save(playlist);
+    }
+
+    @Transactional
+    public void updatePlaylist(String id, UpdatePlaylistRequest request, Long userId) {
+        Playlist playlist = findPlaylistById(id);
+        checkUsersAccessToPlaylist(playlist, userId, false);
+        playlistMapper.updateEntity(request, playlist);
         playlistRepository.save(playlist);
     }
 }

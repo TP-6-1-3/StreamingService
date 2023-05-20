@@ -33,7 +33,9 @@ public class AudioLibraryService {
                 .skip((long) (pageNumber - 1) * size)
                 .limit(size)
                 .toList();
-        return new PageImpl<>(songs, pageUtil.createPageRequest(pageNumber, size), totalSize);
+        Page<SongDTO> pages = new PageImpl<>(songs, pageUtil.createPageRequest(pageNumber, size), totalSize);
+        pageUtil.checkPageOutOfRange(pages, pageNumber);
+        return pages;
     }
 
     public SongExistsDTO isSongInLibrary(Long userId, Long songId) {

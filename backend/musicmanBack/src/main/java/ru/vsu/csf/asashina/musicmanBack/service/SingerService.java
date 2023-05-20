@@ -48,7 +48,7 @@ public class SingerService {
     @Transactional
     public void updateSingerById(Long id, UpdateSingerRequest request) {
         Singer singer = findSingerById(id);
-        singer.setDescription(request.getDescription());
+        singerMapper.updateEntity(request, singer);
         singerRepository.save(singer);
     }
 

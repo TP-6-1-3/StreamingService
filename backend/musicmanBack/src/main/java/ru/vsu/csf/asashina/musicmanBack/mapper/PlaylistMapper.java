@@ -1,12 +1,16 @@
 package ru.vsu.csf.asashina.musicmanBack.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.PlaylistDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.PlaylistWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
-import ru.vsu.csf.asashina.musicmanBack.model.request.PlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 
 @Mapper(uses = {SongMapper.class, UserMapper.class})
 public interface PlaylistMapper {
@@ -17,5 +21,8 @@ public interface PlaylistMapper {
 
     PlaylistWithSongsDTO toDTOWithSongFromEntity(Playlist entity);
 
-    Playlist toEntityFromRequest(String playlistId, PlaylistRequest request, UserDTO user);
+    Playlist toEntityFromRequest(String playlistId, CreatePlaylistRequest request, UserDTO user);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntity(UpdatePlaylistRequest request, @MappingTarget Playlist entity);
 }

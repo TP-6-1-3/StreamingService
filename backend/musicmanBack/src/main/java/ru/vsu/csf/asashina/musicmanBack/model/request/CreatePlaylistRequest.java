@@ -2,8 +2,12 @@ package ru.vsu.csf.asashina.musicmanBack.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public class PlaylistRequest {
+@Data
+@AllArgsConstructor
+public class CreatePlaylistRequest {
 
     @NotBlank
     @Size(max = 100)
