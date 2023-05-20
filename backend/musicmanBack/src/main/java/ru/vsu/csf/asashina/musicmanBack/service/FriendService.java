@@ -1,10 +1,12 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
+import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.FriendDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
@@ -33,6 +35,7 @@ public class FriendService {
         return pages.map(userMapper::toFriendDTOFromEntity);
     }
 
+    @Transactional
     public void addFriend(UserDTO userDTO, String nickname) {
         User user = userMapper.toEntityFromDTO(userDTO);
         User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
@@ -45,5 +48,16 @@ public class FriendService {
 
     private boolean hasFriend(Set<User> friends, Long friendId) {
         return friends.stream().anyMatch(friend -> friend.getUserId().equals(friendId));
+    }
+
+    @Transactional
+    public void deleteFriend(UserDTO userDTO, String nickname) {
+        User user = userMapper.toEntityFromDTO(userDTO);
+        User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
+        if (!hasFriend(user.getFriends(), friend.getUserId())) {
+            throw new NoFriendException("Пользователя не было в друзьях");
+        }
+        user.deleteFriend(friend);
+        userRepository.save(user);
     }
 }

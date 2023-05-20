@@ -72,4 +72,28 @@ public class FriendController {
         friendService.addFriend(user, nickname);
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
+
+    @DeleteMapping("/{nickname}")
+    @Operation(summary = "Удалить пользователя из друзей", tags = FRIEND, responses = {
+            @ApiResponse(responseCode = "200", description = "Пользователь удален из друзей", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Пользователя не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "405", description = "Пользователя не было в друзьях", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteFriend(@PathVariable("nickname") String nickname, Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        friendService.deleteFriend(user, nickname);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
 }
