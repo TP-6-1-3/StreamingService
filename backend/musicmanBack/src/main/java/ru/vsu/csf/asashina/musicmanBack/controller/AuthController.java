@@ -17,6 +17,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.user.CredentialsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateProfileRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.AuthService;
 import ru.vsu.csf.asashina.musicmanBack.service.TokenService;
@@ -152,6 +153,30 @@ public class AuthController {
     @SecurityRequirements
     public ResponseEntity<?> refreshToken(@RequestBody @Valid RefreshTokenRequest request) {
         return ResponseBuilder.build(OK, tokenService.refreshAccessToken(request));
+    }
+
+    @PutMapping("/profile")
+    @Operation(summary = "Обновление информации о пользователе", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Информация обновлена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "409",
+                    description = "Пользователь c указанным ником уже существует",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid UpdateProfileRequest request,
+                                           Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        userService.updateProfile(user, request);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
 }
