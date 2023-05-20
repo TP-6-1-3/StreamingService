@@ -9,7 +9,7 @@ import ru.vsu.csf.asashina.musicmanBack.mapper.HistoryMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.HistoryDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.History;
 import ru.vsu.csf.asashina.musicmanBack.repository.HistoryRepository;
 

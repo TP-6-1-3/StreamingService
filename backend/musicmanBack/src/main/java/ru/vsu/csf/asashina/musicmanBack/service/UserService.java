@@ -9,9 +9,11 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.PasswordsDoNotMatch;
 import ru.vsu.csf.asashina.musicmanBack.exception.UserNotVerifiedException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserWithSongsDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.CredentialsDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.User;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateProfileRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.UserRepository;
 
@@ -91,5 +93,19 @@ public class UserService {
 
     public boolean isAdmin(UserDTO user) {
         return roleService.isAdmin(user.getRoles());
+    }
+
+    public CredentialsDTO getCredentials(UserDTO user) {
+        return userMapper.toCredentialsDTOFromDTO(user);
+    }
+
+    @Transactional
+    public void updateProfile(UserDTO user, UpdateProfileRequest request) {
+        if (userRepository.existsByNickname(request.getNickname())) {
+            throw new EntityAlreadyExistsException("Пользователь с данным никнеймом уже существует");
+        }
+        User entity = userMapper.toEntityFromDTO(user);
+        userMapper.updateEntity(request, entity);
+        userRepository.save(entity);
     }
 }

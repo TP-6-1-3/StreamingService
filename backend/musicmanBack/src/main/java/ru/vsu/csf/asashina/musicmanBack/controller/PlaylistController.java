@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PlaylistPagesDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdatePlaylistRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.PlaylistService;

@@ -10,7 +10,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.RecommendationMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Recommendation;
 import ru.vsu.csf.asashina.musicmanBack.repository.RecommendationRepository;
 

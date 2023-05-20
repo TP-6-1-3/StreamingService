@@ -5,7 +5,7 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.5
+  version: 1.0.6
 servers:
   - url: http://localhost:8080/api/v1
     description: Generated server url
@@ -228,6 +228,41 @@ paths:
                 "$ref": "#/components/schemas/ExceptionDTO"
         '404':
           description: Плейлист не существует
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+  "/auth/profile":
+    put:
+      tags:
+        - Auth Controller
+      summary: Обновление информации о пользователе
+      operationId: updateProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateProfileRequest"
+        required: true
+      responses:
+        '200':
+          description: Информация обновлена
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '409':
+          description: Пользователь c указанным ником уже существует
           content:
             application/json:
               schema:
@@ -889,6 +924,12 @@ paths:
           description: Код повторно отправлен
           content:
             application/json: {}
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
         '404':
           description: Пользователь не найден
           content:
@@ -997,6 +1038,31 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ExceptionDTO"
       security: []
+  "/auth/credentials":
+    post:
+      tags:
+        - Auth Controller
+      summary: Получение информации о пользователе
+      operationId: getCredentials
+      responses:
+        '200':
+          description: Получение кредов
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CredentialsDTO"
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExceptionDTO"
   "/statistics/user/{userId}":
     get:
       tags:
@@ -1579,6 +1645,21 @@ components:
           type: string
         description:
           type: string
+    UpdateProfileRequest:
+      type: object
+      properties:
+        firstName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        nickname:
+          maxLength: 100
+          minLength: 0
+          type: string
     CreateSongRequest:
       required:
         - duration
@@ -1717,6 +1798,37 @@ components:
         email:
           type: string
         password:
+          type: string
+    CredentialsDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        nickname:
+          type: string
+        isVerified:
+          type: boolean
+        roles:
+          uniqueItems: true
+          type: array
+          items:
+            "$ref": "#/components/schemas/RoleDTO"
+    RoleDTO:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        authority:
           type: string
     GenreDTO:
       type: object

@@ -9,7 +9,7 @@ import ru.vsu.csf.asashina.musicmanBack.mapper.StatisticMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.StatisticGenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.StatisticUserDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Statistic;
 import ru.vsu.csf.asashina.musicmanBack.repository.StatisticRepository;
 

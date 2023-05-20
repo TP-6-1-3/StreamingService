@@ -9,7 +9,7 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.FriendDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.User;
 import ru.vsu.csf.asashina.musicmanBack.repository.UserRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
