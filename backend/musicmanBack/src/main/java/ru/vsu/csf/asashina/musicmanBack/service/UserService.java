@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.PasswordsDoNotMatch;
+import ru.vsu.csf.asashina.musicmanBack.exception.UserNotVerifiedException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.User;
@@ -30,6 +31,14 @@ public class UserService {
                 () -> new EntityDoesNotExistException("Пользователь с данной почтой не существует")
         );
         return userMapper.toDTOFromEntity(user);
+    }
+
+    public UserDTO getUserByEmailWithVerificationCheck(String email) {
+        UserDTO user = getUserByEmail(email);
+        if (!user.getIsVerified()) {
+            throw new UserNotVerifiedException("Пользователь не верифицирован");
+        }
+        return user;
     }
 
     @Transactional

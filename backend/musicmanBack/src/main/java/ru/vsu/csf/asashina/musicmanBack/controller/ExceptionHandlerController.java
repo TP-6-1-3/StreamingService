@@ -52,7 +52,7 @@ public class ExceptionHandlerController {
         return ResponseBuilder.build(UNAUTHORIZED, e);
     }
 
-    @ExceptionHandler({AccessDeniedException.class})
+    @ExceptionHandler({AccessDeniedException.class, UserNotVerifiedException.class})
     public ResponseEntity<?> forbiddenExceptionHandler(Exception e) {
         return ResponseBuilder.build(FORBIDDEN, e);
     }
