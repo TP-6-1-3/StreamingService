@@ -41,4 +41,14 @@ public class MapperConfiguration {
     public PlaylistMapper playlistMapper() {
         return PlaylistMapper.INSTANCE;
     }
+
+    @Bean
+    public StatisticMapper statisticMapper() {
+        return StatisticMapper.INSTANCE;
+    }
+
+    @Bean
+    public HistoryMapper historyMapper() {
+        return HistoryMapper.INSTANCE;
+    }
 }
