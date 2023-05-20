@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.SongPagesDTO;
 import ru.vsu.csf.asashina.musicmanBack.service.AudioLibraryService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;

@@ -1,5 +1,7 @@
 package ru.vsu.csf.asashina.musicmanBack.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +24,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE user_info SET is_verified = true WHERE user_id = :id")
     void verifyUserById(@Param("id") Long id);
+
+    @Query("""
+            SELECT u
+            FROM User u
+            JOIN u.friends f
+                ON f.userId = :userId
+                AND WHERE LOWER(f.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')
+            """)
+    Page<User> findAllFriendsByNickname(@Param("userId") Long userId,
+                                        @Param("nickname") String nickname,
+                                        Pageable pageable);
 }
