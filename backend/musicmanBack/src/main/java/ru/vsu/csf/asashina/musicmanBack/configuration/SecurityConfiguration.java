@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.vsu.csf.asashina.musicmanBack.filter.AuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.*;
+import static ru.vsu.csf.asashina.musicmanBack.model.constant.Role.ADMIN;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Role.USER;
 
 @Configuration
@@ -30,9 +31,21 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(GET, "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers(GET, "/v3/api-docs/**", "/songs/**", "/swagger-ui/**",
+                        "/swagger-ui.html", "/singers/**", "/genres/**").permitAll()
 
-                .requestMatchers(POST, "/auth/resend-code").hasAnyAuthority(USER)
+                .requestMatchers(GET, "/songs/*/file", "/library/**", "/playlists/**",
+                        "/history", "/friends", "/recommendations", "/auth/credentials").hasAnyAuthority(USER)
+                .requestMatchers(POST, "/auth/resend-code", "/library/*",
+                        "/playlists/**", "/friends/*", "/recommendations/**").hasAnyAuthority(USER)
+                .requestMatchers(PUT, "/playlists/*", "/auth/profile").hasAnyAuthority(USER)
+                .requestMatchers(DELETE, "/library/*", "/playlists/**", "/friends/*").hasAnyAuthority(USER)
+
+                .requestMatchers(GET, "/statistics/*").hasAnyAuthority(ADMIN)
+                .requestMatchers(POST, "/songs/**", "/singers", "/genres").hasAnyAuthority(ADMIN)
+                .requestMatchers(PUT, "/singers/*").hasAnyAuthority(ADMIN)
+                .requestMatchers(DELETE, "/songs/*", "/singers/*", "/genres/*",
+                        "/auth/*").hasAnyAuthority(ADMIN)
 
                 .anyRequest().authenticated();
 

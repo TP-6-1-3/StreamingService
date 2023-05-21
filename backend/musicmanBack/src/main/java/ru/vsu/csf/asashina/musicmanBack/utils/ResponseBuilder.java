@@ -5,7 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.PagingInfoDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PagingDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.page.PagingInfoDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,8 @@ public class ResponseBuilder {
                 data.getContent());
     }
 
-    public static ResponseEntity<?> build(PagingInfoDTO pagingInfoDTO, List<?> data) {
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of(
-                "paging", pagingInfoDTO,
-                "data", data
-        ));
+    public static <T> ResponseEntity<?> build(PagingInfoDTO pagingInfoDTO, List<T> data) {
+        return ResponseEntity.status(HttpStatus.OK).body(new PagingDTO<T>(pagingInfoDTO, data));
     }
 
     public static ResponseEntity<?> build(HttpStatus httpStatus, Exception e) {

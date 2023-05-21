@@ -1,4 +1,4 @@
-package ru.vsu.csf.asashina.musicmanBack.model.dto;
+package ru.vsu.csf.asashina.musicmanBack.model.dto.page;
 
 import lombok.*;
 

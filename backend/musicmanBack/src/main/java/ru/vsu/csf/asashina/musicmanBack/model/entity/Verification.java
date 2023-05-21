@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "verification")
@@ -15,13 +16,14 @@ import java.time.Instant;
 public class Verification {
 
     @Id
-    private String verificationId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID verificationId;
 
     @Column(nullable = false)
     private Instant validTill;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    private UUID code;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

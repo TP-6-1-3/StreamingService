@@ -1,6 +1,5 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -8,13 +7,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.musicmanBack.exception.WrongCredentialsException;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.VerificationEmailDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.template.EmailTemplate;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +35,13 @@ public class AuthService {
     @Transactional
     public TokensDTO signUp(UserSignUpRequest request, String verificationLink) {
         UserDTO registeredUser = userService.registerUser(request);
-        String code = verificationService.createCodeAndSave(registeredUser);
+        UUID code = verificationService.createCodeAndSave(registeredUser);
         sendCode(registeredUser, verificationLink, code);
         return tokenService.createTokens(registeredUser);
     }
 
     @Async
-    private void sendCode(UserDTO user, String verificationLink, String code) {
+    private void sendCode(UserDTO user, String verificationLink, UUID code) {
         emailService.sendTemplate(
                 user.getEmail(),
                 "Подтверждение регистрации на платформе Musicman",
@@ -47,13 +49,13 @@ public class AuthService {
                 new VerificationEmailDTO(
                         user.getFirstName() + " " + user.getLastName(),
                         mainPage,
-                        verificationLink + "/" + code
+                        verificationLink + "/" + code.toString()
                 ));
     }
 
     @Transactional
     public void resendCode(UserDTO user, String verificationLink) {
-        String code = verificationService.resendCode(user);
+        UUID code = verificationService.resendCode(user);
         sendCode(user, verificationLink, code);
     }
 

@@ -3,6 +3,7 @@ package ru.vsu.csf.asashina.musicmanBack.controller;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,13 +14,12 @@ import ru.vsu.csf.asashina.musicmanBack.exception.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
-import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class ExceptionHandlerController {
 
     @ExceptionHandler(Exception.class)
@@ -28,7 +28,8 @@ public class ExceptionHandlerController {
         return ResponseBuilder.build(INTERNAL_SERVER_ERROR, new ExceptionDTO("Internal server error"));
     }
 
-    @ExceptionHandler({PasswordsDoNotMatch.class, WrongCredentialsException.class})
+    @ExceptionHandler({PasswordsDoNotMatch.class, WrongCredentialsException.class, PageException.class,
+            SongFileException.class})
     public ResponseEntity<?> badRequestExceptionHandler(Exception e) {
         return ResponseBuilder.build(BAD_REQUEST, e);
     }
@@ -51,7 +52,7 @@ public class ExceptionHandlerController {
         return ResponseBuilder.build(UNAUTHORIZED, e);
     }
 
-    @ExceptionHandler({AccessDeniedException.class})
+    @ExceptionHandler({AccessDeniedException.class, UserNotVerifiedException.class})
     public ResponseEntity<?> forbiddenExceptionHandler(Exception e) {
         return ResponseBuilder.build(FORBIDDEN, e);
     }
@@ -61,7 +62,8 @@ public class ExceptionHandlerController {
         return ResponseBuilder.build(NOT_FOUND, e);
     }
 
-    @ExceptionHandler({VerificationExpiredException.class, AlreadyVerifiedUserException.class})
+    @ExceptionHandler({VerificationExpiredException.class, AlreadyVerifiedUserException.class,
+            NoSongInCollectionException.class, NoFriendException.class})
     public ResponseEntity<?> methodNotAllowedExceptionHandler(Exception e) {
         return ResponseBuilder.build(METHOD_NOT_ALLOWED, e);
     }

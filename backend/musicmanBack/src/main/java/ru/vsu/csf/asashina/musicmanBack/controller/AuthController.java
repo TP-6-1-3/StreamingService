@@ -13,17 +13,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.ExceptionDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.TokensDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.UserDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.CredentialsDTO;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.request.LoginRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.RefreshTokenRequest;
+import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateProfileRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
 import ru.vsu.csf.asashina.musicmanBack.service.AuthService;
 import ru.vsu.csf.asashina.musicmanBack.service.TokenService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUTH;
 
 @RestController
@@ -34,6 +35,23 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
     private final UserService userService;
+
+    @PostMapping("/credentials")
+    @Operation(summary = "Получение информации о пользователе", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Получение кредов", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CredentialsDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> getCredentials(Authentication authentication) {
+        UserDTO user = userService.getUserByEmail((String) authentication.getPrincipal());
+        return ResponseBuilder.build(OK, userService.getCredentials(user));
+    }
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация нового пользователя", tags = AUTH, responses = {
@@ -47,8 +65,8 @@ public class AuthController {
                     responseCode = "409",
                     description = "Пользователь с указанной почтой или указанным ником уже существует",
                     content = {
-                        @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
-            })
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+                    })
     })
     @SecurityRequirements
     public ResponseEntity<?> signUpNewUserUsingForm(@RequestBody @Valid UserSignUpRequest request,
@@ -70,9 +88,9 @@ public class AuthController {
             }),
             @ApiResponse(
                     responseCode = "405", description = "Истекло время действия ссылки", content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ExceptionDTO.class))
-                    })
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+            })
     })
     @SecurityRequirements
     public ResponseEntity<?> verifyUser(@PathVariable("code") String code) {
@@ -85,15 +103,14 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Код повторно отправлен", content = {
                     @Content(mediaType = "application/json")
             }),
-            @ApiResponse(
-                    responseCode = "404", description = "Пользователь не найден", content = {
-                    @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDTO.class))
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             }),
-            @ApiResponse(
-                    responseCode = "405", description = "Пользователь уже верифицирован", content = {
-                    @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionDTO.class))
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "405", description = "Пользователь уже верифицирован", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
     public ResponseEntity<?> resendCode(Authentication authentication, HttpServletRequest request) {
@@ -135,6 +152,50 @@ public class AuthController {
     @SecurityRequirements
     public ResponseEntity<?> refreshToken(@RequestBody @Valid RefreshTokenRequest request) {
         return ResponseBuilder.build(OK, tokenService.refreshAccessToken(request));
+    }
+
+    @PutMapping("/profile")
+    @Operation(summary = "Обновление информации о пользователе", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "200", description = "Информация обновлена", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "409",
+                    description = "Пользователь c указанным ником уже существует",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+                    })
+    })
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid UpdateProfileRequest request,
+                                           Authentication authentication) {
+        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        userService.updateProfile(user, request);
+        return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
+
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "Удаление пользователя", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "204", description = "Пользователь удален", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Пользователя не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 
 }

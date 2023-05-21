@@ -7,8 +7,4 @@ public interface TemplateEngine {
     default String compile(Template template, Object model) {
         return compile(template.getName(), model);
     }
-
-    default String compile(Template template) {
-        return compile(template, null);
-    }
 }
