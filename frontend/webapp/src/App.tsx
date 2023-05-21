@@ -9,6 +9,7 @@ import { AuthPage } from "./pages/authPage";
 import { HomePage } from "./pages/homePage";
 import { RegPage } from "./pages/regPage";
 import { TracksPage } from "./pages/tracksPage";
+import { VerifyPage } from "./pages/verifyPage";
 
 const App = () => {
 	const router = createBrowserRouter([
@@ -25,9 +26,14 @@ const App = () => {
 			element: <AuthPage />,
 		},
 		{
+			path: "/auth/verify/:code",
+			element: <VerifyPage />,
+		},
+		{
 			path: "/reg",
 			element: <RegPage />,
 		},
+		
 	]);
 
 	return (
