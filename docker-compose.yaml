@@ -1,11 +1,11 @@
 version: '3'
 services:
-  musicmanDB:
+  database:
     image: postgres:15.1-alpine
     restart: always
     ports:
       - ${MUSICMAN_DATABASE_PORT}:5432
-    container_name: ${MUSICMAN_DATABASE_HOST}
+    container_name: database
     environment:
       - POSTGRES_USER=${MUSICMAN_DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${MUSICMAN_DATABASE_PASSWORD}
@@ -34,6 +34,13 @@ services:
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
+
+  proxy:
+    image: arcturs/musicman_proxy
+    depends_on:
+      - backend
+    ports:
+      - 8081:8080
 
 volumes:
   musicman_data:
