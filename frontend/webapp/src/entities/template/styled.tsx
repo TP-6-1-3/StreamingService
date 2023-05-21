@@ -59,7 +59,7 @@ export const TemplateDesignBottom = styled.div`
     background: ${Theme.gradientBottom};
     width: 100vw;
     height: 40vh;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
 `;

@@ -14,7 +14,8 @@ export const AuthLayout = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: calc(100vh - 80px);
+    height: calc(100% - 80px);
+    min-height: 100vh;
 `;
 export const AuthContent = styled.div`
     width: 800px;
