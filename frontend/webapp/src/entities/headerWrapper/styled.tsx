@@ -6,6 +6,8 @@ export const HeaderWrapperContainer = styled.div`
     height: 80px;
     background: ${Theme.primary};
     box-shadow: 0px 0px 20px 0px #000000BF;
+    position: relative;
+    z-index: 2;
 `;
 
 export const HeaderWrapperContent = styled.div`
