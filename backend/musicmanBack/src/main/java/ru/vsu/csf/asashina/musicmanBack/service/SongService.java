@@ -87,6 +87,7 @@ public class SongService {
         return songMapper.toDTOFromEntity(findSongById(id));
     }
 
+    @Transactional
     public File getFileFromSystem(UserDTO user, Long id) {
         SongDTO song = getSongById(id);
         File songFile = new File(songsDirectoryPath.concat("/").concat(Long.toString(id)));

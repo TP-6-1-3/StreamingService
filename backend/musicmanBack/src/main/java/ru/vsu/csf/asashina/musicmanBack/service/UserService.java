@@ -83,6 +83,7 @@ public class UserService {
         return roleService.isAdmin(user.getRoles());
     }
 
+    @Transactional
     public CredentialsDTO getCredentials(UserDTO user) {
         return userMapper.toCredentialsDTOFromDTO(user);
     }
