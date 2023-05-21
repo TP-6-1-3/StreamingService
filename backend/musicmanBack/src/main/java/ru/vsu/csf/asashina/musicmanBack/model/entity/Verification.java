@@ -23,7 +23,7 @@ public class Verification {
     private Instant validTill;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    private UUID code;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

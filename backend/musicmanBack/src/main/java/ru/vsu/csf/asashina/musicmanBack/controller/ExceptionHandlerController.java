@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class ExceptionHandlerController {
 
     @ExceptionHandler(Exception.class)

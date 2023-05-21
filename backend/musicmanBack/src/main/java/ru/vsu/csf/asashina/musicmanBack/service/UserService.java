@@ -1,9 +1,9 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.PasswordsDoNotMatch;
@@ -11,7 +11,6 @@ import ru.vsu.csf.asashina.musicmanBack.exception.UserNotVerifiedException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.user.CredentialsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
-import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserWithSongsDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.User;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UpdateProfileRequest;
 import ru.vsu.csf.asashina.musicmanBack.model.request.UserSignUpRequest;
@@ -78,17 +77,6 @@ public class UserService {
     @Transactional
     public void verifyUserById(Long id) {
         userRepository.verifyUserById(id);
-    }
-
-    public UserWithSongsDTO getUserWithSongs(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new EntityDoesNotExistException("Пользователь не существует с заданным ИД"));
-        return userMapper.toWithSongsDTOFromEntity(user);
-    }
-
-    @Transactional
-    public void updateUserWithSongs(UserWithSongsDTO user) {
-        userRepository.save(userMapper.toEntityFromDTO(user));
     }
 
     public boolean isAdmin(UserDTO user) {

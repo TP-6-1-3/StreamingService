@@ -18,6 +18,8 @@ import ru.vsu.csf.asashina.musicmanBack.service.PlaylistService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
+import java.util.UUID;
+
 import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.PLAYLIST;
 
@@ -43,7 +45,7 @@ public class PlaylistController {
     })
     public ResponseEntity<?> getAllPlaylists(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                              @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
-                                             @RequestParam(value = "name", required = false) String name,
+                                             @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                              Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         return ResponseBuilder.build(
@@ -68,7 +70,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> getPlaylistById(@PathVariable("id") String id, Authentication authentication) {
+    public ResponseEntity<?> getPlaylistById(@PathVariable("id") UUID id, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         boolean isAdmin = userService.isAdmin(user);
         return ResponseBuilder.build(OK, playlistService.getPlaylistById(id, isAdmin, user.getUserId()));
@@ -89,7 +91,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> isSongInPlaylist(@PathVariable("id") String id,
+    public ResponseEntity<?> isSongInPlaylist(@PathVariable("id") UUID id,
                                               @PathVariable("songId") Long songId,
                                               Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
@@ -136,7 +138,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> addSongToPlaylist(@PathVariable("id") String id,
+    public ResponseEntity<?> addSongToPlaylist(@PathVariable("id") UUID id,
                                                @PathVariable("songId") Long songId,
                                                Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
@@ -159,7 +161,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> updatePlaylist(@PathVariable("id") String id,
+    public ResponseEntity<?> updatePlaylist(@PathVariable("id") UUID id,
                                             @RequestBody @Valid UpdatePlaylistRequest request,
                                             Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
@@ -182,7 +184,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> deletePlaylist(@PathVariable("id") String id, Authentication authentication) {
+    public ResponseEntity<?> deletePlaylist(@PathVariable("id") UUID id, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         boolean isAdmin = userService.isAdmin(user);
         playlistService.deletePlaylist(id, user.getUserId(), isAdmin);
@@ -207,7 +209,7 @@ public class PlaylistController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> deleteSongFromPlaylist(@PathVariable("id") String id,
+    public ResponseEntity<?> deleteSongFromPlaylist(@PathVariable("id") UUID id,
                                                     @PathVariable("songId") Long songId,
                                                     Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());

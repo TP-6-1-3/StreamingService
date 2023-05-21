@@ -44,7 +44,7 @@ public class SingerController {
     @SecurityRequirements
     public ResponseEntity<?> getAllSingers(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
-                                           @RequestParam(value = "name", required = false) String name,
+                                           @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                            @RequestParam(value = "isAsc", required = false, defaultValue = "true") Boolean isAsc) {
         return ResponseBuilder.build(singerService.getAllSingers(pageNumber, size, name, isAsc), pageNumber, size);
     }

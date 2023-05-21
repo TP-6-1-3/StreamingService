@@ -9,6 +9,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 
+import java.time.LocalTime;
 import java.util.Set;
 
 @Mapper(uses = { GenreMapper.class, SingerMapper.class })
@@ -16,7 +17,8 @@ public interface SongMapper {
 
     SongMapper INSTANCE = Mappers.getMapper(SongMapper.class);
 
-    Song toEntityFromRequest(CreateSongRequest request, SingerDTO singer, Set<GenreDTO> genres);
+    @Mapping(target = "duration", source = "duration")
+    Song toEntityFromRequest(CreateSongRequest request, LocalTime duration, SingerDTO singer, Set<GenreDTO> genres);
 
     Song toEntityFromDTO(SongDTO dto);
 

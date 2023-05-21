@@ -22,18 +22,18 @@ public interface PlaylistRepository extends JpaRepository<Playlist, UUID> {
             WHERE LOWER(p.name) LIKE CONCAT('%', LOWER(:name), '%')""")
     Page<Playlist> getAll(@Param("userId") Long userId, @Param("name") String name, Pageable pageable);
 
-    @Deprecated
-    @Query(value = """
-            SELECT EXISTS(SELECT 1 FROM playlist_song WHERE song_id = :songId AND playlist_id = :playlistId)""",
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM playlist_song WHERE song_id = :songId AND playlist_id = :playlistId)",
             nativeQuery = true)
     boolean isSongInPlaylist(@Param("playlistId") UUID playlistId, @Param("songId") Long songId);
 
-    @Deprecated
     @Modifying
     @Query(value = """
-            INSERT INTO playlist_song(playlist_song_id, playlist_id, song_id)
-            VALUES(:playlistSongId, :playlistId, :songId)""", nativeQuery = true)
-    void addSongToPlaylist(@Param("playlistSongId") UUID playlistSongId,
-                               @Param("playlistId") UUID playlistId,
-                               @Param("songId") Long songId);
+            INSERT INTO playlist_song(playlist_id, song_id)
+            VALUES(:playlistId, :songId)""", nativeQuery = true)
+    void addSongToPlaylist(@Param("playlistId") UUID playlistId, @Param("songId") Long songId);
+
+    @Modifying
+    @Query(value = "DELETE FROM playlist_song WHERE playlist_id = :playlistId AND song_id = :songId",
+            nativeQuery = true)
+    void deleteSongFromPlaylist(@Param("playlistId") UUID playlistId, @Param("songId") Long songId);
 }

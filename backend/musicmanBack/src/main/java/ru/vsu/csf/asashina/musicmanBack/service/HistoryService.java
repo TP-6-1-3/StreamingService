@@ -1,10 +1,11 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.vsu.csf.asashina.musicmanBack.mapper.HistoryMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.HistoryDTO;
@@ -14,6 +15,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.entity.History;
 import ru.vsu.csf.asashina.musicmanBack.repository.HistoryRepository;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,8 +37,7 @@ public class HistoryService {
         List<History> histories = historyRepository.findByUserId(user.getUserId());
         List<History> updatedHistory = new LinkedList<>();
         if (histories.isEmpty()) {
-            updatedHistory.add(
-                    historyMapper.createEntity(user, song, Instant.now()));
+            updatedHistory.add(historyMapper.createEntity(user, song, Instant.now()));
         } else {
             boolean exists = false;
             for (History history : histories) {
@@ -46,16 +47,21 @@ public class HistoryService {
                 }
                 updatedHistory.add(history);
             }
-            if (updatedHistory.size() == historySize && !exists) {
-                updatedHistory.set(0,
-                        historyMapper.createEntity(user, song, Instant.now()));
+            if (updatedHistory.size() < historySize) {
+                updatedHistory.add(historyMapper.createEntity(user, song, Instant.now()));
+            } else if (!exists) {
+                updatedHistory.set(0, historyMapper.createEntity(user, song, Instant.now()));
             }
         }
         historyRepository.saveAll(updatedHistory);
     }
 
+    @Transactional
     public HistoryDTO getHistory(Long userId) {
         List<History> histories = historyRepository.findByUserId(userId);
+        if (CollectionUtils.isEmpty(histories)) {
+            return new HistoryDTO(Collections.emptyList());
+        }
         return new HistoryDTO(histories.stream()
                 .map(history -> songMapper.toDTOFromEntity(history.getSong()))
                 .toList());

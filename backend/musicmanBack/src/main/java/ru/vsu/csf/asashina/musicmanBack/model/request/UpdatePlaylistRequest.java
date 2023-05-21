@@ -3,10 +3,12 @@ package ru.vsu.csf.asashina.musicmanBack.model.request;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.vsu.csf.asashina.musicmanBack.annotation.NullOrNotBlank;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UpdatePlaylistRequest {
 
     @NullOrNotBlank(message = "Указанное имя не должно быть пустым")

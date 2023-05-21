@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
@@ -57,8 +56,8 @@ public interface SongRepository extends JpaRepository<Song, Long> {
             WHERE LOWER(s.title) LIKE CONCAT('%', LOWER(:title), '%')""")
     Page<Song> getUsersAll(@Param("userId") Long userId, @Param("title") String title, Pageable pageable);
 
-    @Query(value = """
-            SELECT EXISTS(SELECT 1 FROM user_song WHERE song_id = :songId AND user_id = :userId)""", nativeQuery = true)
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM user_song WHERE song_id = :songId AND user_id = :userId)",
+            nativeQuery = true)
     boolean isSongAlreadyInUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
 
     @Modifying
@@ -68,7 +67,6 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     void addSongToUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
 
     @Modifying
-    @Query(value = """
-            DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId""", nativeQuery = true)
+    @Query(value = "DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId", nativeQuery = true)
     void deleteSongFromUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
 }

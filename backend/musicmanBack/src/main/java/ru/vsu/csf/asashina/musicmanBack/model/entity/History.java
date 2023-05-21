@@ -19,7 +19,7 @@ public class History {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID historyId;
 
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

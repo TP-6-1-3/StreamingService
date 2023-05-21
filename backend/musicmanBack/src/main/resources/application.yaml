@@ -27,13 +27,16 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  jpa:
+    open-in-view: false
+
 security:
   jwt:
     secret-key: ${JWT_SECRET_KEY:secretKey897#7h}
     access-token:
 
       #30 seconds
-      expire-date-ms: 30000
+      expire-date-ms: 300000000
 
     refresh-token:
       expire-date-days: 30

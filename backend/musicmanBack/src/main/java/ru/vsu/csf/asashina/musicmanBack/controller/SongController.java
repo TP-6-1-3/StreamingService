@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,9 @@ import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -50,7 +51,7 @@ public class SongController {
     @SecurityRequirements
     public ResponseEntity<?> getAllSongs(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                          @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
-                                         @RequestParam(value = "title", required = false) String title,
+                                         @RequestParam(value = "title", required = false, defaultValue = "") String title,
                                          @RequestParam(value = "sort", required = false, defaultValue = "BY_TITLE") SongSort sort,
                                          @RequestParam(value = "isAsc", required = false, defaultValue = "true") Boolean isAsc,
                                          @RequestParam(value = "genres", required = false) List<Long> genreIds,
@@ -76,10 +77,10 @@ public class SongController {
         return ResponseBuilder.build(OK, songService.getSongById(id));
     }
 
-    @GetMapping(value = "/{id}/file", produces = "audio/mp3")
+    @GetMapping(value = "/{id}/file")
     @Operation(summary = "Возвращает mp3 файл", tags = SONG, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает файл", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))
+                    @Content(mediaType = "audio/mp3")
             }),
             @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
@@ -88,13 +89,15 @@ public class SongController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> getSongFileById(@PathVariable("id") Long id,
-                                             Authentication authentication) throws IOException {
+    public void getSongFileById(@PathVariable("id") Long id,
+                                Authentication authentication,
+                                HttpServletResponse response) throws IOException {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        FileSystemResource in = new FileSystemResource(songService.getFileFromSystem(user, id));
-        var headers = new HttpHeaders();
-        headers.setContentLength(in.contentLength());
-        return new ResponseEntity(in, headers, OK);
+        File file = songService.getFileFromSystem(user, id);
+        response.setContentType("audio/mp3");
+        response.setContentLength((int) Files.size(file.toPath()));
+        Files.copy(file.toPath(), response.getOutputStream());
+        response.flushBuffer();
     }
 
     @PostMapping(value = "", consumes = MULTIPART_FORM_DATA_VALUE)
@@ -112,7 +115,7 @@ public class SongController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> createSong(@RequestBody @Valid CreateSongRequest request) throws UnsupportedAudioFileException, IOException {
+    public ResponseEntity<?> createSong(@ModelAttribute @Valid CreateSongRequest request) throws UnsupportedAudioFileException, IOException {
         songService.createSong(request);
         return ResponseBuilder.buildWithoutBodyResponse(CREATED);
     }

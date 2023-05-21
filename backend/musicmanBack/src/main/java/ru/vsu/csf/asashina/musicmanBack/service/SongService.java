@@ -1,13 +1,14 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
@@ -24,14 +25,11 @@ import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 import ru.vsu.csf.asashina.musicmanBack.repository.SongRepository;
 import ru.vsu.csf.asashina.musicmanBack.utils.PageUtil;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -56,6 +54,7 @@ public class SongService {
     @Value("${songs.directory}")
     private String songsDirectoryPath;
 
+    @Transactional
     public Page<SongDTO> getAllSongs(
             Integer pageNumber,
             Integer size,
@@ -66,7 +65,7 @@ public class SongService {
             Long singerId) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size, isAsc, sort.getQueryParam());
         Page<Song> songs;
-        if (genreIds.isEmpty()) {
+        if (CollectionUtils.isEmpty(genreIds)) {
             songs = songRepository.getAll(singerId, title, pageRequest);
         } else {
             songs = songRepository.getAll(singerId, genreIds, title, pageRequest);
@@ -75,7 +74,7 @@ public class SongService {
         return songs.map(songMapper::toDTOFromEntity);
     }
 
-    @Deprecated
+    @Transactional
     public Page<SongDTO> getUsersSongs(Long userId, Integer pageNumber, Integer size, String title) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
         Page<Song> songs = songRepository.getUsersAll(userId, title, pageRequest);
@@ -83,6 +82,7 @@ public class SongService {
         return songs.map(songMapper::toDTOFromEntity);
     }
 
+    @Transactional
     public SongDTO getSongById(Long id) {
         return songMapper.toDTOFromEntity(findSongById(id));
     }
@@ -96,10 +96,13 @@ public class SongService {
     }
 
     @Transactional
-    public void createSong(CreateSongRequest request) throws UnsupportedAudioFileException, IOException {
+    public void createSong(CreateSongRequest request) throws IOException {
         SingerDTO singer = singerService.getSingerById(request.getSingerId());
         Set<GenreDTO> genres = genreService.getGenresByIds(request.getGenreIds());
-        Song song = songMapper.toEntityFromRequest(request, singer, genres);
+        LocalTime duration = LocalTime.of(0,
+                Integer.parseInt(request.getDuration().substring(0, 2)),
+                Integer.parseInt(request.getDuration().substring(3)));
+        Song song = songMapper.toEntityFromRequest(request, duration, singer, genres);
         validateSongFile(request.getFile());
         song = songRepository.save(song);
 
@@ -108,18 +111,13 @@ public class SongService {
         request.getFile().transferTo(directory);
     }
 
-    private void validateSongFile(MultipartFile file) throws IOException, UnsupportedAudioFileException {
+    private void validateSongFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new SongFileException("Вы не можете загрузить пустой файл");
         }
         if (!Objects.requireNonNull(file.getOriginalFilename()).contains(".mp3")) {
             throw new SongFileException("Тип файла должен быть .mp3");
         }
-
-        ByteArrayInputStream in = new ByteArrayInputStream(file.getBytes());
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(in);
-        in.close();
-        audioStream.close();
     }
 
     @Transactional
@@ -151,20 +149,18 @@ public class SongService {
         return songRepository.isSongAlreadyInUsersLibrary(id, userId);
     }
 
-    @Deprecated
     @Transactional
     public void addSongToUsersLibrary(Long id, Long userId) {
-        Song song = findSongById(id);
+        findSongById(id);
         if (isSongInUsersLibrary(userId, id)) {
             throw new EntityAlreadyExistsException("Песня уже есть в аудиотеке");
         }
         songRepository.addSongToUsersLibrary(id, userId);
     }
 
-    @Deprecated
     @Transactional
     public void deleteSongFromUsersLibrary(Long id, Long userId) {
-        Song song = findSongById(id);
+        findSongById(id);
         if (!isSongInUsersLibrary(userId, id)) {
             throw new NoSongInCollectionException("Песни нет в аудиотеке");
         }

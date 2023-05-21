@@ -25,11 +25,11 @@ public class Song {
     @Column(nullable = false)
     private LocalTime duration;
 
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "singer_id")
     private Singer singer;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     @JoinTable(name = "song_genre",
             joinColumns = {@JoinColumn(name = "song_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
