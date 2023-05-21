@@ -24,8 +24,7 @@ import ru.vsu.csf.asashina.musicmanBack.service.TokenService;
 import ru.vsu.csf.asashina.musicmanBack.service.UserService;
 import ru.vsu.csf.asashina.musicmanBack.utils.ResponseBuilder;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.AUTH;
 
 @RestController
@@ -177,6 +176,26 @@ public class AuthController {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         userService.updateProfile(user, request);
         return ResponseBuilder.buildWithoutBodyResponse(OK);
+    }
+
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "Удаление пользователя", tags = AUTH, responses = {
+            @ApiResponse(responseCode = "204", description = "Пользователь удален", content = {
+                    @Content(mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Нет доступа", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Пользователя не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
+        return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
     }
 
 }

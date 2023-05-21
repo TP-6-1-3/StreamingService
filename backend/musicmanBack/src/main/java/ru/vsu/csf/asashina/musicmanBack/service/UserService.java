@@ -96,4 +96,11 @@ public class UserService {
         userMapper.updateEntity(request, entity);
         userRepository.save(entity);
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.delete(userRepository.findById(userId).orElseThrow(
+                () -> new EntityDoesNotExistException("Пользователь с данным ИД не существует")
+        ));
+    }
 }
