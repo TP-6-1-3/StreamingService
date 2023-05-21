@@ -13,6 +13,7 @@ import ru.vsu.csf.asashina.musicmanBack.service.TokenService;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
@@ -32,6 +33,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 throw new TokenValidationException("Во время валидации токена произошла ошибка");
             }
         }
+        response.addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         filterChain.doFilter(request, response);
     }
 }
