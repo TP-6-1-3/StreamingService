@@ -28,7 +28,7 @@ export const TemplateContainer = styled.div`
         padding: 10px 40px !important;
     }
 
-    .MuiTypography-root {
+    .MuiFormLabel-root {
         color: ${Theme.whiteText} !important;
     }
 
@@ -36,6 +36,10 @@ export const TemplateContainer = styled.div`
         border-bottom: 1px solid ${Theme.whiteText} !important;
         text-decoration: none !important;
         cursor: pointer;
+    }
+
+    .MuiAlert-standardError {
+        text-align: left;
     }
 `;
 
