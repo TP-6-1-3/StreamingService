@@ -1,10 +1,11 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.RecommendationMapper;
@@ -15,6 +16,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.entity.Recommendation;
 import ru.vsu.csf.asashina.musicmanBack.repository.RecommendationRepository;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,13 +31,18 @@ public class RecommendationService {
 
     private final SongService songService;
     private final FriendService friendService;
+    private final UserService userService;
 
     @Value("${songs.daysToRecommend}")
     private Integer daysToRecommend;
 
+    @Transactional
     public List<SongDTO> getRecommendedSongs(Long userId) {
-        return recommendationRepository.findAllByUserId(userId)
-                .stream()
+        var recommendations =  recommendationRepository.findAllByUserId(userId);
+        if (CollectionUtils.isEmpty(recommendations)) {
+            return Collections.emptyList();
+        }
+        return recommendations.stream()
                 .map(recommendation -> songMapper.toDTOFromEntity(recommendation.getSong()))
                 .toList();
     }
@@ -43,14 +50,15 @@ public class RecommendationService {
     @Transactional
     public void recommendSongToUser(UserDTO user, Long songId, String nickname) {
         SongDTO song = songService.getSongById(songId);
-        if (!friendService.hasFriend(user, nickname)) {
+        UserDTO friend = userService.getUserByNickname(nickname);
+        if (!friendService.hasFriend(user, friend)) {
             throw new NoFriendException("Пользователя нет в друзьях");
         }
         if (recommendationRepository.findByUserIdAndSongId(user.getUserId(), songId).isPresent()) {
             throw new EntityAlreadyExistsException("Песня уже рекомендована пользователю");
         }
         recommendationRepository.save(recommendationMapper.createEntity(
-                song, user, Instant.now().plusSeconds(daysToRecommend * 3600 * 24)));
+                song, friend, Instant.now().plusSeconds(daysToRecommend * 3600 * 24)));
     }
 
     @Async

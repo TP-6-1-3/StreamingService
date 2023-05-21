@@ -1,10 +1,11 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.UserMapper;
@@ -28,6 +29,7 @@ public class FriendService {
 
     private final PageUtil pageUtil;
 
+    @Transactional
     public Page<FriendDTO> getFriends(Long id, Integer pageNumber, Integer size, String nickname) {
         PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size);
         Page<User> pages = userRepository.findAllFriendsByNickname(id, nickname, pageRequest);
@@ -37,33 +39,28 @@ public class FriendService {
 
     @Transactional
     public void addFriend(UserDTO userDTO, String nickname) {
-        User user = userMapper.toEntityFromDTO(userDTO);
         User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
-        if (hasFriend(user.getFriends(), friend.getUserId())) {
+        if (userRepository.isFriend(userDTO.getUserId(), friend.getUserId())) {
             throw new EntityAlreadyExistsException("Пользователь уже добавлен в друзья");
         }
-        user.addFriend(friend);
-        userRepository.save(user);
+        userRepository.addFriend(userDTO.getUserId(), friend.getUserId());
     }
 
     private boolean hasFriend(Set<User> friends, Long friendId) {
-        return friends.stream().anyMatch(friend -> friend.getUserId().equals(friendId));
+        return !CollectionUtils.isEmpty(friends)
+                && friends.stream().anyMatch(friend -> friend.getUserId().equals(friendId));
     }
 
     @Transactional
     public void deleteFriend(UserDTO userDTO, String nickname) {
-        User user = userMapper.toEntityFromDTO(userDTO);
         User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
-        if (!hasFriend(user.getFriends(), friend.getUserId())) {
+        if (!userRepository.isFriend(userDTO.getUserId(), friend.getUserId())) {
             throw new NoFriendException("Пользователя не было в друзьях");
         }
-        user.deleteFriend(friend);
-        userRepository.save(user);
+        userRepository.deleteFriend(userDTO.getUserId(), friend.getUserId());
     }
 
-    public boolean hasFriend(UserDTO userDTO, String nickname) {
-        User user = userMapper.toEntityFromDTO(userDTO);
-        User friend = userMapper.toEntityFromDTO(userService.getUserByNickname(nickname));
-        return hasFriend(user.getFriends(), friend.getUserId());
+    public boolean hasFriend(UserDTO userDTO, UserDTO friend) {
+        return userRepository.isFriend(userDTO.getUserId(), friend.getUserId());
     }
 }

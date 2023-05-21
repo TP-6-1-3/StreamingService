@@ -50,7 +50,7 @@ public class AuthController {
             })
     })
     public ResponseEntity<?> getCredentials(Authentication authentication) {
-        UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
+        UserDTO user = userService.getUserByEmail((String) authentication.getPrincipal());
         return ResponseBuilder.build(OK, userService.getCredentials(user));
     }
 
@@ -66,8 +66,8 @@ public class AuthController {
                     responseCode = "409",
                     description = "Пользователь с указанной почтой или указанным ником уже существует",
                     content = {
-                        @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
-            })
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+                    })
     })
     @SecurityRequirements
     public ResponseEntity<?> signUpNewUserUsingForm(@RequestBody @Valid UserSignUpRequest request,
@@ -89,9 +89,9 @@ public class AuthController {
             }),
             @ApiResponse(
                     responseCode = "405", description = "Истекло время действия ссылки", content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ExceptionDTO.class))
-                    })
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class))
+            })
     })
     @SecurityRequirements
     public ResponseEntity<?> verifyUser(@PathVariable("code") String code) {
@@ -170,7 +170,7 @@ public class AuthController {
                     description = "Пользователь c указанным ником уже существует",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionDTO.class))
-            })
+                    })
     })
     public ResponseEntity<?> updateProfile(@RequestBody @Valid UpdateProfileRequest request,
                                            Authentication authentication) {

@@ -40,7 +40,7 @@ public class FriendController {
     })
     public ResponseEntity<?> getAllFriends(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
-                                           @RequestParam(value = "nickname", required = false) String nickname,
+                                           @RequestParam(value = "nickname", required = false, defaultValue = "") String nickname,
                                            Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         return ResponseBuilder.build(

@@ -18,23 +18,20 @@ public interface StatisticRepository extends JpaRepository<Statistic, UUID> {
             JOIN s.user u
                 ON u.userId = :userId
             JOIN s.genre g
-                ON g.genreId IN (:genreIds)
-            """)
+                ON g.genreId IN (:genreIds)""")
     List<Statistic> findByUserIdAndGenreId(@Param("userId") Long userId, @Param("genreIds") List<Long> genreIds);
 
     @Query("""
             SELECT s
             FROM Statistic s
             JOIN s.user u
-                ON u.userId = :userId
-            """)
+                ON u.userId = :userId""")
     List<Statistic> findByUserId(@Param("userId") Long userId);
 
     @Query("""
             SELECT s
             FROM Statistic s
             JOIN s.genre g
-                ON g.genreId = :genreId
-            """)
+                ON g.genreId = :genreId""")
     List<Statistic> findByGenreId(@Param("genreId") Long genreId);
 }

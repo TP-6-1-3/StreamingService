@@ -33,7 +33,7 @@ public class UserDTO implements UserDetails {
 
     @Override
     public String getUsername() {
-        return nickname;
+        return email;
     }
 
     @Override

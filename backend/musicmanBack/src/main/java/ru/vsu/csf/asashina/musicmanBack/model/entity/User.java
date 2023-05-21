@@ -37,29 +37,21 @@ public class User {
     @Column(nullable = false)
     private Boolean isVerified = false;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH })
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH })
+    @ManyToMany
     @JoinTable(name = "user_song",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "song_id")})
     private Set<Song> songs;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH })
+    @ManyToMany
     @JoinTable(name = "friend",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "friend_id")})
     private Set<User> friends;
-
-    public void addFriend(User friend) {
-        friends.add(friend);
-    }
-
-    public void deleteFriend(User friend) {
-        friends.remove(friend);
-    }
 }

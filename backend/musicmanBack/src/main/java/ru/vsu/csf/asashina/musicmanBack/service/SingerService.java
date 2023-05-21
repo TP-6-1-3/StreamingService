@@ -1,10 +1,10 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SingerMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SingerDTO;
@@ -34,7 +34,7 @@ public class SingerService {
     }
 
     public Page<SingerDTO> getAllSingers(Integer pageNumber, Integer size, String name, Boolean isAsc) {
-        PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size, isAsc, "full_name");
+        PageRequest pageRequest = pageUtil.createPageRequest(pageNumber, size, isAsc, "fullName");
         Page<Singer> singers = singerRepository.getAll(name, pageRequest);
         pageUtil.checkPageOutOfRange(singers, pageNumber);
         return singers.map(singerMapper::toDTOFromEntity);

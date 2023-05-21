@@ -18,11 +18,11 @@ public class Statistic {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID statisticId;
 
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "genre_id")
     private Genre genre;
 

@@ -1,9 +1,9 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.musicmanBack.mapper.GenreMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.StatisticMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;

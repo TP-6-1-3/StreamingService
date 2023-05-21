@@ -9,13 +9,13 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@SecurityScheme(name = "Authorization", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "Bearer")
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 @OpenAPIDefinition(
         info = @Info(
                 title = "Musicman API",
                 description = "Описание всех эндпоинтов сервиса \"Musicman\"",
                 contact = @Contact(name = "Анастасия Сашина", email = "sashina@cs.vsu.ru"),
-                version = "1.0.6"),
-        security = { @SecurityRequirement(name = "Bearer") })
+                version = "1.0.7"),
+        security = @SecurityRequirement(name = "bearerAuth"))
 public class SpringdocConfiguration {
 }

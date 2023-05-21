@@ -1,16 +1,15 @@
 package ru.vsu.csf.asashina.musicmanBack.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.PlaylistMapper;
-import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Playlist;
@@ -28,7 +27,6 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
 
     private final PlaylistMapper playlistMapper;
-    private final SongMapper songMapper;
 
     private final PageUtil pageUtil;
 
@@ -42,55 +40,52 @@ public class PlaylistService {
         return playlists.map(playlistMapper::toDTOFromEntity);
     }
 
-    public PlaylistWithSongsDTO getPlaylistById(String id, boolean isAdmin, Long userId) {
+    @Transactional
+    public PlaylistWithSongsDTO getPlaylistById(UUID id, boolean isAdmin, Long userId) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, isAdmin);
         return playlistMapper.toDTOWithSongFromEntity(playlist);
     }
 
     private void checkUsersAccessToPlaylist(Playlist playlist, Long userId, boolean isAdmin) {
-        if (!playlist.getUser().getUserId().equals(userId) || !isAdmin) {
+        if (!playlist.getUser().getUserId().equals(userId) && !isAdmin) {
             throw new AccessDeniedException("Нет доступа к плейлисту");
         }
     }
 
-    private Playlist findPlaylistById(String id) {
-        return playlistRepository.findById(UUID.fromString(id)).orElseThrow(
+    private Playlist findPlaylistById(UUID id) {
+        return playlistRepository.findById(id).orElseThrow(
                 () -> new EntityDoesNotExistException("Плейлиста с данным ИД не существует"));
     }
 
     @Transactional
     public void createPlaylist(CreatePlaylistRequest request, UserDTO user) {
         Playlist playlist = playlistMapper.toEntityFromRequest(request, user);
-        playlistRepository.save(playlist);
+        playlistRepository.saveAndFlush(playlist);
     }
 
-    public SongExistsDTO isSongInPlaylist(String id, Long songId, Long userId) {
+    @Transactional
+    public SongExistsDTO isSongInPlaylist(UUID id, Long songId, Long userId) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, false);
         songService.getSongById(songId);
-        return new SongExistsDTO(isSongInPlaylist(playlist, songId));
-    }
-
-    private boolean isSongInPlaylist(Playlist playlist, Long songId) {
-        return playlist.getSongs().stream().anyMatch(song -> song.getSongId().equals(songId));
+        return new SongExistsDTO(playlistRepository.isSongInPlaylist(playlist.getPlaylistId(), songId));
     }
 
     @Transactional
-    public void addSongToPlaylist(String id, Long songId, Long userId) {
+    public void addSongToPlaylist(UUID id, Long songId, Long userId) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, false);
-        SongDTO song = songService.getSongById(songId);
-        if (isSongInPlaylist(playlist, songId)) {
+        songService.getSongById(songId);
+        if (playlistRepository.isSongInPlaylist(playlist.getPlaylistId(), songId)) {
             throw new EntityAlreadyExistsException("Песня уже есть в плейлисте");
         }
         recommendationService.deleteFromRecommendation(userId, songId);
-        playlist.addSong(songMapper.toEntityFromDTO(song));
-        playlistRepository.save(playlist);
+        playlistRepository.addSongToPlaylist(id, songId);
     }
 
     @Transactional
-    public void updatePlaylist(String id, UpdatePlaylistRequest request, Long userId) {
+    public void updatePlaylist(UUID id, UpdatePlaylistRequest request, Long userId) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, false);
         playlistMapper.updateEntity(request, playlist);
@@ -98,21 +93,20 @@ public class PlaylistService {
     }
 
     @Transactional
-    public void deletePlaylist(String id, Long userId, boolean isAdmin) {
+    public void deletePlaylist(UUID id, Long userId, boolean isAdmin) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, isAdmin);
         playlistRepository.delete(playlist);
     }
 
     @Transactional
-    public void deleteSongFromPlaylist(String id, Long songId, Long userId) {
+    public void deleteSongFromPlaylist(UUID id, Long songId, Long userId) {
         Playlist playlist = findPlaylistById(id);
         checkUsersAccessToPlaylist(playlist, userId, false);
-        SongDTO song = songService.getSongById(songId);
-        if (!isSongInPlaylist(playlist, songId)) {
+        songService.getSongById(songId);
+        if (!playlistRepository.isSongInPlaylist(playlist.getPlaylistId(), songId)) {
             throw new NoSongInCollectionException("Песни нет в плейлисте");
         }
-        playlist.deleteSong(songMapper.toEntityFromDTO(song));
-        playlistRepository.save(playlist);
+        playlistRepository.deleteSongFromPlaylist(id, songId);
     }
 }

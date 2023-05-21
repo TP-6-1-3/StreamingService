@@ -5,12 +5,12 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.6
+  version: 1.0.7
 servers:
   - url: http://localhost:8080/api/v1
     description: Generated server url
 security:
-  - Bearer: []
+  - bearerAuth: []
 paths:
   "/singers/{id}":
     get:
@@ -133,6 +133,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: Возвращает плейлист
@@ -169,6 +170,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -209,6 +211,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '204':
           description: Плейлист удален
@@ -293,6 +296,7 @@ paths:
           required: false
           schema:
             type: string
+            default: ''
         - name: sort
           in: query
           required: false
@@ -346,7 +350,6 @@ paths:
           multipart/form-data:
             schema:
               "$ref": "#/components/schemas/CreateSongRequest"
-        required: true
       responses:
         '201':
           description: Песня создана
@@ -438,6 +441,7 @@ paths:
           required: false
           schema:
             type: string
+            default: ''
         - name: isAsc
           in: query
           required: false
@@ -565,6 +569,7 @@ paths:
           required: false
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Возвращает все плейлисты
@@ -630,6 +635,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: songId
           in: path
           required: true
@@ -1224,9 +1230,7 @@ paths:
         '200':
           description: Возвращает файл
           content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/SongDTO"
+            audio/mp3: {}
         '400':
           description: Невалидные входные данные
           content:
@@ -1323,6 +1327,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: songId
           in: path
           required: true
@@ -1380,6 +1385,7 @@ paths:
           required: false
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Возвращает все песни
@@ -1556,6 +1562,7 @@ paths:
           required: false
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Возвращает всех друзей
@@ -1587,6 +1594,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: songId
           in: path
           required: true
@@ -1673,7 +1681,8 @@ components:
           minLength: 0
           type: string
         duration:
-          "$ref": "#/components/schemas/LocalTime"
+          type: string
+          format: mm:ss
         singerId:
           type: integer
           format: int64
@@ -1685,21 +1694,6 @@ components:
         file:
           type: string
           format: binary
-    LocalTime:
-      type: object
-      properties:
-        hour:
-          type: integer
-          format: int32
-        minute:
-          type: integer
-          format: int32
-        second:
-          type: integer
-          format: int32
-        nano:
-          type: integer
-          format: int32
     AddGenresToSongRequest:
       required:
         - genresIds
@@ -1859,6 +1853,21 @@ components:
         totalSongsAmount:
           type: integer
           format: int64
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
     PagingInfoDTO:
       type: object
       properties:
@@ -1984,7 +1993,7 @@ components:
           items:
             "$ref": "#/components/schemas/FriendDTO"
   securitySchemes:
-    Authorization:
+    bearerAuth:
       type: http
-      scheme: Bearer
+      scheme: bearer
       bearerFormat: JWT

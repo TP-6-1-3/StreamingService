@@ -14,7 +14,6 @@ public interface SingerRepository extends JpaRepository<Singer, Long> {
     @Query(value = """
             SELECT s
             FROM Singer s
-            WHERE LOWER(s.fullName) LIKE CONCAT('%', LOWER(:name), '%')
-            """)
+            WHERE LOWER(s.fullName) LIKE CONCAT('%', LOWER(:name), '%')""")
     Page<Singer> getAll(@Param("name") String name, Pageable pageable);
 }

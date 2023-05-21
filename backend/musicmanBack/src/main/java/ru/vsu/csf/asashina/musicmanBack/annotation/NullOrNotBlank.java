@@ -19,7 +19,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NullOrNotBlank {
 
     String message() default "Must be null or not blank";
-    Class<?>[] groups() default { };
+
+    Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBlank, String> {

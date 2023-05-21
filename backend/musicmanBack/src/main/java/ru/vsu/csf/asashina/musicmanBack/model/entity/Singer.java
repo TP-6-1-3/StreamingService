@@ -24,6 +24,6 @@ public class Singer {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "singer", cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
+    @OneToMany(mappedBy = "singer")
     private Set<Song> songs;
 }

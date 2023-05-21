@@ -41,7 +41,7 @@ public class AudioLibraryController {
     })
     public ResponseEntity<?> getAllSongs(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                          @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
-                                         @RequestParam(value = "title", required = false) String title,
+                                         @RequestParam(value = "title", required = false, defaultValue = "") String title,
                                          Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         return ResponseBuilder.build(
@@ -90,7 +90,7 @@ public class AudioLibraryController {
     })
     public ResponseEntity<?> addSong(@PathVariable("songId") Long songId, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
-        audioLibraryService.addSongToUsersLibrary(songId, user.getUserId());
+        audioLibraryService.addSongToUsersLibrary(user.getUserId(), songId);
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
