@@ -34,6 +34,7 @@ services:
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
+      - FRONT_URL=${MUSICMAN_FRONT_URL}
 
 volumes:
   musicman_data:

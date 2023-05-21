@@ -50,6 +50,8 @@ server:
 emailTemplate:
   mainPage:
 
+frontUrl: ${FRONT_URL:http://localhost:3000}
+
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
   historySize: 20
