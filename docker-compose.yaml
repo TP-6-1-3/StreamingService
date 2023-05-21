@@ -20,7 +20,7 @@ services:
     ports:
       - ${MUSICMAN_SERVER_PORT}:8080
     depends_on:
-      - musicmanDB
+      - database
     volumes:
       - /c/Users/Public/StreamingService/songs:/opt/app/songs
     environment:
