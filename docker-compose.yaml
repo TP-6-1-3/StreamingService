@@ -15,9 +15,7 @@ services:
       - musicman_data:/var/lib/postgresql/data
 
   backend:
-    image: musicman_backend:latest
-    build:
-      context: ./backend
+    image: arcturs/musicman_backend
     container_name: backend
     ports:
       - ${MUSICMAN_SERVER_PORT}:8080
