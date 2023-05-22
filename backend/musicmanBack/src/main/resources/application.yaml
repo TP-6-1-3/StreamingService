@@ -49,6 +49,7 @@ server:
 
 emailTemplate:
   mainPage:
+  verificationLink:
 
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
