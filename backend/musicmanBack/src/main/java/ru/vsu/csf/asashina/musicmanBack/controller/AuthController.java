@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,11 +68,8 @@ public class AuthController {
                     })
     })
     @SecurityRequirements
-    public ResponseEntity<?> signUpNewUserUsingForm(@RequestBody @Valid UserSignUpRequest request,
-                                                    HttpServletRequest req) {
-        return ResponseBuilder.build(
-                CREATED,
-                authService.signUp(request, req.getRequestURL().toString().replace("register", "verify")));
+    public ResponseEntity<?> signUpNewUserUsingForm(@RequestBody @Valid UserSignUpRequest request) {
+        return ResponseBuilder.build(CREATED, authService.signUp(request));
     }
 
     @PostMapping("/verify/{code}")
@@ -113,9 +109,9 @@ public class AuthController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> resendCode(Authentication authentication, HttpServletRequest request) {
+    public ResponseEntity<?> resendCode(Authentication authentication) {
         UserDTO user = userService.getUserByEmail((String) authentication.getPrincipal());
-        authService.resendCode(user, request.getRequestURL().toString().replace("resend-code", "verify"));
+        authService.resendCode(user);
         return ResponseBuilder.buildWithoutBodyResponse(OK);
     }
 
