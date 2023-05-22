@@ -32,16 +32,19 @@ public class AuthService {
     @Value("${emailTemplate.mainPage}")
     private String mainPage;
 
+    @Value("${emailTemplate.verificationLink}")
+    private String verificationLink;
+
     @Transactional
-    public TokensDTO signUp(UserSignUpRequest request, String verificationLink) {
+    public TokensDTO signUp(UserSignUpRequest request) {
         UserDTO registeredUser = userService.registerUser(request);
         UUID code = verificationService.createCodeAndSave(registeredUser);
-        sendCode(registeredUser, verificationLink, code);
+        sendCode(registeredUser, code);
         return tokenService.createTokens(registeredUser);
     }
 
     @Async
-    private void sendCode(UserDTO user, String verificationLink, UUID code) {
+    private void sendCode(UserDTO user, UUID code) {
         emailService.sendTemplate(
                 user.getEmail(),
                 "Подтверждение регистрации на платформе Musicman",
@@ -54,9 +57,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void resendCode(UserDTO user, String verificationLink) {
+    public void resendCode(UserDTO user) {
         UUID code = verificationService.resendCode(user);
-        sendCode(user, verificationLink, code);
+        sendCode(user, code);
     }
 
     @Transactional
