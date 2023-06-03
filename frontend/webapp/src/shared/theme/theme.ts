@@ -6,5 +6,6 @@ export const Theme = {
     authButton: 'rgba(8, 72, 124, 0.55)',
     text: 'rgba(0, 0, 0, 0.55)',
     whiteText: '#ffffff',
-    background: '#282828'
+    background: '#282828',
+    primary2: '#42A6F5',
 }
