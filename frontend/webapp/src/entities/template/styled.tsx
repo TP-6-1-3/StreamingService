@@ -49,7 +49,7 @@ export const TemplateContent = styled.div`
 `;
 export const TemplateDesignTop = styled.div`
     background: ${Theme.gradientTop};
-    width: 100vw;
+    width: calc(100vw);
     height: 40vh;
     position: absolute;
     top: 0;
@@ -57,7 +57,7 @@ export const TemplateDesignTop = styled.div`
 `;
 export const TemplateDesignBottom = styled.div`
     background: ${Theme.gradientBottom};
-    width: 100vw;
+    width: calc(100vw);
     height: 40vh;
     position: fixed;
     bottom: 0;

@@ -5,5 +5,5 @@ interface IHeader {
 }
 
 export const HeaderWrapper = ({ children }: IHeader): React.ReactElement<IHeader, string> => {
-    return <HeaderWrapperContainer><HeaderWrapperContent>{children}</HeaderWrapperContent></HeaderWrapperContainer>
+    return <HeaderWrapperContainer><HeaderWrapperContent><div style={{ padding: '10px 20px', width: '100%' }}>{children}</div></HeaderWrapperContent></HeaderWrapperContainer>
 }
