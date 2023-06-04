@@ -8,7 +8,7 @@ import { MusicFooterPlayerPlayIcon } from "../../entities/icons/musicFooterPlaye
 import { MusicFooterPlayerRightIcon } from "../../entities/icons/musicFooterPlayerRight"
 import { MusicFooterPlayerEqualizer, MusicFooterPlayerEqualizerContainer, MusicFooterPlayerSlider, MusicPlayerFooterBasisActions, MusicPlayerFooterContainer, MusicPlayerFooterImageContainer, MusicPlayerFooterTime, MusicPlayerFooterTrackInfo } from "./styled"
 import { MusicFooterPlayerPauseIcon } from '../../entities/icons/musicFooterPlayerPause';
-import { $currentTrack, $currentTrackIsPaused, setCurrentTrackIsPausedFx } from '../../shared/stores/tracks';
+import { $currentTrack, $currentTrackIsPaused, setCurrentTrackIsPausedFx, setNextTrackFx, setPrevTrackFx } from '../../shared/stores/tracks';
 import { useStore } from 'effector-react';
 
 const SliderComponent = React.memo(({ duration, stopStartInterval, updateTrackTime, currentDuration, changeTimeTrack }: any) => {
@@ -33,6 +33,7 @@ export const MusicPlayerFooter = () => {
     const currentTrack = useStore($currentTrack);
 
     const [int, setInt] = React.useState<any>(0);
+    const [initialPlayer, setInitialPlayer] = React.useState<any>(false);
     const [musicHasStarted, setMusicHasStarted] = React.useState(false);
 
     const [duration, setDuration] = React.useState(0);
@@ -95,25 +96,23 @@ export const MusicPlayerFooter = () => {
         setMusicHasStarted(true);
     };
 
-    // React.useEffect(() => {
-    //     loadAudioBuffer();
-    // }, [])
-
     React.useEffect(() => {
-        if (!musicHasStarted) {
-            loadAudioBuffer()
-        } else {
-            if (audioContext) {
-                if (currentTrackIsPaused) {
-                    audioContext.suspend()
-                    clearInterval(int);
-                } else {
-                    audioContext.resume()
-                    stopStartInterval(currentDuration);
+        if (initialPlayer) {
+            if (!musicHasStarted) {
+                loadAudioBuffer()
+            } else {
+                if (audioContext) {
+                    if (currentTrackIsPaused) {
+                        audioContext.suspend()
+                        clearInterval(int);
+                    } else {
+                        audioContext.resume()
+                        stopStartInterval(currentDuration);
+                    }
                 }
             }
         }
-    }, [currentTrackIsPaused, musicHasStarted]);
+    }, [currentTrackIsPaused, musicHasStarted, initialPlayer]);
 
     const changeTimeTrack = (seconds: number) => {
         const currentTime = audioContext.currentTime;
@@ -144,9 +143,13 @@ export const MusicPlayerFooter = () => {
             </MusicPlayerFooterImageContainer>
 
             <MusicPlayerFooterBasisActions>
-                <MusicFooterPlayerLeftIcon />
-                <div onClick={() => setCurrentTrackIsPausedFx(!currentTrackIsPaused)}>{renderIcon}</div>
-                <MusicFooterPlayerRightIcon />
+                <div onClick={() => setPrevTrackFx()}><MusicFooterPlayerLeftIcon /></div>
+                <div onClick={() => {
+                    if (!initialPlayer) setInitialPlayer(true);
+
+                    setCurrentTrackIsPausedFx(!currentTrackIsPaused)
+                }}>{renderIcon}</div>
+                <div onClick={() => setNextTrackFx()}><MusicFooterPlayerRightIcon /></div>
             </MusicPlayerFooterBasisActions>
 
             <MusicPlayerFooterTime>{time}</MusicPlayerFooterTime>
