@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from "react-router-dom"
 import { HeaderWrapper } from "../../entities/headerWrapper"
 import { MusicPlayerLeftIcon } from "../../entities/icons/musicPlayerLeft"
@@ -6,10 +7,15 @@ import { MusicSliderElemIcon } from "../../entities/icons/musicSliderElem"
 import { MusicPlayerFooter } from "../../features/musicFooterPlayer"
 import { PersonalHeader } from "../../features/personalHeader"
 import { SearchInput } from "../../features/searchInput"
+import { setHeaderTextFx } from '../../shared/stores/common';
 import { HeaderText } from "../../shared/text/headerText"
 import { HomeActionButton, HomeActionContainer, HomeComponent, HomeHeaderFirstText, HomeHeaderSecondText, HomeHelloContent, HomeLayout, HomeMusicContent, MusicPublishContainer, MusicPublishImageContainer, MusicPublishPlayerActions, MusicPublishPlayerSlider } from "./styled"
 
 export const HomePage = (): React.ReactElement<void, string> => {
+    React.useEffect(() => {
+        setHeaderTextFx('Главная');
+    }, []);
+
     return (
         <HomeComponent>
             <HeaderWrapper>
@@ -24,7 +30,7 @@ export const HomePage = (): React.ReactElement<void, string> => {
 
                     <HomeActionContainer>
                         <HomeHeaderSecondText>Или же вы также можете:</HomeHeaderSecondText>
-                        <Link to="#"><HomeActionButton>Перейти к своим любимым песням</HomeActionButton></Link>
+                        <Link to="/tracks"><HomeActionButton>Перейти к своим любимым песням</HomeActionButton></Link>
                         <Link to="#"><HomeActionButton>Посмотреть композиции по жанрам</HomeActionButton></Link>
                         <Link to="#"><HomeActionButton>Открыть историю прослушиваний</HomeActionButton></Link>
                     </HomeActionContainer>
