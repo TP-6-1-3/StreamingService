@@ -38,6 +38,7 @@ services:
       - SONGS_DIRECTORY=/opt/app/songs
       - SERVER_PORT=${MUSICMAN_SERVER_PORT_SSL}
       - SERVER_ENABLED_SSL=${MUSICMAN_SERVER_ENABLED_SSL}
+      - KEYSTORE=/opt/app/musicman.p12
 
   proxy:
     image: arcturs/musicman_proxy
