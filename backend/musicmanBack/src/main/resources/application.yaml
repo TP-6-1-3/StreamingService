@@ -47,6 +47,10 @@ server:
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
 
+trust:
+  store: classpath:musicman.p12
+  store.password: password
+
 management:
   endpoints:
     web:
