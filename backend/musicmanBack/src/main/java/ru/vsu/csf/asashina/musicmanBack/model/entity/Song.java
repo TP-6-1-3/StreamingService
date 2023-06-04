@@ -29,7 +29,7 @@ public class Song {
     @JoinColumn(name = "singer_id")
     private Singer singer;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(name = "song_genre",
             joinColumns = {@JoinColumn(name = "song_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
