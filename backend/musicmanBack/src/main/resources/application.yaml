@@ -44,8 +44,19 @@ security:
 server:
   shutdown: GRACEFUL
   forward-headers-strategy: NATIVE
+  port: ${SERVER_PORT:8443}
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/musicman.p12
+    key-store-password: password
+    key-alias: musicman
+    enabled: ${SERVER_ENABLED_SSL:false}
+
+trust:
+  store: classpath:keystore/musicman.p12
+  store.password: password
 
 management:
   endpoints:
