@@ -46,12 +46,6 @@ server:
   forward-headers-strategy: NATIVE
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
-  ssl:
-    key-store-type: PKCS12
-    key-store: classpath:musicman.p12
-    key-store-password: password
-    key-alias: musicman
-    enabled: false
 
 trust:
   store: classpath:musicman.p12

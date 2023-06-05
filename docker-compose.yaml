@@ -34,8 +34,6 @@ services:
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
-      - SERVER_PORT=${MUSICMAN_SERVER_PORT_SSL}
-      - SERVER_ENABLED_SSL=${MUSICMAN_SERVER_ENABLED_SSL}
 
   proxy:
     image: arcturs/musicman_proxy
