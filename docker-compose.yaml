@@ -23,8 +23,6 @@ services:
       - database
     volumes:
       - /c/Users/Public/StreamingService/songs:/opt/app/songs
-      - /c/Users/Public/StreamingService/musicman.p12:/opt/app/musicman.p12
-      - /c/Users/Public/StreamingService/myCertificate.crt:/opt/app/myCertificate.crt
     environment:
       - DATABASE_HOST=${MUSICMAN_DATABASE_HOST}
       - DATABASE_PORT=${MUSICMAN_DATABASE_PORT}
@@ -38,7 +36,6 @@ services:
       - SONGS_DIRECTORY=/opt/app/songs
       - SERVER_PORT=${MUSICMAN_SERVER_PORT_SSL}
       - SERVER_ENABLED_SSL=${MUSICMAN_SERVER_ENABLED_SSL}
-      - KEYSTORE=/opt/app/musicman.p12
 
   proxy:
     image: arcturs/musicman_proxy

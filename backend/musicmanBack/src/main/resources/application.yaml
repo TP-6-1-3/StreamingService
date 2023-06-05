@@ -49,13 +49,13 @@ server:
     context-path: ${SERVER_PREFIX:/api/v1}
   ssl:
     key-store-type: PKCS12
-    key-store: ${KEYSTORE:C:\Users\Public\StreamingService\musicman.p12}
+    key-store: classpath:musicman.p12
     key-store-password: password
     key-alias: musicman
     enabled: ${SERVER_ENABLED_SSL:false}
 
 trust:
-  store: ${KEYSTORE:C:\Users\Public\StreamingService\musicman.p12}
+  store: classpath:musicman.p12
   store.password: password
 
 management:
