@@ -56,12 +56,24 @@ export const MusicFooterPlayerSlider = styled.div`
 export const MusicFooterPlayerEqualizer = styled.div`
 
 `
+
+export const EqualizerLines = styled.div`
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 15px 0;
+`
+
 export const MusicFooterPlayerEqualizerContainer = styled.div`
-    background: ${Theme.primary};
+    /* background: ${Theme.primary}; */
+    background: black;
     position: absolute;
     bottom: 70px;
     border: 1px black solid;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
 `
 export const MusicPlayerFooterTime = styled.div`
     width: 50px;
