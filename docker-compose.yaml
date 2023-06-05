@@ -35,8 +35,16 @@ services:
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
 
+  frontend:
+    image: arcturs/musicman_frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+
   proxy:
-    image: arcturs/musicman_proxy
+    image: musicman_proxy:latest
+    build:
+      context: ./proxy
     depends_on:
       - backend
     ports:

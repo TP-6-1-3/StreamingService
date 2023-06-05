@@ -4,7 +4,7 @@ import { MusicElementMoreIcon } from '../../entities/icons/musicElementMore';
 import { MusicFooterPlayerPauseIcon } from '../../entities/icons/musicFooterPlayerPause';
 import { MusicFooterPlayerPlayIcon } from '../../entities/icons/musicFooterPlayerPlay';
 import { ISong } from '../../shared/api/songs/getSongs';
-import { $currentTrack, $currentTrackIsPaused, setCurrentTrackFx, setCurrentTrackIsPausedFx } from '../../shared/stores/tracks';
+import { $currentTrack, $currentTrackIsPaused, setCurrentTrackFx, setCurrentTrackIsPausedFx, setCurrentTrackSongIdFx } from '../../shared/stores/tracks';
 import { MusicElementActions, MusicElementContainer, MusicElementContent, MusicElementImageContainer, MusicElementName } from './styled';
 
 export const MusicElement = (params: ISong) => {
@@ -34,6 +34,7 @@ export const MusicElement = (params: ISong) => {
                 <div onClick={() => {
                     setCurrentTrackIsPausedFx(!currentTrackIsPaused);
                     setCurrentTrackFx(params);
+                    setCurrentTrackSongIdFx(songId);
                 }}>{ songIcon }</div>
 
                 <MusicElementImageContainer>

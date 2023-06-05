@@ -6,10 +6,64 @@ import { MusicFooterPlayerHeartIcon } from "../../entities/icons/musicFooterPlay
 import { MusicFooterPlayerLeftIcon } from "../../entities/icons/musicFooterPlayerLeft"
 import { MusicFooterPlayerPlayIcon } from "../../entities/icons/musicFooterPlayerPlay"
 import { MusicFooterPlayerRightIcon } from "../../entities/icons/musicFooterPlayerRight"
-import { MusicFooterPlayerEqualizer, MusicFooterPlayerEqualizerContainer, MusicFooterPlayerSlider, MusicPlayerFooterBasisActions, MusicPlayerFooterContainer, MusicPlayerFooterImageContainer, MusicPlayerFooterTime, MusicPlayerFooterTrackInfo } from "./styled"
+import { EqualizerLines, MusicFooterPlayerEqualizer, MusicFooterPlayerEqualizerContainer, MusicFooterPlayerSlider, MusicPlayerFooterBasisActions, MusicPlayerFooterContainer, MusicPlayerFooterImageContainer, MusicPlayerFooterTime, MusicPlayerFooterTrackInfo } from "./styled"
 import { MusicFooterPlayerPauseIcon } from '../../entities/icons/musicFooterPlayerPause';
-import { $currentTrack, $currentTrackIsPaused, setCurrentTrackIsPausedFx, setNextTrackFx, setPrevTrackFx } from '../../shared/stores/tracks';
+import { $currentTrack, $currentTrackAudioObj, $currentTrackIsPaused, $currentTrackSongId, setCurrentTrackAudioObjFx, setCurrentTrackIsPausedFx, setNextTrackFx, setPrevTrackFx } from '../../shared/stores/tracks';
 import { useStore } from 'effector-react';
+import { Equalizer } from '../../shared/libs/equalizer';
+import { ISong } from '../../shared/api/songs/getSongs';
+import { $userCredentials } from '../../shared/stores/user';
+
+const MusicEqualizer = React.memo(({ showEqualizer, setShowEqualizer, audioContext, audioBuffer }: any) => {
+    const audioObj = useStore($currentTrackAudioObj);
+    const [equalizer, setEqualizer] = React.useState<any>(null);
+    const [hasEdit, setHasEdit] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        if (audioContext && audioBuffer && hasEdit) {
+            const equalizer = new Equalizer(audioContext);
+            equalizer.initialize(audioBuffer);
+
+            setEqualizer(equalizer);
+        }
+    }, [hasEdit, audioContext]);
+
+    const onInput = (index: any, value: any) => {
+        const gain = Number(value);
+        equalizer.setGain(index, gain);
+    }
+
+    const neeededRowEqualize = 3;
+    const renderEqualizeLines = new Array(neeededRowEqualize).fill('').map((_, key) => {
+        return (
+            <Slider
+                min={-10}
+                max={10}
+                step={0.1}
+                defaultValue={0}
+                orientation="vertical"
+                onChange={(_, value) => {
+                    if (!hasEdit) {
+                        setHasEdit(true);
+                    } else { 
+                        onInput(key + 1, value);
+                    }
+                }}
+            />
+        )
+    })
+
+    return (<div>
+        <div onClick={() => setShowEqualizer(!showEqualizer)}><MusicFooterPlayerEqualizerIcon /></div>
+        {showEqualizer ? <MusicFooterPlayerEqualizerContainer>
+            <span>Эквалайзер</span>
+
+            <EqualizerLines>
+                {renderEqualizeLines}
+            </EqualizerLines>
+        </MusicFooterPlayerEqualizerContainer> : null}
+    </div>)
+})
 
 const SliderComponent = React.memo(({ duration, stopStartInterval, updateTrackTime, currentDuration, changeTimeTrack }: any) => {
     return (
@@ -31,7 +85,10 @@ const SliderComponent = React.memo(({ duration, stopStartInterval, updateTrackTi
 export const MusicPlayerFooter = () => {
     const currentTrackIsPaused = useStore($currentTrackIsPaused);
     const currentTrack = useStore($currentTrack);
+    const userCredentials = useStore($userCredentials);
+    const currentTrackSongId = useStore($currentTrackSongId);
 
+    const [showEqualizer, setShowEqualizer] = React.useState<any>(false);
     const [int, setInt] = React.useState<any>(0);
     const [initialPlayer, setInitialPlayer] = React.useState<any>(false);
     const [musicHasStarted, setMusicHasStarted] = React.useState(false);
@@ -41,9 +98,28 @@ export const MusicPlayerFooter = () => {
     const [minutes, setMinutes] = React.useState(0);
     const [seconds, setSeconds] = React.useState(0);
 
-    const [audioObj, setAudioObj] = React.useState<any>(null);
+    const audioObj: any = useStore($currentTrackAudioObj);
+    const setAudioObj = setCurrentTrackAudioObjFx;
+
     const [audioContext, setAudioContext] = React.useState<any>(null);
     const [audioBuffer, setAudioBuffer] = React.useState<any>(null);
+
+    console.log(currentTrackSongId);
+
+    React.useEffect(() => {
+        clearInterval(int);
+        setMinutes(0);
+        setSeconds(0);
+        console.log('changed audio')
+
+        if (!currentTrack) return;
+        if (audioObj) {
+            audioObj.stop();
+            audioObj.disconnect();
+        }
+
+        loadAudioBuffer(currentTrack);
+    }, [currentTrackSongId]);
 
     const stopStartInterval = (currentDuration: number) => {
         clearInterval(int);
@@ -67,12 +143,16 @@ export const MusicPlayerFooter = () => {
         setSeconds(seconds);
     }
 
-    const loadAudioBuffer = async () => {
+    const loadAudioBuffer = async (currentTrack: ISong) => {
         console.log('Start')
-        const response = await axios.get('/gspd.mp3', {
+
+        if (!currentTrack.url) return;
+        if (!userCredentials) return;
+
+        const response = await axios.get(currentTrack.url, {
             responseType: 'arraybuffer',
             headers: {
-                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZXMiOlsiQURNSU4iLCJVU0VSIl0sImlzcyI6Im11c2ljbWFuLXNlcnZlciIsIm5pY2tuYW1lIjoiYWRtaW4iLCJmdWxsTmFtZSI6ImFkbWluIGFkbWluIiwiZXhwIjoxNjg2Mjk1OTA1LCJlbWFpbCI6ImFkbWluQG1haWwuY29tIn0.p75bEYutAaW-8blNisy27xLW7TYzgxm7RtBU8xxwbk8`
+                Authorization: `Bearer ${userCredentials?.accessToken}`
             }
         });
         const audioContext = new AudioContext();
@@ -86,6 +166,8 @@ export const MusicPlayerFooter = () => {
         console.log(audioContext, decodedData)
 
         setDuration(decodedData.duration);
+        setCurrentDuration(0);
+        stopStartInterval(0);
 
         setAudioObj(audioBufferSourceNode);
         setAudioContext(audioContext);
@@ -99,7 +181,9 @@ export const MusicPlayerFooter = () => {
     React.useEffect(() => {
         if (initialPlayer) {
             if (!musicHasStarted) {
-                loadAudioBuffer()
+                if (currentTrack) {
+                    loadAudioBuffer(currentTrack);
+                }
             } else {
                 if (audioContext) {
                     if (currentTrackIsPaused) {
@@ -162,11 +246,7 @@ export const MusicPlayerFooter = () => {
             <MusicFooterPlayerHeartIcon />
 
             <MusicFooterPlayerEqualizer>
-                <MusicFooterPlayerEqualizerIcon />
-
-                <MusicFooterPlayerEqualizerContainer>
-                    <span>Эквалайзер</span>
-                </MusicFooterPlayerEqualizerContainer>
+                <MusicEqualizer {...{ showEqualizer, setShowEqualizer, audioContext, audioBuffer }} />
             </MusicFooterPlayerEqualizer>
 
             <MusicFooterPlayerSlider>

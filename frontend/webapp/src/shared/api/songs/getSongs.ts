@@ -14,6 +14,7 @@ export interface ISong {
     songId: number,
     title: string,
     duration: string,
+    url?: string,
     singer: {
         singerId: number,
         fullName: string,

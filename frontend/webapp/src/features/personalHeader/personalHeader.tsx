@@ -23,8 +23,6 @@ export const PersonalHeader = () => {
 
     const isAuthed = userData;
 
-    console.log(isAuthed)
-
     return (
         <HeaderWrapper>
             <PersonalHeaderData>
