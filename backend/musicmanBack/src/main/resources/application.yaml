@@ -44,7 +44,6 @@ security:
 server:
   shutdown: GRACEFUL
   forward-headers-strategy: NATIVE
-  port: ${SERVER_PORT:8443}
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
   ssl:
