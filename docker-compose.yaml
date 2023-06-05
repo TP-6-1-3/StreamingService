@@ -1,0 +1,75 @@
+version: '3'
+services:
+  database:
+    image: postgres:15.1-alpine
+    restart: always
+    ports:
+      - ${MUSICMAN_DATABASE_PORT}:5432
+    container_name: database
+    environment:
+      - POSTGRES_USER=${MUSICMAN_DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${MUSICMAN_DATABASE_PASSWORD}
+      - POSTGRES_DB=${MUSICMAN_DATABASE_NAME}
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    volumes:
+      - musicman_data:/var/lib/postgresql/data
+
+  backend:
+    image: arcturs/musicman_backend
+    container_name: backend
+    ports:
+      - ${MUSICMAN_SERVER_PORT}:8080
+    depends_on:
+      - database
+    volumes:
+      - /c/Users/Public/StreamingService/songs:/opt/app/songs
+    environment:
+      - DATABASE_HOST=${MUSICMAN_DATABASE_HOST}
+      - DATABASE_PORT=${MUSICMAN_DATABASE_PORT}
+      - DATABASE_NAME=${MUSICMAN_DATABASE_NAME}
+      - DATABASE_USERNAME=${MUSICMAN_DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${MUSICMAN_DATABASE_PASSWORD}
+      - JWT_SECRET_KEY=${MUSICMAN_SERVER_JWT_SECRET_KEY}
+      - SERVER_PREFIX=${MUSICMAN_SERVER_PREFIX}
+      - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
+      - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
+      - SONGS_DIRECTORY=/opt/app/songs
+
+  proxy:
+    image: arcturs/musicman_proxy
+    depends_on:
+      - backend
+    ports:
+      - 8081:8080
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    user: "$UID:$GID"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/'
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3001:3001
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./:/etc/grafana/provisioning
+    environment:
+      - GF_SERVER_HTTP_PORT=3001
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+
+volumes:
+  musicman_data:
+  backend_data:
+  prometheus-data:
+  grafana-data:
