@@ -42,9 +42,7 @@ services:
       - 3000:3000
 
   proxy:
-    image: musicman_proxy:latest
-    build:
-      context: ./proxy
+    image: arcturs/musicman_proxy
     depends_on:
       - backend
     ports:
