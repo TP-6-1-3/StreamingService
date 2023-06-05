@@ -52,7 +52,7 @@ server:
     key-store: classpath:musicman.p12
     key-store-password: password
     key-alias: musicman
-    enabled: ${SERVER_ENABLED_SSL:false}
+    enabled: false
 
 trust:
   store: classpath:musicman.p12

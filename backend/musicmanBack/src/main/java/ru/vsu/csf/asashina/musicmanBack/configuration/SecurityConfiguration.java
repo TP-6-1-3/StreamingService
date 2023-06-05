@@ -28,7 +28,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers(GET, "/v3/api-docs/**", "/songs/**", "/swagger-ui/**",
