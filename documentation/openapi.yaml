@@ -5,14 +5,14 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.7
+  version: 1.0.9
 servers:
   - url: http://localhost:8080/api/v1
     description: Generated server url
 security:
   - bearerAuth: []
 paths:
-  "/singers/{id}":
+  /singers/{id}:
     get:
       tags:
         - Singer Controller
@@ -31,19 +31,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SingerDTO"
+                $ref: '#/components/schemas/SingerDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Исполнитель не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     put:
       tags:
@@ -61,7 +61,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UpdateSingerRequest"
+              $ref: '#/components/schemas/UpdateSingerRequest'
         required: true
       responses:
         '200':
@@ -73,19 +73,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Исполнитель не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     delete:
       tags:
         - Singer Controller
@@ -108,20 +108,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Исполнитель не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/playlists/{id}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /playlists/{id}:
     get:
       tags:
         - Playlist Controller
@@ -140,25 +140,25 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/PlaylistWithSongsDTO"
+                $ref: '#/components/schemas/PlaylistWithSongsDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     put:
       tags:
         - Playlist Controller
@@ -175,7 +175,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UpdatePlaylistRequest"
+              $ref: '#/components/schemas/UpdatePlaylistRequest'
         required: true
       responses:
         '200':
@@ -187,19 +187,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     delete:
       tags:
         - Playlist Controller
@@ -222,20 +222,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/auth/profile":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/profile:
     put:
       tags:
         - Auth Controller
@@ -245,7 +245,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UpdateProfileRequest"
+              $ref: '#/components/schemas/UpdateProfileRequest'
         required: true
       responses:
         '200':
@@ -257,20 +257,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Пользователь c указанным ником уже существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/songs":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /songs:
     get:
       tags:
         - Song Controller
@@ -305,7 +305,8 @@ paths:
             default: BY_TITLE
             enum:
               - BY_TITLE
-              - BY_DURATION
+              - BY_ALBUM
+              - BY_YEAR
         - name: isAsc
           in: query
           required: false
@@ -332,13 +333,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongPagesDTO"
+                $ref: '#/components/schemas/SongPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     post:
       tags:
@@ -349,7 +350,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/CreateSongRequest"
+              $ref: '#/components/schemas/CreateSongRequest'
       responses:
         '201':
           description: Песня создана
@@ -360,20 +361,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Отсутствует доступ
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Не существует исполнитель или жанр
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/songs/{id}/add-genres":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /songs/{id}/add-genres:
     post:
       tags:
         - Song Controller
@@ -390,7 +391,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/AddGenresToSongRequest"
+              $ref: '#/components/schemas/AddGenresToSongRequest'
         required: true
       responses:
         '200':
@@ -402,20 +403,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Отсутствует доступ
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Не существует исполнитель или жанр
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/singers":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /singers:
     get:
       tags:
         - Singer Controller
@@ -454,13 +455,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SingerPagesDTO"
+                $ref: '#/components/schemas/SingerPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     post:
       tags:
@@ -471,7 +472,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CreateSingerRequest"
+              $ref: '#/components/schemas/CreateSingerRequest'
         required: true
       responses:
         '201':
@@ -483,14 +484,14 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/recommendations/{nickname}/recommend/{songId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /recommendations/{nickname}/recommend/{songId}:
     post:
       tags:
         - Recommendation Controller
@@ -518,32 +519,32 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песня или пользователь не существуют
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Пользователя нет в друзьях
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Песня уже рекомендована
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/playlists":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /playlists:
     get:
       tags:
         - Playlist Controller
@@ -576,19 +577,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/PlaylistPagesDTO"
+                $ref: '#/components/schemas/PlaylistPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     post:
       tags:
         - Playlist Controller
@@ -598,7 +599,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CreatePlaylistRequest"
+              $ref: '#/components/schemas/CreatePlaylistRequest'
         required: true
       responses:
         '201':
@@ -610,20 +611,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/playlists/{id}/add-song/{songId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /playlists/{id}/add-song/{songId}:
     post:
       tags:
         - Playlist Controller
@@ -652,26 +653,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист или песня не существуют
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Песня уже есть в плейлисте
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/library/{songId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /library/{songId}:
     post:
       tags:
         - Audio Library Controller
@@ -694,25 +695,25 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песня не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Песня уже в аудиотеке
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     delete:
       tags:
         - Audio Library Controller
@@ -735,26 +736,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песня не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Песни нет в аудиотеке
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/genres":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /genres:
     get:
       tags:
         - Genre Controller
@@ -766,13 +767,13 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/GenresDTO"
+                $ref: '#/components/schemas/GenresDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     post:
       tags:
@@ -783,7 +784,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CreateGenreRequest"
+              $ref: '#/components/schemas/CreateGenreRequest'
         required: true
       responses:
         '201':
@@ -795,20 +796,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Жанр уже существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/friends/{nickname}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /friends/{nickname}:
     post:
       tags:
         - Friend Controller
@@ -830,25 +831,25 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Пользователя не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Пользователь уже в друзьях
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
     delete:
       tags:
         - Friend Controller
@@ -870,26 +871,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Пользователя не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Пользователя не было в друзьях
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/auth/verify/{code}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/verify/{code}:
     post:
       tags:
         - Auth Controller
@@ -911,15 +912,15 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Истекло время действия ссылки
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
-  "/auth/resend-code":
+  /auth/resend-code:
     post:
       tags:
         - Auth Controller
@@ -935,20 +936,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Пользователь не найден
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Пользователь уже верифицирован
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/auth/register":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/register:
     post:
       tags:
         - Auth Controller
@@ -958,7 +959,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UserSignUpRequest"
+              $ref: '#/components/schemas/UserSignUpRequest'
         required: true
       responses:
         '201':
@@ -966,21 +967,21 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TokensDTO"
+                $ref: '#/components/schemas/TokensDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Пользователь с указанной почтой или указанным ником уже существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
-  "/auth/refresh-token":
+  /auth/refresh-token:
     post:
       tags:
         - Auth Controller
@@ -990,7 +991,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/RefreshTokenRequest"
+              $ref: '#/components/schemas/RefreshTokenRequest'
         required: true
       responses:
         '200':
@@ -998,27 +999,63 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TokensDTO"
+                $ref: '#/components/schemas/TokensDTO'
         '400':
           description: Токен отсутствует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '401':
           description: Токен не валиден
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Токен не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
-  "/auth/login":
+  /auth/profile/photo:
+    post:
+      tags:
+        - Auth Controller
+      summary: Загрузка фотографии пользователя в профиль
+      operationId: uploadPhotoProfile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadPhotoProfileRequest'
+      responses:
+        '200':
+          description: Фотография загружена
+          content:
+            '*/*':
+              schema:
+                type: object
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '404':
+          description: Пользователя не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/login:
     post:
       tags:
         - Auth Controller
@@ -1028,7 +1065,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/LoginRequest"
+              $ref: '#/components/schemas/LoginRequest'
         required: true
       responses:
         '200':
@@ -1036,40 +1073,15 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/TokensDTO"
+                $ref: '#/components/schemas/TokensDTO'
         '400':
           description: Неправильный пароль или почта
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
-  "/auth/credentials":
-    post:
-      tags:
-        - Auth Controller
-      summary: Получение информации о пользователе
-      operationId: getCredentials
-      responses:
-        '200':
-          description: Получение кредов
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/CredentialsDTO"
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-        '403':
-          description: Нет доступа
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/statistics/user/{userId}":
+  /statistics/user/{userId}:
     get:
       tags:
         - Statistic Controller
@@ -1088,26 +1100,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/StatisticUserDTO"
+                $ref: '#/components/schemas/StatisticUserDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Пользователя не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/statistics/genre/{genreId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /statistics/genre/{genreId}:
     get:
       tags:
         - Statistic Controller
@@ -1126,26 +1138,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/StatisticUserDTO"
+                $ref: '#/components/schemas/StatisticUserDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Жанра не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/songs/{id}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /songs/{id}:
     get:
       tags:
         - Song Controller
@@ -1164,19 +1176,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongDTO"
+                $ref: '#/components/schemas/SongDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песни не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     delete:
       tags:
@@ -1200,20 +1212,51 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Отсутствует доступ
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песня не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/songs/{id}/file":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /songs/{id}/picture:
+    get:
+      tags:
+        - Song Controller
+      summary: Возвращает картинку песни
+      operationId: getSongPictureById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Возвращает картинку
+          content:
+            image/png: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '404':
+          description: Песни не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+      security: []
+  /songs/{id}/file:
     get:
       tags:
         - Song Controller
@@ -1236,14 +1279,14 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песни не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/singers/{id}/songs":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /singers/{id}/songs:
     get:
       tags:
         - Singer Controller
@@ -1276,21 +1319,21 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongPagesDTO"
+                $ref: '#/components/schemas/SongPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Исполнитель не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
-  "/recommendations":
+  /recommendations:
     get:
       tags:
         - Recommendation Controller
@@ -1302,20 +1345,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/RecommendationDTO"
+                $ref: '#/components/schemas/RecommendationDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/playlists/{id}/exists/{songId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /playlists/{id}/exists/{songId}:
     get:
       tags:
         - Playlist Controller
@@ -1340,26 +1383,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongExistsDTO"
+                $ref: '#/components/schemas/SongExistsDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист или песня не существуют
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/library":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /library:
     get:
       tags:
         - Audio Library Controller
@@ -1392,20 +1435,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongPagesDTO"
+                $ref: '#/components/schemas/SongPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/library/{songId}/exists":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /library/{songId}/exists:
     get:
       tags:
         - Audio Library Controller
@@ -1424,26 +1467,26 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/SongExistsDTO"
+                $ref: '#/components/schemas/SongExistsDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Песня не существует
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/history":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /history:
     get:
       tags:
         - History Controller
@@ -1455,20 +1498,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/StatisticUserDTO"
+                $ref: '#/components/schemas/StatisticUserDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/genres/{id}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /genres/{id}:
     get:
       tags:
         - Genre Controller
@@ -1487,19 +1530,19 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/GenreDTO"
+                $ref: '#/components/schemas/GenreDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Жанр не найден
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
       security: []
     delete:
       tags:
@@ -1523,20 +1566,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Нет доступа
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Жанр не найден
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/friends":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /friends:
     get:
       tags:
         - Friend Controller
@@ -1569,20 +1612,75 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/FriendPagesDTO"
+                $ref: '#/components/schemas/FriendPagesDTO'
         '400':
           description: Невалидные входные данные
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
-  "/playlists/{id}/delete-song/{songId}":
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/{nickname}/photo:
+    get:
+      tags:
+        - Auth Controller
+      summary: Получение фотографии пользователя по никнейму
+      operationId: getUsersPhoto
+      parameters:
+        - name: nickname
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Фотография получена
+          content:
+            image/png: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '404':
+          description: Пользователя или фотографии не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+      security: []
+  /auth/credentials:
+    get:
+      tags:
+        - Auth Controller
+      summary: Получение информации о пользователе
+      operationId: getCredentials
+      responses:
+        '200':
+          description: Получение кредов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialsDTO'
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+  /playlists/{id}/delete-song/{songId}:
     delete:
       tags:
         - Playlist Controller
@@ -1611,25 +1709,61 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Плейлист или песня не существуют
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
         '405':
           description: Песни нет в плейлисте
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExceptionDTO"
+                $ref: '#/components/schemas/ExceptionDTO'
+  /auth/{id}:
+    delete:
+      tags:
+        - Auth Controller
+      summary: Удаление пользователя
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Пользователь удален
+          content:
+            application/json: {}
+        '400':
+          description: Невалидные входные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '403':
+          description: Нет доступа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
+        '404':
+          description: Пользователя не существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionDTO'
 components:
   schemas:
     ExceptionDTO:
@@ -1670,8 +1804,10 @@ components:
           type: string
     CreateSongRequest:
       required:
-        - duration
+        - album
+        - createdYear
         - file
+        - picture
         - singerId
         - title
       type: object
@@ -1680,9 +1816,11 @@ components:
           maxLength: 255
           minLength: 0
           type: string
-        duration:
+        createdYear:
           type: string
-          format: mm:ss
+          format: yyyy
+        album:
+          type: string
         singerId:
           type: integer
           format: int64
@@ -1692,6 +1830,9 @@ components:
             type: integer
             format: int64
         file:
+          type: string
+          format: binary
+        picture:
           type: string
           format: binary
     AddGenresToSongRequest:
@@ -1783,6 +1924,14 @@ components:
       properties:
         refreshToken:
           type: string
+    UploadPhotoProfileRequest:
+      required:
+        - file
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
     LoginRequest:
       required:
         - email
@@ -1792,37 +1941,6 @@ components:
         email:
           type: string
         password:
-          type: string
-    CredentialsDTO:
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        nickname:
-          type: string
-        isVerified:
-          type: boolean
-        roles:
-          uniqueItems: true
-          type: array
-          items:
-            "$ref": "#/components/schemas/RoleDTO"
-    RoleDTO:
-      type: object
-      properties:
-        roleId:
-          type: integer
-          format: int64
-        name:
-          type: string
-        authority:
           type: string
     GenreDTO:
       type: object
@@ -1836,7 +1954,7 @@ components:
       type: object
       properties:
         genre:
-          "$ref": "#/components/schemas/GenreDTO"
+          $ref: '#/components/schemas/GenreDTO'
         amount:
           type: integer
           format: int64
@@ -1849,25 +1967,10 @@ components:
         genreStatistics:
           type: array
           items:
-            "$ref": "#/components/schemas/StatisticGenreDTO"
+            $ref: '#/components/schemas/StatisticGenreDTO'
         totalSongsAmount:
           type: integer
           format: int64
-    LocalTime:
-      type: object
-      properties:
-        hour:
-          type: integer
-          format: int32
-        minute:
-          type: integer
-          format: int32
-        second:
-          type: integer
-          format: int32
-        nano:
-          type: integer
-          format: int32
     PagingInfoDTO:
       type: object
       properties:
@@ -1898,40 +2001,42 @@ components:
           format: int64
         title:
           type: string
-        duration:
-          "$ref": "#/components/schemas/LocalTime"
+        createdYear:
+          type: string
+        album:
+          type: string
         singer:
-          "$ref": "#/components/schemas/SingerDTO"
+          $ref: '#/components/schemas/SingerDTO'
         genres:
           uniqueItems: true
           type: array
           items:
-            "$ref": "#/components/schemas/GenreDTO"
+            $ref: '#/components/schemas/GenreDTO'
     SongPagesDTO:
       type: object
       properties:
         paging:
-          "$ref": "#/components/schemas/PagingInfoDTO"
+          $ref: '#/components/schemas/PagingInfoDTO'
         data:
           type: array
           items:
-            "$ref": "#/components/schemas/SongDTO"
+            $ref: '#/components/schemas/SongDTO'
     SingerPagesDTO:
       type: object
       properties:
         paging:
-          "$ref": "#/components/schemas/PagingInfoDTO"
+          $ref: '#/components/schemas/PagingInfoDTO'
         data:
           type: array
           items:
-            "$ref": "#/components/schemas/SingerDTO"
+            $ref: '#/components/schemas/SingerDTO'
     RecommendationDTO:
       type: object
       properties:
         songs:
           type: array
           items:
-            "$ref": "#/components/schemas/SongDTO"
+            $ref: '#/components/schemas/SongDTO'
     PlaylistDTO:
       type: object
       properties:
@@ -1946,21 +2051,21 @@ components:
       type: object
       properties:
         paging:
-          "$ref": "#/components/schemas/PagingInfoDTO"
+          $ref: '#/components/schemas/PagingInfoDTO'
         data:
           type: array
           items:
-            "$ref": "#/components/schemas/PlaylistDTO"
+            $ref: '#/components/schemas/PlaylistDTO'
     PlaylistWithSongsDTO:
       type: object
       properties:
         playlistInfo:
-          "$ref": "#/components/schemas/PlaylistDTO"
+          $ref: '#/components/schemas/PlaylistDTO'
         songs:
           uniqueItems: true
           type: array
           items:
-            "$ref": "#/components/schemas/SongDTO"
+            $ref: '#/components/schemas/SongDTO'
     SongExistsDTO:
       type: object
       properties:
@@ -1972,7 +2077,7 @@ components:
         genres:
           type: array
           items:
-            "$ref": "#/components/schemas/GenreDTO"
+            $ref: '#/components/schemas/GenreDTO'
     FriendDTO:
       type: object
       properties:
@@ -1987,11 +2092,42 @@ components:
       type: object
       properties:
         paging:
-          "$ref": "#/components/schemas/PagingInfoDTO"
+          $ref: '#/components/schemas/PagingInfoDTO'
         data:
           type: array
           items:
-            "$ref": "#/components/schemas/FriendDTO"
+            $ref: '#/components/schemas/FriendDTO'
+    CredentialsDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        nickname:
+          type: string
+        isVerified:
+          type: boolean
+        roles:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleDTO'
+    RoleDTO:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        authority:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

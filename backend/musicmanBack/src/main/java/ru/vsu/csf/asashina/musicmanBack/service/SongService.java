@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -187,6 +186,11 @@ public class SongService {
             throw new NoSongInCollectionException("Песни нет в аудиотеке");
         }
         songRepository.deleteSongFromUsersLibrary(id, userId);
+    }
+
+    @Transactional
+    public List<SongDTO> getRecommendedSongs(Long userId, List<Long> genresIds) {
+        return songMapper.toDTOFromEntityList(songRepository.getRecommendedSongs(userId, genresIds));
     }
 
     @PostConstruct

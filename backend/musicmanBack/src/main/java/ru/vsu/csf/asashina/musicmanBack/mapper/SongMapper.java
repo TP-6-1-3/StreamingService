@@ -8,6 +8,7 @@ import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Song;
 import ru.vsu.csf.asashina.musicmanBack.model.request.CreateSongRequest;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(uses = { GenreMapper.class, SingerMapper.class })
@@ -22,4 +23,6 @@ public interface SongMapper {
     SongDTO toDTOFromEntity(Song entity);
 
     Set<SongDTO> toDTOFromEntitySet(Set<Song> entities);
+
+    List<SongDTO> toDTOFromEntityList(List<Song> entities);
 }

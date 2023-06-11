@@ -10,15 +10,18 @@ import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoFriendException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.RecommendationMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
+import ru.vsu.csf.asashina.musicmanBack.model.dto.GenreDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.SongDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.user.UserDTO;
 import ru.vsu.csf.asashina.musicmanBack.model.entity.Recommendation;
 import ru.vsu.csf.asashina.musicmanBack.repository.RecommendationRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +33,10 @@ public class RecommendationService {
     private final SongMapper songMapper;
 
     private final SongService songService;
+    private final GenreService genreService;
     private final FriendService friendService;
     private final UserService userService;
+    private final StatisticService statisticService;
 
     @Value("${songs.daysToRecommend}")
     private Integer daysToRecommend;
@@ -39,12 +44,41 @@ public class RecommendationService {
     @Transactional
     public List<SongDTO> getRecommendedSongs(Long userId) {
         var recommendations =  recommendationRepository.findAllByUserId(userId);
-        if (CollectionUtils.isEmpty(recommendations)) {
-            return Collections.emptyList();
+        List<SongDTO> recommendedSongsFromFriends = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(recommendations)) {
+            recommendedSongsFromFriends = recommendations.stream()
+                    .map(recommendation -> songMapper.toDTOFromEntity(recommendation.getSong()))
+                    .limit(10)
+                    .toList();
         }
-        return recommendations.stream()
-                .map(recommendation -> songMapper.toDTOFromEntity(recommendation.getSong()))
-                .toList();
+        var size = 20 - recommendedSongsFromFriends.size();
+        var statistics = statisticService.getUserStatistic(userId);
+        List<Long> topGenres;
+        if (statistics.getGenreStatistics().isEmpty()) {
+            topGenres = genreService.getAll().stream()
+                    .map(GenreDTO::getGenreId)
+                    .limit(5)
+                    .toList();
+        } else {
+            topGenres = statistics.getGenreStatistics().stream()
+                    .map(statistic -> statistic.getGenre().getGenreId())
+                    .limit(5)
+                    .collect(Collectors.toList());
+            if (topGenres.size() < 5) {
+                topGenres.addAll(
+                        genreService.getAll().stream()
+                                .map(GenreDTO::getGenreId)
+                                .filter(id -> !topGenres.contains(id))
+                                .limit(5 - topGenres.size())
+                                .toList());
+            }
+        }
+        var randomSongs = songService.getRecommendedSongs(userId, topGenres)
+                .stream()
+                .limit(size)
+                .collect(Collectors.toList());
+        randomSongs.addAll(recommendedSongsFromFriends);
+        return randomSongs;
     }
 
     @Transactional
