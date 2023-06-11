@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
                 title = "Musicman API",
                 description = "Описание всех эндпоинтов сервиса \"Musicman\"",
                 contact = @Contact(name = "Анастасия Сашина", email = "sashina@cs.vsu.ru"),
-                version = "1.0.8"),
+                version = "1.0.9"),
         security = @SecurityRequirement(name = "bearerAuth"))
 public class SpringdocConfiguration {
 }

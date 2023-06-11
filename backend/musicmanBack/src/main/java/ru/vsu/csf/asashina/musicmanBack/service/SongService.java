@@ -53,6 +53,8 @@ public class SongService {
 
     @Value("${songs.directory}")
     private String songsDirectoryPath;
+    @Value("${songs.directoryPictures}")
+    private String songsDirectoryPicturesPath;
 
     @Transactional
     public Page<SongDTO> getAllSongs(
@@ -97,19 +99,27 @@ public class SongService {
     }
 
     @Transactional
+    public File getPictureFromSystem(Long id) {
+        getSongById(id);
+        return new File(songsDirectoryPicturesPath.concat("/").concat(Long.toString(id)));
+    }
+
+    @Transactional
     public void createSong(CreateSongRequest request) throws IOException {
         SingerDTO singer = singerService.getSingerById(request.getSingerId());
         Set<GenreDTO> genres = genreService.getGenresByIds(request.getGenreIds());
-        LocalTime duration = LocalTime.of(0,
-                Integer.parseInt(request.getDuration().substring(0, 2)),
-                Integer.parseInt(request.getDuration().substring(3)));
-        Song song = songMapper.toEntityFromRequest(request, duration, singer, genres);
+        Song song = songMapper.toEntityFromRequest(request, singer, genres);
         validateSongFile(request.getFile());
+        validateSongsPictureFile(request.getPicture());
         song = songRepository.save(song);
 
         String filePath = songsDirectoryPath.concat("/").concat(Long.toString(song.getSongId()));
         File directory = new File(filePath);
         request.getFile().transferTo(directory);
+
+        String picturePath = songsDirectoryPicturesPath.concat("/").concat(Long.toString(song.getSongId()));
+        File directoryPicture = new File(picturePath);
+        request.getPicture().transferTo(directoryPicture);
     }
 
     private void validateSongFile(MultipartFile file) {
@@ -118,6 +128,17 @@ public class SongService {
         }
         if (!Objects.requireNonNull(file.getOriginalFilename()).contains(".mp3")) {
             throw new FileException("Тип файла должен быть .mp3");
+        }
+    }
+
+    private void validateSongsPictureFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new FileException("Вы не можете загрузить пустой файл");
+        }
+        if (!Objects.requireNonNull(file.getOriginalFilename()).contains(".png")
+                && !Objects.requireNonNull(file.getOriginalFilename()).contains(".jpeg")
+                && !Objects.requireNonNull(file.getOriginalFilename()).contains(".jpg")) {
+            throw new FileException("Тип файла должен быть .png, или .jpeg, или .jpg");
         }
     }
 
@@ -172,6 +193,7 @@ public class SongService {
     private void checkIsPathValid() {
         try {
             Paths.get(songsDirectoryPath);
+            Paths.get(songsDirectoryPicturesPath);
         } catch (InvalidPathException e) {
             log.error("Произошла ошибка при чтении директории с песнями: {}", e.getMessage(), e);
         }
