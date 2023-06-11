@@ -99,3 +99,6 @@ volumes:
   backend_data:
   prometheus-data:
   grafana-data:
+  web-root:
+  certbot-etc:
+  certbot-var:
