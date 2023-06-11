@@ -25,7 +25,8 @@ public interface StatisticRepository extends JpaRepository<Statistic, UUID> {
             SELECT s
             FROM Statistic s
             JOIN s.user u
-                ON u.userId = :userId""")
+                ON u.userId = :userId
+            ORDER BY s.amount DESC""")
     List<Statistic> findByUserId(@Param("userId") Long userId);
 
     @Query("""

@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum SongSort {
 
     BY_TITLE("BY_TITLE", "title"),
-    BY_DURATION("BY_DURATION", "duration");
+    BY_ALBUM("BY_ALBUM", "album"),
+    BY_YEAR("BY_YEAR", "yearCreated");
 
     @Getter
     private final String sort;

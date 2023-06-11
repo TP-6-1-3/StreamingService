@@ -69,4 +69,13 @@ public interface SongRepository extends JpaRepository<Song, Long> {
     @Modifying
     @Query(value = "DELETE FROM user_song WHERE song_id = :songId AND user_id = :userId", nativeQuery = true)
     void deleteSongFromUsersLibrary(@Param("songId") Long songId, @Param("userId") Long userId);
+
+    @Query("""
+            SELECT s
+            FROM Song s
+            JOIN s.genres g
+                ON g.genreId IN (:genresIds)
+            LEFT JOIN s.users u
+                ON u.userId <> :userId""")
+    List<Song> getRecommendedSongs(@Param("userId") Long userId, @Param("genresIds") List<Long> genreIds);
 }

@@ -67,5 +67,8 @@ emailTemplate:
 
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
+  directoryPictures: ${SONGS_PICTURES_DIRECTORY:C:\Users\Public\StreamingService\songs\pictures}
   historySize: 20
   daysToRecommend: 2
+users:
+  directory: ${USERS_DIRECTORY:C:\Users\Public\StreamingService\users}
