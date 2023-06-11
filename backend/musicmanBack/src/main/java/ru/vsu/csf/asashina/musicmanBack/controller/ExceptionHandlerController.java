@@ -29,7 +29,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler({PasswordsDoNotMatch.class, WrongCredentialsException.class, PageException.class,
-            SongFileException.class})
+            FileException.class})
     public ResponseEntity<?> badRequestExceptionHandler(Exception e) {
         return ResponseBuilder.build(BAD_REQUEST, e);
     }

@@ -69,3 +69,5 @@ songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
   historySize: 20
   daysToRecommend: 2
+users:
+  directory: ${USERS_DIRECTORY:C:\Users\Public\StreamingService\users}

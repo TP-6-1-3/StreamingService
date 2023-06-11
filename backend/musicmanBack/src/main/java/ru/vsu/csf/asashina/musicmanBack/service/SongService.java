@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityAlreadyExistsException;
 import ru.vsu.csf.asashina.musicmanBack.exception.EntityDoesNotExistException;
 import ru.vsu.csf.asashina.musicmanBack.exception.NoSongInCollectionException;
-import ru.vsu.csf.asashina.musicmanBack.exception.SongFileException;
+import ru.vsu.csf.asashina.musicmanBack.exception.FileException;
 import ru.vsu.csf.asashina.musicmanBack.mapper.GenreMapper;
 import ru.vsu.csf.asashina.musicmanBack.mapper.SongMapper;
 import ru.vsu.csf.asashina.musicmanBack.model.dto.*;
@@ -114,10 +114,10 @@ public class SongService {
 
     private void validateSongFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new SongFileException("Вы не можете загрузить пустой файл");
+            throw new FileException("Вы не можете загрузить пустой файл");
         }
         if (!Objects.requireNonNull(file.getOriginalFilename()).contains(".mp3")) {
-            throw new SongFileException("Тип файла должен быть .mp3");
+            throw new FileException("Тип файла должен быть .mp3");
         }
     }
 
