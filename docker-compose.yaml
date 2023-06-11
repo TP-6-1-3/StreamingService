@@ -66,7 +66,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - web-root:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --staging -d musicman-vsu.ru -d www.musicman-vsu.ru
+    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --force-renewal -d musicman-vsu.ru -d www.musicman-vsu.ru
 
   prometheus:
     image: prom/prometheus
@@ -93,6 +93,8 @@ services:
     environment:
       - GF_SERVER_HTTP_PORT=3001
       - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_SERVER_DOMAIN=musicman-vsu.ru
+      - GF_SERVER_ROOT_URL=http://musicman-vsu.ru:/metrics
 
 volumes:
   musicman_data:
