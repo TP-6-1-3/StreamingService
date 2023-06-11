@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static ru.vsu.csf.asashina.musicmanBack.model.constant.Tag.SONG;
 
@@ -95,6 +96,27 @@ public class SongController {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         File file = songService.getFileFromSystem(user, id);
         response.setContentType("audio/mp3");
+        response.setContentLength((int) Files.size(file.toPath()));
+        Files.copy(file.toPath(), response.getOutputStream());
+        response.flushBuffer();
+    }
+
+    @GetMapping(value = "/{id}/picture")
+    @Operation(summary = "Возвращает картинку песни", tags = SONG, responses = {
+            @ApiResponse(responseCode = "200", description = "Возвращает картинку", content = {
+                    @Content(mediaType = IMAGE_PNG_VALUE)
+            }),
+            @ApiResponse(responseCode = "400", description = "Невалидные входные данные", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Песни не существует", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
+            })
+    })
+    @SecurityRequirements
+    public void getSongPictureById(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        File file = songService.getPictureFromSystem(id);
+        response.setContentType(IMAGE_PNG_VALUE);
         response.setContentLength((int) Files.size(file.toPath()));
         Files.copy(file.toPath(), response.getOutputStream());
         response.flushBuffer();

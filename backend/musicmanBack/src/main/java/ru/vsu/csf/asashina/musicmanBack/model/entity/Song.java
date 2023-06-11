@@ -23,7 +23,10 @@ public class Song {
     private String title;
 
     @Column(nullable = false)
-    private LocalTime duration;
+    private String createdYear;
+
+    @Column(nullable = false)
+    private String album;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "singer_id")

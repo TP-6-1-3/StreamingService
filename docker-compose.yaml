@@ -23,6 +23,8 @@ services:
       - database
     volumes:
       - /c/Users/Public/StreamingService/songs:/opt/app/songs
+      - /c/Users/Public/StreamingService/songs/pictures:/opt/app/songs/pictures
+      - /c/Users/Public/StreamingService/users:/opt/app/users
     environment:
       - DATABASE_HOST=${MUSICMAN_DATABASE_HOST}
       - DATABASE_PORT=${MUSICMAN_DATABASE_PORT}
@@ -34,6 +36,8 @@ services:
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
+      - SONGS_PICTURES_DIRECTORY=/opt/app/songs/pictures
+      - USERS_DIRECTORY=/opt/app/users
 
   frontend:
     image: arcturs/musicman_frontend

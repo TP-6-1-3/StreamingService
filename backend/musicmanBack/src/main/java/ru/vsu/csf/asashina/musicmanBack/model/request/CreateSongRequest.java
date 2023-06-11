@@ -21,9 +21,13 @@ public class CreateSongRequest {
     @Size(max = 255, message = "Название не может превышать 255 символов")
     private String title;
 
-    @NotBlank(message = "Длительность не может быть пустой")
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, format = "mm:ss")
-    private String duration;
+    @NotBlank(message = "Год не может быть пустым")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, format = "yyyy")
+    private String createdYear;
+
+    @NotBlank(message = "Альбом не может быть пустым")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+    private String album;
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "ИД исполнителя не может быть пустым")
@@ -33,4 +37,7 @@ public class CreateSongRequest {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private MultipartFile file;
+
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+    private MultipartFile picture;
 }
