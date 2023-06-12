@@ -65,7 +65,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - web-root:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --staging -d musicman-vsu.online -d www.musicman-vsu.online
+    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --force-renewal -d musicman-vsu.online -d www.musicman-vsu.online
 
   prometheus:
     image: prom/prometheus
