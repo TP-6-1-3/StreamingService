@@ -101,3 +101,5 @@ volumes:
   prometheus-data:
   grafana-data:
   web-root:
+  certbot-etc:
+  certbot-var:
