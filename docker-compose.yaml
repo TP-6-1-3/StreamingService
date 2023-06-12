@@ -59,7 +59,7 @@ services:
   certbot:
     image: certbot/certbot
     depends_on:
-      - nginx
+      - proxy
     container_name: certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
