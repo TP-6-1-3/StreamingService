@@ -1,26 +1,65 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+	createBrowserRouter,
+	RouterProvider,
+} from "react-router-dom";
 import './App.css';
+import { Template } from "./entities/template";
+import { AuthPage } from "./pages/authPage";
+import { HomePage } from "./pages/homePage";
+import { RegPage } from "./pages/regPage";
+import { TracksPage } from "./pages/tracksPage";
+import { VerifyPage } from "./pages/verifyPage";
+import Cookies from 'universal-cookie';
+import { IUserCredentials, setUserCredentialsFx, setUserDataFx } from './shared/stores/user';
+import { GetCredentialsRequest } from './shared/api/auth/credentials';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+	const cookies = new Cookies();
+
+	React.useEffect(() => {
+		const accessToken = cookies.get('accessToken');
+		const refreshToken = cookies.get('refreshToken');
+
+		if (accessToken && refreshToken) {
+			GetCredentialsRequest().then((userData) => {
+				if (userData) setUserDataFx(userData);
+			})
+		}
+		setUserCredentialsFx({ accessToken, refreshToken })
+	}, []);
+
+	const router = createBrowserRouter([
+		{
+			path: "/",
+			element: <HomePage />,
+		},
+		{
+			path: "/tracks",
+			element: <TracksPage />,
+		},
+		{
+			path: "/auth",
+			element: <AuthPage />,
+		},
+		{
+			path: "/auth/verify/:code",
+			element: <VerifyPage />,
+		},
+		{
+			path: "/reg",
+			element: <RegPage />,
+		},
+		
+	]);
+
+	return (
+		<div className="App">
+			<Template>
+			<RouterProvider router={router} />
+			</Template>
+		</div>
+	);
 }
 
 export default App;

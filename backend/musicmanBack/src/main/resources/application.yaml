@@ -1,0 +1,74 @@
+spring:
+  datasource:
+    host: ${DATABASE_HOST:localhost}
+    port: ${DATABASE_PORT:5435}
+    dbname: ${DATABASE_NAME:musicmandb}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5435}/${DATABASE_NAME:musicmandb}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:gtneifhs}
+
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: ${EMAIL_LOGIN:MusicmanPlatform@yandex.ru}
+    password: ${EMAIL_PASSWORD:rcrajuneuyzjxwow}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          ssl.enable: true
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jpa:
+    open-in-view: false
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:secretKey897#7h}
+    access-token:
+
+      #30 seconds
+      expire-date-ms: 300000000
+
+    refresh-token:
+      expire-date-days: 30
+
+server:
+  shutdown: GRACEFUL
+  forward-headers-strategy: framework
+  servlet:
+    context-path: ${SERVER_PREFIX:/api/v1}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: [ "health","prometheus", "metrics" ]
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+emailTemplate:
+  mainPage:
+  verificationLink:
+
+songs:
+  directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
+  directoryPictures: ${SONGS_PICTURES_DIRECTORY:C:\Users\Public\StreamingService\songs\pictures}
+  historySize: 20
+  daysToRecommend: 2
+users:
+  directory: ${USERS_DIRECTORY:C:\Users\Public\StreamingService\users}
