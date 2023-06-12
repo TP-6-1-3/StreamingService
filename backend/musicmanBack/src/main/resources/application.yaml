@@ -43,7 +43,7 @@ security:
 
 server:
   shutdown: GRACEFUL
-  forward-headers-strategy: NATIVE
+  forward-headers-strategy: framework
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
 
