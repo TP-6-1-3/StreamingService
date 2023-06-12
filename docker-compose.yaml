@@ -52,9 +52,20 @@ services:
       - 80:80
     volumes:
       - ./proxy/:/etc/nginx/conf.d
-      - ./proxy/certificates/fullchain.pem:/etc/ssl/musicman-vsu.ru/certificate.pem
-      - ./proxy/certificates/key.pem:/etc/ssl/musicman-vsu.ru/privkey.pem
       - web-root:/var/www/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --staging -d musicman-vsu.online -d www.musicman-vsu.online
 
   prometheus:
     image: prom/prometheus
