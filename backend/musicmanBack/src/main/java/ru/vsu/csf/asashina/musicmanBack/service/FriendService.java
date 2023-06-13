@@ -43,6 +43,9 @@ public class FriendService {
         if (userRepository.isFriend(userDTO.getUserId(), friend.getUserId())) {
             throw new EntityAlreadyExistsException("Пользователь уже добавлен в друзья");
         }
+        if (friend.getUserId().equals(userDTO.getUserId())) {
+            throw new EntityAlreadyExistsException("Пользователь не может добавить самого себя в друзья");
+        }
         userRepository.addFriend(userDTO.getUserId(), friend.getUserId());
     }
 

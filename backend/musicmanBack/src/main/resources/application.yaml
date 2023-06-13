@@ -62,8 +62,8 @@ management:
       enabled: true
 
 emailTemplate:
-  mainPage:
-  verificationLink:
+  mainPage: https://www.musicman-vsu.online
+  verificationLink: https://www.musicman-vsu.online
 
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
