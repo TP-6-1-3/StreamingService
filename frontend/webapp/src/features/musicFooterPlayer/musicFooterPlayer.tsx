@@ -220,7 +220,7 @@ export const MusicPlayerFooter = () => {
     const renderIcon = currentTrackIsPaused ? <MusicFooterPlayerPlayIcon /> : <MusicFooterPlayerPauseIcon />;
     const time = `${minutes}:${seconds}`;
 
-    return (
+    return currentTrack ? (
         <MusicPlayerFooterContainer>
             <MusicPlayerFooterImageContainer>
                 <img src="/assets/music.png" alt="" />
@@ -253,5 +253,5 @@ export const MusicPlayerFooter = () => {
                 {duration ? <SliderComponent {...{ duration, stopStartInterval, updateTrackTime, currentDuration, changeTimeTrack }} /> : null}
             </MusicFooterPlayerSlider>
         </MusicPlayerFooterContainer >
-    )
+    ) : null;
 }

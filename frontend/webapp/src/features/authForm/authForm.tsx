@@ -29,6 +29,7 @@ export const AuthForm = () => {
                 
                 setUserCredentialsFx(data);
                 navigate("/");
+                window.location.pathname = '/'
             }
         });
     }

@@ -80,8 +80,8 @@ export const TracksPage = (): React.ReactElement<void, string> => {
                                 <img src="/assets/music.png" alt="" />
                             </MusicPublishImageContainer>
                             <MusicPublishPlayElement>
-                                <MusicFooterPlayerPlayIcon />
-                                <span>Слушать</span>
+                                {/* <MusicFooterPlayerPlayIcon />
+                                <span>Слушать</span> */}
                             </MusicPublishPlayElement>
                         </MusicPublishPlayContainer>
 

@@ -22,7 +22,7 @@ export const RegForm = () => {
                     setErrors(errorMessages);
                 } else {
                     setUserCredentialsFx(data);
-                    navigate("/");
+                    navigate("/auth");
                 }
             });
     }
