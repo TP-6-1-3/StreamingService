@@ -29,3 +29,4 @@
 - [Защита ТЗ](https://drive.google.com/file/d/1NdsEdDp1seJ7x68AnN0qodGPCHbLI0SQ/view?usp=sharing)
 - [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.9-oas3)
 - [Метрики](https://www.musicman-vsu.online/metrics/d/ab9ac4ba-edae-4dd9-9424-dc9c0720c90f/jvm-micrometer?orgId=1&refresh=30s)
+- [Организация кода на бэкенде](https://drive.google.com/file/d/1GAJ3BZ3XLWjOVqvm1QYvZAXHBDYvnpRd/view?usp=drive_link)
