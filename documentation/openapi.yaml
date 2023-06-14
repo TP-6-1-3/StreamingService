@@ -5,9 +5,9 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.9
+  version: 1.0.11
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: https://musicman-vsu.online/api
     description: Generated server url
 security:
   - bearerAuth: []
@@ -117,120 +117,6 @@ paths:
                 $ref: '#/components/schemas/ExceptionDTO'
         '404':
           description: Исполнитель не существует
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-  /playlists/{id}:
-    get:
-      tags:
-        - Playlist Controller
-      summary: Выводит плейлист пользователя с песнями
-      operationId: getPlaylistById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Возвращает плейлист
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlaylistWithSongsDTO'
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист не существует
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-    put:
-      tags:
-        - Playlist Controller
-      summary: Обновление плейлиста
-      operationId: updatePlaylist
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdatePlaylistRequest'
-        required: true
-      responses:
-        '200':
-          description: Плейлист обновлен
-          content:
-            application/json: {}
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист не существует
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-    delete:
-      tags:
-        - Playlist Controller
-      summary: Удаление плейлиста
-      operationId: deletePlaylist
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: Плейлист удален
-          content:
-            application/json: {}
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист не существует
           content:
             application/json:
               schema:
@@ -540,134 +426,6 @@ paths:
                 $ref: '#/components/schemas/ExceptionDTO'
         '409':
           description: Песня уже рекомендована
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-  /playlists:
-    get:
-      tags:
-        - Playlist Controller
-      summary: Выводит все плейлисты пользователя
-      operationId: getAllPlaylists
-      parameters:
-        - name: pageNumber
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 1
-        - name: size
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 5
-        - name: name
-          in: query
-          required: false
-          schema:
-            type: string
-            default: ''
-      responses:
-        '200':
-          description: Возвращает все плейлисты
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlaylistPagesDTO'
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-    post:
-      tags:
-        - Playlist Controller
-      summary: Создает новый плейлист
-      operationId: createPlaylist
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreatePlaylistRequest'
-        required: true
-      responses:
-        '201':
-          description: Плейлист создан
-          content:
-            application/json: {}
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист не существует
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-  /playlists/{id}/add-song/{songId}:
-    post:
-      tags:
-        - Playlist Controller
-      summary: Добавить песню в плейлист
-      operationId: addSongToPlaylist
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: songId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Песня добавлена
-          content:
-            application/json: {}
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист или песня не существуют
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '409':
-          description: Песня уже есть в плейлисте
           content:
             application/json:
               schema:
@@ -1337,7 +1095,7 @@ paths:
     get:
       tags:
         - Recommendation Controller
-      summary: Выводит все рекомендованные песни друзьями
+      summary: Выводит все рекомендованные песни друзьями и системой
       operationId: getRecommendations
       responses:
         '200':
@@ -1354,50 +1112,6 @@ paths:
                 $ref: '#/components/schemas/ExceptionDTO'
         '403':
           description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-  /playlists/{id}/exists/{songId}:
-    get:
-      tags:
-        - Playlist Controller
-      summary: Выводит информацию о существовании песни в плейлисте
-      operationId: isSongInPlaylist
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: songId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Возвращает результат
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SongExistsDTO'
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист или песня не существуют
           content:
             application/json:
               schema:
@@ -1680,54 +1394,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExceptionDTO'
-  /playlists/{id}/delete-song/{songId}:
-    delete:
-      tags:
-        - Playlist Controller
-      summary: Удаление песни из плейлиста
-      operationId: deleteSongFromPlaylist
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: songId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Песня удалена
-          content:
-            application/json: {}
-        '400':
-          description: Невалидные входные данные
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '403':
-          description: Доступ запрещен
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '404':
-          description: Плейлист или песня не существуют
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
-        '405':
-          description: Песни нет в плейлисте
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionDTO'
   /auth/{id}:
     delete:
       tags:
@@ -1776,15 +1442,6 @@ components:
         - description
       type: object
       properties:
-        description:
-          type: string
-    UpdatePlaylistRequest:
-      type: object
-      properties:
-        name:
-          maxLength: 100
-          minLength: 0
-          type: string
         description:
           type: string
     UpdateProfileRequest:
@@ -1853,18 +1510,6 @@ components:
       properties:
         fullName:
           maxLength: 255
-          minLength: 0
-          type: string
-        description:
-          type: string
-    CreatePlaylistRequest:
-      required:
-        - description
-        - name
-      type: object
-      properties:
-        name:
-          maxLength: 100
           minLength: 0
           type: string
         description:
@@ -2034,35 +1679,6 @@ components:
       type: object
       properties:
         songs:
-          type: array
-          items:
-            $ref: '#/components/schemas/SongDTO'
-    PlaylistDTO:
-      type: object
-      properties:
-        playlistId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-    PlaylistPagesDTO:
-      type: object
-      properties:
-        paging:
-          $ref: '#/components/schemas/PagingInfoDTO'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlaylistDTO'
-    PlaylistWithSongsDTO:
-      type: object
-      properties:
-        playlistInfo:
-          $ref: '#/components/schemas/PlaylistDTO'
-        songs:
-          uniqueItems: true
           type: array
           items:
             $ref: '#/components/schemas/SongDTO'

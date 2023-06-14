@@ -32,7 +32,11 @@ docker-compose up -d
 Документация бэкенда будет доступна по [localhost:8080](http://localhost:8080/api/v1/swagger-ui/index.html), фронтэнд по [localhost:3000](http://localhost:3000) и метрики по [localhost:3001](http://localhost:3001).
 Далее вкратце представлено описание возможных проблем и их решение:
 - Не поднимается база данных. В этом случае нужно проследовать в файл .env и поменять поле 'MUSICMAN_DATABASE_HOST' на адрес докер-машины (его можно выяснить с помощью команды ifconfig или ipconfig в зависимости от вашей ОС);
-- Фронтенд не отправляет запросы. В папке фронтенда, в webapp находим package.json. Изменяем поле 'proxy' на адрес 'http://localhost:8080', если вы тестируете локально.
+- Фронтенд не отправляет запросы. В папке фронтенда, в webapp находим package.json. Изменяем поле 'proxy' на адрес 'http://localhost:8080/api/v1', если вы тестируете локально.
+
+### Роли для тестирования приложения:
+- Администратор (логин - admin@mail.com, пароль - password);
+- Пользователь (логин - pajobi7427@byorby.com, пароль - qwerty1234).
 
 ## Документация и полезные ссылки:
 
@@ -44,14 +48,17 @@ docker-compose up -d
 - [Miro](https://miro.com/app/board/uXjVMaVV5qU=/?share_link_id=838823599808/)
 - [Figma](https://www.figma.com/proto/lnKM9pm5HmxMi5NboduJrd/WebProject?page-id=0%3A1&node-id=2-2&viewport=551%2C207%2C0.61&scaling=scale-down)
 - [Защита ТЗ](https://drive.google.com/file/d/1NdsEdDp1seJ7x68AnN0qodGPCHbLI0SQ/view?usp=sharing)
+- [Презентация проекта](https://drive.google.com/file/d/14JYVUG-M_FETpuYLdn2UnzRyDk0uuzIl/view?usp=sharing)
 
 ### Серверная часть
 Подробности разворачивания бэкенд части приложения в [readme](backend/README.md) файле.
 Полезные ссылки:
 - [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.11)
 - [Метрики](https://www.musicman-vsu.online/metrics/d/ab9ac4ba-edae-4dd9-9424-dc9c0720c90f/jvm-micrometer?orgId=1&refresh=30s)
-- [Организация кода на бэкенде](https://drive.google.com/file/d/1GAJ3BZ3XLWjOVqvm1QYvZAXHBDYvnpRd/view?usp=drive_link)
+- [Организация кода на бэкенде](https://drive.google.com/file/d/1kDUXixqFKNxApIXAUZx676jLM7nFlCOo/view?usp=sharing)
 - [Деплой приложения](https://drive.google.com/file/d/1Crbc_Z9vKYQJz-t0aVrGGzB0G7OdLY8r/view?usp=drive_link)
 
 ### Клиентская часть
 Подробности разворачивания фронтэнд части приложения в [readme](frontend/README.md) файле.
+- [Организация кода на фронтенде](https://vk.com/away.php?to=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1%2Fview%3Fusp%3Ddrive_link&cc_key=)
+- [Демонстрация приложения](https://vk.com/away.php?to=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1%2Fview%3Fusp%3Ddrive_link&cc_key=)
