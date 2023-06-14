@@ -9,6 +9,9 @@ import { MusicElementActions, MusicElementContainer, MusicElementContent, MusicE
 import {MusicElementOptions} from "../../entities/musicElementOptions";
 import {Box, Fade, Popper} from "@mui/material";
 import {LibraryMusicElementOptions} from "../libraryMusicElementOptions";
+import {RecomendationModal} from "../recomendationModal";
+import {$modalIsOpen, $setModalOpenFx} from "../../shared/stores/modal";
+import {$recomend, $setRecomendFx, IRecomend} from "../../shared/stores/recomend";
 
 export const MusicElement = (params: ISong) => {
     const currentTrack = useStore($currentTrack);
@@ -32,11 +35,19 @@ export const MusicElement = (params: ISong) => {
     const songIcon = isSongPlayed && !currentTrackIsPaused ? <MusicFooterPlayerPauseIcon /> : <MusicFooterPlayerPlayIcon />;
 
     const [optionsIsOpen, setOptionsIsOpen] = useState(false);
+
     const onHandleOpenOptions = (e: any) => {
         optionsIsOpen ? setOptionsIsOpen(false) : setOptionsIsOpen(true);
     }
+    const modalIsOpen = $modalIsOpen.getState();
+    // console.log($modalIsOpen.getState())
+    const onModalOpen = (songId: number) => {
 
+        $setModalOpenFx(true);
 
+    }
+
+    console.log(modalIsOpen)
     return (
         <MusicElementContainer active={isSongPlayed}>
             <MusicElementContent>
@@ -57,7 +68,8 @@ export const MusicElement = (params: ISong) => {
                         <MusicElementMoreIcon />
                     </div>
 
-                    {optionsIsOpen && (<LibraryMusicElementOptions songId={songId} />)}
+                    {optionsIsOpen && (<LibraryMusicElementOptions songId={songId} openModal={() => onModalOpen}/>)}
+
 
                 </MusicElementActions>
             </MusicElementContent>

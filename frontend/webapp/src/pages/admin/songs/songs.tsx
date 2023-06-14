@@ -118,12 +118,12 @@ export const Songs = (): React.ReactElement<void, string> => {
                 <AddMusicCard>
                     <p>Добавить композицию</p>
                     <input type="text" placeholder="Название" name="title" value={songFormData.title} onChange={onSongHandleChange} />
-                    <input type="text" placeholder="Продолжительность" name="duration" value={songFormData.duration} onChange={onSongHandleChange}/>
+                    {/*<input type="text" placeholder="Продолжительность" name="duration" value={songFormData.duration} onChange={onSongHandleChange}/>*/}
                     <input type="text"  placeholder="Id исполнителя" name="singerId" value={songFormData.singerId} onChange={onSongHandleChange}/>
                     <input type="text" placeholder="Id жанра" name="genreIds" value={songFormData.genreIds} onChange={onSongHandleChange}/>
                     <input type="text" placeholder="album" name="album" value={songFormData.album} onChange={onSongHandleChange}/>
 
-                    <input type="text" placeholder="createdYear" name="createdYear" value={songFormData.createdYear} onChange={onSongHandleChange}/>
+                    {/*<input type="text" placeholder="createdYear" name="createdYear" value={songFormData.createdYear} onChange={onSongHandleChange}/>*/}
                     Track
                     <input type="file" placeholder="mp3"  name="file" accept=".mp3"  onChange={handleAudioFileChange}/>
                     Img

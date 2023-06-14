@@ -8,10 +8,6 @@ interface IMenu {
 
 export const MusicElementOptions = (props : IMenu): React.ReactElement<IMenu, string> => {
 
-    // const removeFromLibrary = (songId) => {
-    //
-    // }
-
     return (
         <MusicElementOptionsContainer>
             <div>

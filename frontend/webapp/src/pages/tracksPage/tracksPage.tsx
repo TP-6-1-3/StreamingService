@@ -16,6 +16,8 @@ import { $currentTrack, $tracksList, setTracksListFx } from '../../shared/stores
 import { HeaderText } from "../../shared/text/headerText"
 import { HomeActionButton, HomeActionContainer, HomeComponent, HomeHeaderFirstText, HomeHeaderSecondText, HomeHelloContent, HomeLayout, HomeMusicContent, MusicDescription, MusicDescriptionLabel, MusicDescriptionValue, MusicDesctiptionElement, MusicListContainer, MusicPublishContainer, MusicPublishImageContainer, MusicPublishPlayContainer, MusicPublishPlayElement, MusicPublishPlayerActions, MusicPublishPlayerSlider } from "./styled"
 import {GetSongsFromLibraryRequest} from "../../shared/api/library/getFromLibrary";
+import {RecomendationModal} from "../../features/recomendationModal";
+import {$modalIsOpen, $setModalOpenFx} from "../../shared/stores/modal";
 
 export const TracksPage = (): React.ReactElement<void, string> => {
     const musicList = useStore($tracksList);
@@ -60,6 +62,13 @@ export const TracksPage = (): React.ReactElement<void, string> => {
         </>
     ) : null;
 
+    const modalIsOpen = useStore($modalIsOpen);
+
+
+    const onModalClose = () => {
+        $setModalOpenFx(false)
+    }
+
     return (
         <HomeComponent>
             <HeaderWrapper>
@@ -74,13 +83,16 @@ export const TracksPage = (): React.ReactElement<void, string> => {
                 </HomeHelloContent>
                 <HomeMusicContent>
                     <Link to="#"><HomeActionButton>История прослушиваний</HomeActionButton></Link>
+                    {modalIsOpen && <RecomendationModal close={onModalClose}/>}
 
                     <MusicPublishContainer>
+
                         <MusicPublishPlayContainer>
                             <MusicPublishImageContainer>
                                 <img src="/assets/music.png" alt="" />
                             </MusicPublishImageContainer>
                             <MusicPublishPlayElement>
+
                                 {/* <MusicFooterPlayerPlayIcon />
                                 <span>Слушать</span> */}
                             </MusicPublishPlayElement>
@@ -89,6 +101,7 @@ export const TracksPage = (): React.ReactElement<void, string> => {
                         <MusicDescription>
                             { renderDescription }
                         </MusicDescription>
+
                     </MusicPublishContainer>
                 </HomeMusicContent>
 

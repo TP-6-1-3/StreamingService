@@ -20,10 +20,13 @@ import {Songs} from "./pages/admin/songs";
 import {PrivateRoute} from "./shared/libs/PrivateRoute";
 import {useStore} from "effector-react";
 import {GenresPage} from "./pages/genresPage";
+import {RecomendationModal} from "./features/recomendationModal";
+import {$modalIsOpen, $setModalOpenFx} from "./shared/stores/modal";
 
 
 const App = () => {
 	const cookies = new Cookies();
+
 
 
 	React.useEffect(() => {
@@ -88,6 +91,7 @@ const App = () => {
 	return (
 		<div className="App">
 			<Template>
+
 				<RouterProvider router={router} />
 			</Template>
 		</div>
