@@ -27,7 +27,7 @@
 - [Miro](https://miro.com/app/board/uXjVMaVV5qU=/?share_link_id=838823599808/)
 - [Figma](https://www.figma.com/proto/lnKM9pm5HmxMi5NboduJrd/WebProject?page-id=0%3A1&node-id=2-2&viewport=551%2C207%2C0.61&scaling=scale-down)
 - [Защита ТЗ](https://drive.google.com/file/d/1NdsEdDp1seJ7x68AnN0qodGPCHbLI0SQ/view?usp=sharing)
-- [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.9-oas3)
+- [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.10)
 - [Метрики](https://www.musicman-vsu.online/metrics/d/ab9ac4ba-edae-4dd9-9424-dc9c0720c90f/jvm-micrometer?orgId=1&refresh=30s)
 - [Организация кода на бэкенде](https://drive.google.com/file/d/1GAJ3BZ3XLWjOVqvm1QYvZAXHBDYvnpRd/view?usp=drive_link)
 - [Деплой приложения](https://drive.google.com/file/d/1Crbc_Z9vKYQJz-t0aVrGGzB0G7OdLY8r/view?usp=drive_link)
