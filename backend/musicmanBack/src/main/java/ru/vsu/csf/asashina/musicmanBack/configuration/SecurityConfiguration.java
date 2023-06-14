@@ -35,13 +35,12 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .requestMatchers(GET, "/v3/api-docs/**", "/songs/**", "/swagger-ui/**",
                         "/swagger-ui.html", "/singers/**", "/genres/**", "/actuator/**").permitAll()
 
-                .requestMatchers(GET, "/songs/*/file", "/library/**", "/playlists/**",
-                        "/history", "/friends", "/recommendations", "/auth/credentials").hasAnyAuthority(USER)
-                .requestMatchers(POST, "/auth/resend-code", "/library/*",
-                        "/playlists/**", "/friends/*", "/recommendations/**",
+                .requestMatchers(GET, "/songs/*/file", "/library/**", "/history", "/friends",
+                        "/recommendations", "/auth/credentials").hasAnyAuthority(USER)
+                .requestMatchers(POST, "/auth/resend-code", "/library/*", "/friends/*", "/recommendations/**",
                         "/auth/profile/photo").hasAnyAuthority(USER)
-                .requestMatchers(PUT, "/playlists/*", "/auth/profile").hasAnyAuthority(USER)
-                .requestMatchers(DELETE, "/library/*", "/playlists/**", "/friends/*").hasAnyAuthority(USER)
+                .requestMatchers(PUT, "/auth/profile").hasAnyAuthority(USER)
+                .requestMatchers(DELETE, "/library/*", "/friends/*").hasAnyAuthority(USER)
 
                 .requestMatchers(GET, "/statistics/*").hasAnyAuthority(ADMIN)
                 .requestMatchers(POST, "/songs/**", "/singers", "/genres").hasAnyAuthority(ADMIN)
