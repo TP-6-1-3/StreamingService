@@ -15,6 +15,7 @@ import { setHeaderTextFx } from '../../shared/stores/common';
 import { $currentTrack, $tracksList, setTracksListFx } from '../../shared/stores/tracks';
 import { HeaderText } from "../../shared/text/headerText"
 import { HomeActionButton, HomeActionContainer, HomeComponent, HomeHeaderFirstText, HomeHeaderSecondText, HomeHelloContent, HomeLayout, HomeMusicContent, MusicDescription, MusicDescriptionLabel, MusicDescriptionValue, MusicDesctiptionElement, MusicListContainer, MusicPublishContainer, MusicPublishImageContainer, MusicPublishPlayContainer, MusicPublishPlayElement, MusicPublishPlayerActions, MusicPublishPlayerSlider } from "./styled"
+import {GetSongsFromLibraryRequest} from "../../shared/api/library/getFromLibrary";
 
 export const TracksPage = (): React.ReactElement<void, string> => {
     const musicList = useStore($tracksList);
@@ -23,7 +24,7 @@ export const TracksPage = (): React.ReactElement<void, string> => {
     React.useEffect(() => {
         setHeaderTextFx('Мои треки');
 
-        GetSongsRequest({
+        GetSongsFromLibraryRequest({
             count: 20,
             isAsc: false
         }).then(musicData => {
@@ -80,8 +81,8 @@ export const TracksPage = (): React.ReactElement<void, string> => {
                                 <img src="/assets/music.png" alt="" />
                             </MusicPublishImageContainer>
                             <MusicPublishPlayElement>
-                                <MusicFooterPlayerPlayIcon />
-                                <span>Слушать</span>
+                                {/* <MusicFooterPlayerPlayIcon />
+                                <span>Слушать</span> */}
                             </MusicPublishPlayElement>
                         </MusicPublishPlayContainer>
 

@@ -6,8 +6,10 @@ export const HeaderWrapperContainer = styled.div`
     /* height: 80px; */
     /* padding: 0 15px; */
     background: ${Theme.primary};
-    position: relative;
+    /* position: relative; */
+    position: sticky;
     z-index: 2;
+    top: 0;
 `;
 
 export const HeaderWrapperContent = styled.div`

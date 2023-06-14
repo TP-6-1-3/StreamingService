@@ -25,4 +25,6 @@ export const MusicElementName = styled.div`
     flex: 1;
     font-size: 20px;
 `
-export const MusicElementActions = styled.div``
+export const MusicElementActions = styled.div`
+  position: relative;
+`

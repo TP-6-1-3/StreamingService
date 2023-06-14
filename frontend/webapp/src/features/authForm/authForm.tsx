@@ -29,6 +29,7 @@ export const AuthForm = () => {
                 
                 setUserCredentialsFx(data);
                 navigate("/");
+                window.location.pathname = '/'
             }
         });
     }
@@ -81,7 +82,6 @@ export const AuthForm = () => {
             </Box>
 
             <RefLinks>
-                <Link to="#">Забыли пароль?</Link>
                 <h3>Новый пользователь? <Link to="/reg">Зарегистрироваться</Link></h3>
             </RefLinks>
         </AuthFormContainer>
