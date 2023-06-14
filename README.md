@@ -60,5 +60,5 @@ docker-compose up -d
 
 ### Клиентская часть
 Подробности разворачивания фронтэнд части приложения в [readme](frontend/README.md) файле.
-- [Организация кода на фронтенде](https://vk.com/away.php?to=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1%2Fview%3Fusp%3Ddrive_link&cc_key=)
-- [Демонстрация приложения](https://vk.com/away.php?to=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1%2Fview%3Fusp%3Ddrive_link&cc_key=)
+- [Организация кода на фронтенде](https://drive.google.com/file/d/1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1/view)
+- [Демонстрация приложения](https://drive.google.com/file/d/1LP367WfTLUUF5OdwnAMZdkuBzRKBESv1/view)
