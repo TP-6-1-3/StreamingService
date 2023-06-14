@@ -13,6 +13,7 @@ import { useStore } from 'effector-react';
 import { Equalizer } from '../../shared/libs/equalizer';
 import { ISong } from '../../shared/api/songs/getSongs';
 import { $userCredentials } from '../../shared/stores/user';
+import {AddToLibraryRequest} from "../../shared/api/library/addToLibrary";
 
 const MusicEqualizer = React.memo(({ showEqualizer, setShowEqualizer, audioContext, audioBuffer }: any) => {
     const audioObj = useStore($currentTrackAudioObj);
@@ -220,6 +221,11 @@ export const MusicPlayerFooter = () => {
     const renderIcon = currentTrackIsPaused ? <MusicFooterPlayerPlayIcon /> : <MusicFooterPlayerPauseIcon />;
     const time = `${minutes}:${seconds}`;
 
+    const onHandleAddToLibrary = (songId: number) => {
+        AddToLibraryRequest(songId)
+            .then(res => console.log(res));
+    }
+
     return currentTrack ? (
         <MusicPlayerFooterContainer>
             <MusicPlayerFooterImageContainer>
@@ -243,7 +249,10 @@ export const MusicPlayerFooter = () => {
                 <span>{currentTrack ? currentTrack.title : ''}</span>
             </MusicPlayerFooterTrackInfo>
 
-            <MusicFooterPlayerHeartIcon />
+            <div onClick={() => onHandleAddToLibrary(currentTrack?.songId)}>
+                <MusicFooterPlayerHeartIcon />
+            </div>
+
 
             <MusicFooterPlayerEqualizer>
                 <MusicEqualizer {...{ showEqualizer, setShowEqualizer, audioContext, audioBuffer }} />

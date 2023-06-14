@@ -19,6 +19,7 @@ import {RecommendsPage} from "./pages/recommendsPage";
 import {Songs} from "./pages/admin/songs";
 import {PrivateRoute} from "./shared/libs/PrivateRoute";
 import {useStore} from "effector-react";
+import {GenresPage} from "./pages/genresPage";
 
 
 const App = () => {
@@ -73,6 +74,10 @@ const App = () => {
 		{
 			path: "/recommends",
 			element: <RecommendsPage />
+		},
+		{
+			path: "/genres",
+			element: <GenresPage />
 		},
 		{
 			path: "/adminsongs",

@@ -82,7 +82,6 @@ export const AuthForm = () => {
             </Box>
 
             <RefLinks>
-                <Link to="#">Забыли пароль?</Link>
                 <h3>Новый пользователь? <Link to="/reg">Зарегистрироваться</Link></h3>
             </RefLinks>
         </AuthFormContainer>

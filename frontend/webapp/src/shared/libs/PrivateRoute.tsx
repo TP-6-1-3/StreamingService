@@ -9,15 +9,15 @@ interface IPrivateRouteProps {
 }
 
 
-const isAuthenticated = (userCred: IProfileCredentials): boolean => {
+export const isAuthenticated = (userCred: IProfileCredentials): boolean => {
     if(userCred) {
         return true
     }
 
     return false;
 }
-const isAdmin = (profile: IProfileCredentials): boolean => {
-    return profile.roles.some((role) => role.authority === "ADMIN");
+export const isAdmin = (profile: IProfileCredentials): boolean => {
+    return profile.roles.some((role) => role.authority === 'ADMIN');
 }
 
 export const PrivateRoute = ({element}: IPrivateRouteProps)  => {

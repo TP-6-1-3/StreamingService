@@ -29,6 +29,8 @@ export const HomePage = (): React.ReactElement<void, string> => {
                 <PersonalHeader/>
             </HeaderWrapper>
 
+
+
             <HomeLayout>
                 <HomeHelloContent>
                     <HomeHeaderFirstText>{authedText}</HomeHeaderFirstText>
@@ -38,7 +40,7 @@ export const HomePage = (): React.ReactElement<void, string> => {
                     <HomeActionContainer>
                         <HomeHeaderSecondText>Или же вы также можете:</HomeHeaderSecondText>
                         <Link to={userData ? "/tracks" : "/auth"}><HomeActionButton>Перейти к своим любимым песням</HomeActionButton></Link>
-                        <Link to={userData ? "#" : "/auth"}><HomeActionButton>Посмотреть композиции по жанрам</HomeActionButton></Link>
+                        <Link to={userData ? "/genres" : "/auth"}><HomeActionButton>Посмотреть композиции по жанрам</HomeActionButton></Link>
                         <Link to={userData ? "#" : "/auth"}><HomeActionButton>Открыть историю прослушиваний</HomeActionButton></Link>
                     </HomeActionContainer>
                 </HomeHelloContent>
@@ -68,6 +70,8 @@ export const HomePage = (): React.ReactElement<void, string> => {
 
                 <MusicPlayerFooter />
             </HomeLayout>
+
+            <HomeLayout></HomeLayout>
         </HomeComponent>
     )
 }
