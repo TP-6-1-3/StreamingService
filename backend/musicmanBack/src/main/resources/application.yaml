@@ -63,7 +63,7 @@ management:
 
 emailTemplate:
   mainPage: https://www.musicman-vsu.online
-  verificationLink: https://www.musicman-vsu.online
+  verificationLink: https://www.musicman-vsu.online/auth/verify
 
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
