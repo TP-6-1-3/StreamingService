@@ -26,6 +26,7 @@ export const GenresPage = (): React.ReactElement<void, string> => {
         GetGenresRequest()
             .then(genresData => {
                 if(genresData) {
+                    console.log(genresData);
                     const genresList = genresData
                     setGenresListFx(genresList);
                 }
