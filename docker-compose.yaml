@@ -23,6 +23,8 @@ services:
       - database
     volumes:
       - /c/Users/Public/StreamingService/songs:/opt/app/songs
+      - /c/Users/Public/StreamingService/songs/pictures:/opt/app/songs/pictures
+      - /c/Users/Public/StreamingService/users:/opt/app/users
     environment:
       - DATABASE_HOST=${MUSICMAN_DATABASE_HOST}
       - DATABASE_PORT=${MUSICMAN_DATABASE_PORT}
@@ -34,13 +36,38 @@ services:
       - EMAIL_LOGIN=${MUSICMAN_EMAIL_LOGIN}
       - EMAIL_PASSWORD=${MUSICMAN_EMAIL_PASSWORD}
       - SONGS_DIRECTORY=/opt/app/songs
+      - SONGS_PICTURES_DIRECTORY=/opt/app/songs/pictures
+      - USERS_DIRECTORY=/opt/app/users
+
+  frontend:
+    image: arcturs/musicman_frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
 
   proxy:
-    image: arcturs/musicman_proxy
-    depends_on:
-      - backend
+    image: nginx
+    restart: always
     ports:
-      - 8081:8080
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/:/etc/nginx/conf.d
+      - web-root:/var/www/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - dhparam:/etc/ssl/certs
+
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      - proxy
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email yaninastya2010@yandex.ru --agree-tos --no-eff-email --force-renewal -d musicman-vsu.online -d www.musicman-vsu.online
 
   prometheus:
     image: prom/prometheus
@@ -67,9 +94,20 @@ services:
     environment:
       - GF_SERVER_HTTP_PORT=3001
       - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_SERVER_DOMAIN=musicman-vsu.ru
+      - GF_SERVER_ROOT_URL=https://musicman-vsu.ru:/metrics
 
 volumes:
   musicman_data:
   backend_data:
   prometheus-data:
   grafana-data:
+  web-root:
+  certbot-etc:
+  certbot-var:
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/musicman/StreamingService/proxy/dhparam/
+      o: bind

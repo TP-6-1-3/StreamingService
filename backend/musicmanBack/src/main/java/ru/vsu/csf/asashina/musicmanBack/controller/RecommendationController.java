@@ -27,7 +27,7 @@ public class RecommendationController {
     private final UserService userService;
 
     @GetMapping("")
-    @Operation(summary = "Выводит все рекомендованные песни друзьями", tags = RECOMMENDATION, responses = {
+    @Operation(summary = "Выводит все рекомендованные песни друзьями и системой", tags = RECOMMENDATION, responses = {
             @ApiResponse(responseCode = "200", description = "Возвращает все песни", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = RecommendationDTO.class))
             }),

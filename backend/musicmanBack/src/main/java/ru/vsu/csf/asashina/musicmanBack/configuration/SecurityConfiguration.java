@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.vsu.csf.asashina.musicmanBack.filter.AuthenticationFilter;
 
@@ -33,12 +35,12 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .requestMatchers(GET, "/v3/api-docs/**", "/songs/**", "/swagger-ui/**",
                         "/swagger-ui.html", "/singers/**", "/genres/**", "/actuator/**").permitAll()
 
-                .requestMatchers(GET, "/songs/*/file", "/library/**", "/playlists/**",
-                        "/history", "/friends", "/recommendations", "/auth/credentials").hasAnyAuthority(USER)
-                .requestMatchers(POST, "/auth/resend-code", "/library/*",
-                        "/playlists/**", "/friends/*", "/recommendations/**").hasAnyAuthority(USER)
-                .requestMatchers(PUT, "/playlists/*", "/auth/profile").hasAnyAuthority(USER)
-                .requestMatchers(DELETE, "/library/*", "/playlists/**", "/friends/*").hasAnyAuthority(USER)
+                .requestMatchers(GET, "/songs/*/file", "/library/**", "/history", "/friends",
+                        "/recommendations", "/auth/credentials").hasAnyAuthority(USER)
+                .requestMatchers(POST, "/auth/resend-code", "/library/*", "/friends/*", "/recommendations/**",
+                        "/auth/profile/photo").hasAnyAuthority(USER)
+                .requestMatchers(PUT, "/auth/profile").hasAnyAuthority(USER)
+                .requestMatchers(DELETE, "/library/*", "/friends/*").hasAnyAuthority(USER)
 
                 .requestMatchers(GET, "/statistics/*").hasAnyAuthority(ADMIN)
                 .requestMatchers(POST, "/songs/**", "/singers", "/genres").hasAnyAuthority(ADMIN)
@@ -52,5 +54,17 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("*");
+    }
+
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
     }
 }

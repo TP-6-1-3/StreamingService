@@ -23,13 +23,16 @@ public class Song {
     private String title;
 
     @Column(nullable = false)
-    private LocalTime duration;
+    private String createdYear;
+
+    @Column(nullable = false)
+    private String album;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "singer_id")
     private Singer singer;
 
-    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(name = "song_genre",
             joinColumns = {@JoinColumn(name = "song_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})

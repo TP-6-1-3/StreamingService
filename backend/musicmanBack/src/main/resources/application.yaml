@@ -43,7 +43,7 @@ security:
 
 server:
   shutdown: GRACEFUL
-  forward-headers-strategy: NATIVE
+  forward-headers-strategy: framework
   servlet:
     context-path: ${SERVER_PREFIX:/api/v1}
 
@@ -62,10 +62,13 @@ management:
       enabled: true
 
 emailTemplate:
-  mainPage:
-  verificationLink:
+  mainPage: https://www.musicman-vsu.online
+  verificationLink: https://www.musicman-vsu.online/auth/verify
 
 songs:
   directory: ${SONGS_DIRECTORY:C:\Users\Public\StreamingService\songs}
+  directoryPictures: ${SONGS_PICTURES_DIRECTORY:C:\Users\Public\StreamingService\songs\pictures}
   historySize: 20
   daysToRecommend: 2
+users:
+  directory: ${USERS_DIRECTORY:C:\Users\Public\StreamingService\users}

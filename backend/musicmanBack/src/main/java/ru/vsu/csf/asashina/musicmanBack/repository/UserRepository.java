@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             SELECT u.*
             FROM user_info u
             JOIN friend f
-                ON u.user_id = f.user_id
+                ON u.user_id = f.friend_id
                 AND f.user_id = :userId
                 AND LOWER(u.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')""", nativeQuery = true)
     Page<User> findAllFriendsByNickname(@Param("userId") Long userId,
