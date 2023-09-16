@@ -53,7 +53,7 @@ docker-compose up -d
 ### Серверная часть
 Подробности разворачивания бэкенд части приложения в [readme](backend/README.md) файле.
 Полезные ссылки:
-- [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.11)
+- [Swagger](https://app.swaggerhub.com/apis/YANINASTYA2010/MusicmanAPI/1.0.12)
 - [Метрики](https://www.musicman-vsu.online/metrics/d/ab9ac4ba-edae-4dd9-9424-dc9c0720c90f/jvm-micrometer?orgId=1&refresh=30s)
 - [Организация кода на бэкенде](https://drive.google.com/file/d/1kDUXixqFKNxApIXAUZx676jLM7nFlCOo/view?usp=sharing)
 - [Деплой приложения](https://drive.google.com/file/d/1Crbc_Z9vKYQJz-t0aVrGGzB0G7OdLY8r/view?usp=drive_link)

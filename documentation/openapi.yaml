@@ -5,7 +5,7 @@ info:
   contact:
     name: Анастасия Сашина
     email: sashina@cs.vsu.ru
-  version: 1.0.11
+  version: 1.0.12
 servers:
   - url: https://musicman-vsu.online/api
     description: Generated server url
@@ -25,6 +25,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает информацию об исполнителе
@@ -57,6 +58,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       requestBody:
         content:
           application/json:
@@ -98,6 +100,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '204':
           description: Исполнитель удален
@@ -207,12 +210,14 @@ paths:
             items:
               type: integer
               format: int64
+              example: [1, 2]
         - name: singer
           in: query
           required: false
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает все песни по страницам
@@ -273,6 +278,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       requestBody:
         content:
           application/json:
@@ -389,12 +395,14 @@ paths:
           required: true
           schema:
             type: string
+            example: 'user'
         - name: songId
           in: path
           required: true
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Рекомендация прошла успешно
@@ -443,6 +451,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Песня добавлена
@@ -476,7 +485,7 @@ paths:
       tags:
         - Audio Library Controller
       summary: Удаляет песню из аудиотеки
-      operationId: deleteSong_1
+      operationId: deleteSongFromLibrary
       parameters:
         - name: songId
           in: path
@@ -484,6 +493,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '204':
           description: Песня удалена
@@ -579,6 +589,7 @@ paths:
           required: true
           schema:
             type: string
+            example: 'user'
       responses:
         '200':
           description: Пользователь добавлен
@@ -619,6 +630,7 @@ paths:
           required: true
           schema:
             type: string
+            example: 'user'
       responses:
         '200':
           description: Пользователь удален из друзей
@@ -660,6 +672,7 @@ paths:
           required: true
           schema:
             type: string
+            example: '3fb378b8-b01d-499f-97c4-0f32b2915bcd'
       responses:
         '200':
           description: Пользователь верифицирован
@@ -852,6 +865,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает статистику
@@ -890,6 +904,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает статистику
@@ -928,6 +943,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает информацию о песне
@@ -960,6 +976,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '204':
           description: Песня удалена
@@ -996,6 +1013,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает картинку
@@ -1027,6 +1045,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает файл
@@ -1057,6 +1076,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
         - name: pageNumber
           in: query
           required: false
@@ -1175,6 +1195,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращается результат
@@ -1238,6 +1259,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '200':
           description: Возвращает жанр
@@ -1270,6 +1292,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '204':
           description: Жанр удален
@@ -1351,6 +1374,7 @@ paths:
           required: true
           schema:
             type: string
+            example: 'user'
       responses:
         '200':
           description: Фотография получена
@@ -1407,6 +1431,7 @@ paths:
           schema:
             type: integer
             format: int64
+            example: 1
       responses:
         '204':
           description: Пользователь удален
@@ -1437,6 +1462,7 @@ components:
       properties:
         message:
           type: string
+          example: 'error message'
     UpdateSingerRequest:
       required:
         - description
@@ -1444,6 +1470,7 @@ components:
       properties:
         description:
           type: string
+          example: 'young artist'
     UpdateProfileRequest:
       type: object
       properties:
@@ -1451,14 +1478,17 @@ components:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'Sam'
         lastName:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'Gellaitry'
         nickname:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'user'
     CreateSongRequest:
       required:
         - album
@@ -1473,19 +1503,24 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+          example: 'assumptions'
         createdYear:
           type: string
           format: yyyy
+          example: '2020'
         album:
           type: string
+          example: 'IV'
         singerId:
           type: integer
           format: int64
+          example: 1
         genreIds:
           type: array
           items:
             type: integer
             format: int64
+            example: [1, 2]
         file:
           type: string
           format: binary
@@ -1502,6 +1537,7 @@ components:
           items:
             type: integer
             format: int64
+            example: [1, 2]
     CreateSingerRequest:
       required:
         - description
@@ -1512,8 +1548,10 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+          example: 'Sam Gellaitry'
         description:
           type: string
+          example: 'young artist'
     CreateGenreRequest:
       required:
         - name
@@ -1523,13 +1561,16 @@ components:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'funk'
     TokensDTO:
       type: object
       properties:
         accessToken:
           type: string
+          example: 'xxx'
         refreshToken:
           type: string
+          example: 'xxx'
     UserSignUpRequest:
       required:
         - email
@@ -1544,24 +1585,30 @@ components:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'Sam'
         lastName:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'Gellaitry'
         email:
           type: string
+          example: 'example@mail.com'
         nickname:
           maxLength: 100
           minLength: 0
           type: string
+          example: 'user'
         password:
           maxLength: 20
           minLength: 8
           type: string
+          example: 'xxx'
         repeatPassword:
           maxLength: 20
           minLength: 8
           type: string
+          example: 'xxx'
     RefreshTokenRequest:
       required:
         - refreshToken
@@ -1569,6 +1616,7 @@ components:
       properties:
         refreshToken:
           type: string
+          example: 'xxx'
     UploadPhotoProfileRequest:
       required:
         - file
@@ -1585,16 +1633,20 @@ components:
       properties:
         email:
           type: string
+          example: 'example@mail.com'
         password:
           type: string
+          example: 'xxx'
     GenreDTO:
       type: object
       properties:
         genreId:
           type: integer
           format: int64
+          example: 1
         name:
           type: string
+          example: 'funk'
     StatisticGenreDTO:
       type: object
       properties:
@@ -1603,12 +1655,14 @@ components:
         amount:
           type: integer
           format: int64
+          example: 1
     StatisticUserDTO:
       type: object
       properties:
         userId:
           type: integer
           format: int64
+          example: 1
         genreStatistics:
           type: array
           items:
@@ -1616,40 +1670,51 @@ components:
         totalSongsAmount:
           type: integer
           format: int64
+          example: 1
     PagingInfoDTO:
       type: object
       properties:
         pageNumber:
           type: integer
           format: int32
+          example: 1
         size:
           type: integer
           format: int32
+          example: 1
         totalPages:
           type: integer
           format: int32
+          example: 1
     SingerDTO:
       type: object
       properties:
         singerId:
           type: integer
           format: int64
+          example: 1
         fullName:
           type: string
+          example: 'Sam Gellaitry'
         description:
           type: string
+          example: 'young artist'
     SongDTO:
       type: object
       properties:
         songId:
           type: integer
           format: int64
+          example: 1
         title:
           type: string
+          example: 'assumptions'
         createdYear:
           type: string
+          example: '2020'
         album:
           type: string
+          example: 'IV'
         singer:
           $ref: '#/components/schemas/SingerDTO'
         genres:
@@ -1687,6 +1752,7 @@ components:
       properties:
         exists:
           type: boolean
+          example: true
     GenresDTO:
       type: object
       properties:
@@ -1700,10 +1766,13 @@ components:
         userId:
           type: integer
           format: int64
+          example: 1
         email:
           type: string
+          example: 'example@mail.com'
         nickname:
           type: string
+          example: 'user'
     FriendPagesDTO:
       type: object
       properties:
@@ -1719,16 +1788,22 @@ components:
         userId:
           type: integer
           format: int64
+          example: 1
         firstName:
           type: string
+          example: 'Sam'
         lastName:
           type: string
+          example: 'Gellaitry'
         email:
           type: string
+          example: 'example@mail.com'
         nickname:
           type: string
+          example: 'user'
         isVerified:
           type: boolean
+          example: true
         roles:
           uniqueItems: true
           type: array
@@ -1740,10 +1815,13 @@ components:
         roleId:
           type: integer
           format: int64
+          example: 1
         name:
           type: string
+          example: 'admin'
         authority:
           type: string
+          example: 'admin'
   securitySchemes:
     bearerAuth:
       type: http

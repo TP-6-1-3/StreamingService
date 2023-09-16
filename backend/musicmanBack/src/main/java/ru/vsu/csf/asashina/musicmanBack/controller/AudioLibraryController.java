@@ -112,7 +112,7 @@ public class AudioLibraryController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))
             })
     })
-    public ResponseEntity<?> deleteSong(@PathVariable("songId") Long songId, Authentication authentication) {
+    public ResponseEntity<?> deleteSongFromLibrary(@PathVariable("songId") Long songId, Authentication authentication) {
         UserDTO user = userService.getUserByEmailWithVerificationCheck((String) authentication.getPrincipal());
         audioLibraryService.deleteSongFromUsersLibrary(songId, user.getUserId());
         return ResponseBuilder.buildWithoutBodyResponse(NO_CONTENT);
